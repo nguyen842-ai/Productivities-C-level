@@ -102,7 +102,6 @@
         .label-cell { background: var(--bg-card); color: var(--primary); font-weight: 800; text-align: left !important; width: 160px; position: sticky; left: 0; z-index: 2; border-right: 1px solid var(--border-color); }
         .risk-flag { color: var(--accent-danger) !important; font-weight: 800 !important; }
 
-        /* PERCENTAGE BADGE Cho Bảng Phân Khúc */
         .pct-badge { background: rgba(168, 200, 196, 0.15); color: var(--primary); padding: 3px 6px; border-radius: 4px; font-size: 9px; margin-left: 8px; font-weight: 800; display: inline-block;}
         .pct-badge.active-badge { background: rgba(22, 163, 74, 0.15); color: var(--accent-success); }
 
@@ -251,7 +250,8 @@ const dict = {
         cSegSub: "Kèm Box tỷ trọng (%) cơ cấu khách hàng. Bảng tự động gộp Toàn Quốc khi chọn 'Tất cả Khu vực'.",
         colArea: "KHU VỰC", colWeek: "TUẦN", colKam: "QUẢN LÝ", colKae: "SALESMAN",
         tbPlan: "Tuyến", tbActive: "Active", tbStrike: "Strike Rate", tbSales: "Sell-Out", tbDrop: "Drop Size", tbFreq: "Tần Suất", tbLppc: "LPPC",
-        sysTotal: "TỔNG TOÀN QUỐC", segColClass: "PHÂN KHÚC", segTblH1: "HIỆU SUẤT ĐIỂM BÁN",
+        sysTotal: "TỔNG TOÀN QUỐC", sysTotalSys: "TỔNG HỆ THỐNG",
+        segColClass: "PHÂN KHÚC", segTblH1: "HIỆU SUẤT ĐIỂM BÁN",
         axisCust: "Đơn vị: Cửa hàng", axisVnd: "Đơn vị: VNĐ", legSales: "Doanh số", legTotal: "Tuyến", legActive: "Active"
     },
     en: {
@@ -267,7 +267,8 @@ const dict = {
         cSegSub: "Includes (%) Proportion Boxes. Auto-groups to Nationwide when 'All Areas' is selected.",
         colArea: "AREA", colWeek: "WEEK", colKam: "MANAGER", colKae: "REP",
         tbPlan: "Route", tbActive: "Active", tbStrike: "Strike Rate", tbSales: "Sell-Out", tbDrop: "Drop Size", tbFreq: "Freq", tbLppc: "LPPC",
-        sysTotal: "NATIONWIDE TOTAL", segColClass: "CLASS", segTblH1: "OUTLET PERFORMANCE",
+        sysTotal: "NATIONWIDE TOTAL", sysTotalSys: "SYSTEM TOTAL",
+        segColClass: "CLASS", segTblH1: "OUTLET PERFORMANCE",
         axisCust: "Unit: Outlets", axisVnd: "Unit: VND", legSales: "Sales", legTotal: "Route", legActive: "Active"
     }
 };
@@ -348,7 +349,10 @@ function renderFilters() {
 function render() {
     if (dbMaster.length === 0 && dbSales.length === 0) return; 
 
+    // Filter cho PHẦN 1: Chỉ chịu ảnh hưởng bởi Month, Week
     const filterP1 = (d) => (filters.month.length === 0 || filters.month.includes(d.month)) && (filters.week.length === 0 || filters.week.includes(d._w));
+    
+    // Filter cho PHẦN 2 & 3: Chịu ảnh hưởng bởi TẤT CẢ bộ lọc
     const filterMain = (d) => filterP1(d) && (filters.hq.length === 0 || filters.hq.includes(d.hq)) && (filters.area.length === 0 || filters.area.includes(d.area));
 
     let sys = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
@@ -448,7 +452,7 @@ function render() {
     document.getElementById("val-strike").innerText = fmt(sysAc);
     document.getElementById("val-strike-rate").innerText = (sysTc > 0 ? (sysAc/sysTc*100).toFixed(1) : 0) + "%";
     document.getElementById("val-drop-size").innerText = (sysAc > 0 ? fmt(sys.s/sysAc) : 0);
-    document.getElementById("val-freq").innerText = sysKpiObj.freq.toFixed(1);
+    document.getElementById("val-freq").innerText = (sysAc > 0 ? (sys.invs/sysAc).toFixed(1) : "0.0");
     document.getElementById("val-lppc").innerText = sysKpiObj.avgSku.toFixed(1);
 
     // 2. TREE PERSONNEL
@@ -462,17 +466,17 @@ function render() {
     });
     document.getElementById('tree-container').innerHTML = treeHtml || '<div style="color:var(--text-muted); font-style:italic;">No Personnel Data</div>';
 
-    // 3. CHARTS P1 (BIỂU ĐỒ NGANG, BẢNG DÀN NGANG)
+    // 3. CHARTS P1 (BIỂU ĐỒ NGANG, BẢNG DÀN NGANG) -> Lần này ĐÚNG: isHorizontal = true
     let p1Total = { tc: 0, ac: 0, s: 0, skus: 0, invs: 0 };
     Object.values(areaMapP1).forEach(m => { p1Total.tc+=m.p.size; p1Total.ac+=m.a.size; p1Total.s+=m.s; p1Total.skus+=m.skus; p1Total.invs+=m.invs; });
     let p1Kpi = { tc: p1Total.tc, ac: p1Total.ac, s: p1Total.s, avgSku: p1Total.invs > 0 ? p1Total.skus/p1Total.invs : 0, freq: p1Total.ac > 0 ? p1Total.invs/p1Total.ac : 0 };
 
     let areaData = Object.keys(areaMapP1).map(k => ({ label: k, tc: areaMapP1[k].p.size, ac: areaMapP1[k].a.size, s: areaMapP1[k].s, avgSku: areaMapP1[k].invs > 0 ? areaMapP1[k].skus/areaMapP1[k].invs : 0, freq: areaMapP1[k].a.size > 0 ? areaMapP1[k].invs/areaMapP1[k].a.size : 0 })).sort((a,b) => b.s - a.s);
-    drawChart('areaChart', areaData, 'label', true); // Horizontal Chart
+    drawChart('areaChart', areaData, 'label', true); // isHorizontal = true
     drawHorizontalTable('areaHeaderRow', 'areaTableBody', areaData, t('colArea'), true, { label: t('sysTotal'), ...p1Kpi }, true); 
 
     let weekData = Object.keys(weekMapP1).map(k => ({ label: formatWM(weekMapP1[k].w, weekMapP1[k].m), tc: weekMapP1[k].p.size, ac: weekMapP1[k].a.size, s: weekMapP1[k].s, avgSku: weekMapP1[k].invs > 0 ? weekMapP1[k].skus/weekMapP1[k].invs : 0, freq: weekMapP1[k].a.size > 0 ? weekMapP1[k].invs/weekMapP1[k].a.size : 0, w: weekMapP1[k].w, m: weekMapP1[k].m })).sort((a,b) => { let m1 = monthOrder[a.m.toLowerCase()]||99; let m2 = monthOrder[b.m.toLowerCase()]||99; return m1!==m2 ? m1-m2 : a.w.localeCompare(b.w); });
-    drawChart('weekChart', weekData, 'label', true); // Horizontal Chart
+    drawChart('weekChart', weekData, 'label', true); // isHorizontal = true
     drawHorizontalTable('weekHeaderRow', 'weekTableBody', weekData, t('colWeek'), true, { label: t('sysTotal'), ...p1Kpi }, false); 
 
     // 4. CHARTS P2 (BIỂU ĐỒ NGANG, BẢNG DỌC)
@@ -566,7 +570,7 @@ function renderPart3(segMap, sysKpiObj) {
     document.getElementById('segmentAreaTableContainer').innerHTML = html;
 }
 
-// ======================== DRAW X-Y TABLES ========================
+// ======================== DRAW HORIZONTAL & VERTICAL TABLES ========================
 function drawHorizontalTable(hid, bid, data, titleNameLabel, showTotal, exp, checkRisk) {
     let rd = [...data]; if (showTotal && exp) rd.push(exp);
     
