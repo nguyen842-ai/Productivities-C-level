@@ -26,11 +26,11 @@
         body { margin: 0; font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg-main); color: var(--text-main); font-size: 13px; overflow-x: hidden; }
 
         /* =========================================================
-           2. LOADER & TRANSITIONS
+           2. MÀN HÌNH LOADING SANG CHẢNH
            ========================================================= */
         #loader-wrapper {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-main); z-index: 99999;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; transition: 0.6s ease;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; transition: 0.4s ease;
         }
         #loader-wrapper.hidden { opacity: 0; visibility: hidden; }
         .spinner-container { position: relative; width: 60px; height: 60px; margin-bottom: 20px; }
@@ -43,16 +43,16 @@
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
         /* =========================================================
-           3. LAYOUT REPORT
+           3. LAYOUT REPORT (FULL-WIDTH STRATEGIC)
            ========================================================= */
         .main-content { padding: 30px; width: 100%; min-height: 100vh; max-width: 1600px; margin: 0 auto; }
         
         /* HEADER SECTION */
         .top-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; margin-bottom: 30px; gap: 20px; }
+        .header-left { display: flex; align-items: flex-start; gap: 25px; flex-wrap: wrap; }
         .exec-title h1 { margin: 0; font-size: 24px; font-weight: 800; color: var(--primary); letter-spacing: -0.5px; }
         .exec-title p { margin: 4px 0 0 0; color: var(--secondary); font-size: 12px; font-weight: 600; }
         
-        .header-controls { display: flex; align-items: center; gap: 20px; }
         .lang-toggle { display: flex; background: var(--bg-card); padding: 4px; border-radius: 8px; border: 1px solid var(--border-color); }
         .lang-toggle button { background: transparent; border: none; color: var(--text-muted); padding: 6px 12px; font-size: 11px; font-weight: 800; cursor: pointer; border-radius: 6px; transition: 0.2s; }
         .lang-toggle button.active { background: var(--primary); color: var(--bg-main); }
@@ -85,7 +85,7 @@
         .t-children { border-left: 1px solid var(--secondary); margin-left: 15px; padding-left: 10px; margin-bottom: 10px; }
         .t-leaf { display: flex; justify-content: space-between; padding: 6px 10px; font-size: 11px; color: var(--text-muted); border-bottom: 1px solid rgba(255,255,255,0.02); }
 
-        /* DATA VISUALS */
+        /* CHARTS & TABLES */
         .chart-box { background: var(--bg-card); border-radius: var(--border-radius); border: 1px solid var(--border-color); padding: 25px; margin-bottom: 30px; }
         .chart-header { margin-bottom: 20px; }
         .chart-title { font-size: 14px; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
@@ -99,7 +99,7 @@
         .label-cell { background: var(--bg-card); color: var(--primary); font-weight: 800; text-align: left !important; width: 180px; position: sticky; left: 0; z-index: 2; border-right: 1px solid var(--border-color); }
         .risk-flag { color: var(--accent-danger) !important; font-weight: 800 !important; }
 
-        /* PART 3: 60/40 SPLIT + HEATMAP */
+        /* PART 3: 60/40 SPLIT WITH HEATMAP */
         .segment-container { display: flex; gap: 20px; flex-wrap: wrap; }
         .segment-left { flex: 0 0 calc(62% - 10px); }
         .segment-right { flex: 0 0 calc(38% - 10px); }
@@ -110,6 +110,11 @@
         .hm-item .hm-label { font-size: 10px; font-weight: 800; text-transform: uppercase; opacity: 0.8; }
         .hm-item .hm-val { font-size: 18px; font-weight: 800; margin: 5px 0; }
         .hm-item .hm-pct { font-size: 10px; font-weight: 600; padding: 2px 6px; background: rgba(0,0,0,0.2); border-radius: 4px; }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-main); }
+        ::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
         @media (max-width: 1200px) {
             .top-header { flex-direction: column; align-items: flex-start; }
@@ -126,13 +131,14 @@
 </div>
 
 <main class="main-content">
+    
     <header class="top-header">
         <div class="header-left">
             <div class="exec-title">
                 <h1 data-i18n="mainTitle">RTM STRATEGIC DASHBOARD</h1>
                 <p data-i18n="subTitle">Đánh giá Hiệu quả Phân phối, Thực thi Tuyến & Phân khúc Sức mua</p>
             </div>
-            <div class="lang-toggle" style="margin-top:15px;">
+            <div class="lang-toggle">
                 <button id="btn-vi" onclick="setLang('vi')" class="active">VI</button>
                 <button id="btn-en" onclick="setLang('en')">EN</button>
             </div>
@@ -149,10 +155,10 @@
     <div class="section-tag" data-i18n="secPulse">CHỈ SỐ SINH TỬ</div>
     <div class="pulse-row">
         <div class="kpi-grid">
-            <div class="kpi-card">
+            <div class="kpi-card md-focus">
                 <div class="label" data-i18n="kpiSalesLbl">TỔNG SELL-OUT</div>
                 <div class="value" id="val-sales">0</div>
-                <div class="sub"><span data-i18n="kpiSalesSub1">VNĐ (Chưa VAT)</span> <span data-i18n="kpiSalesSub2">Volume Flow</span></div>
+                <div class="sub"><span data-i18n="kpiSalesSub1">VNĐ (Chưa VAT)</span> <span data-i18n="kpiSalesSub2">Dòng tiền</span></div>
             </div>
             <div class="kpi-card">
                 <div class="label" data-i18n="kpiActiveLbl">ĐỘ PHỦ SỐNG</div>
@@ -193,15 +199,15 @@
     </div>
 
     <div class="section-tag" data-i18n="secP2">PHẦN 2: THỰC THI THỊ TRƯỜNG & SFE</div>
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; flex-wrap: wrap;">
         <div class="chart-box">
             <div class="chart-title" data-i18n="cKamTitle">TOP 10 NĂNG SUẤT QUẢN LÝ VÙNG</div>
-            <div style="height: 400px;"><canvas id="kamChart"></canvas></div>
+            <div style="height: 380px;"><canvas id="kamChart"></canvas></div>
             <div class="table-wrap"><table class="data-table"><thead><tr id="kamHeaderRow"></tr></thead><tbody id="kamTableBody"></tbody></table></div>
         </div>
         <div class="chart-box">
             <div class="chart-title" data-i18n="cKaeTitle">TOP 10 NĂNG SUẤT SALESMAN</div>
-            <div style="height: 400px;"><canvas id="dayChart"></canvas></div>
+            <div style="height: 380px;"><canvas id="dayChart"></canvas></div>
             <div class="table-wrap"><table class="data-table"><thead><tr id="dayHeaderRow"></tr></thead><tbody id="dayTableBody"></tbody></table></div>
         </div>
     </div>
@@ -231,15 +237,12 @@
 <script src="dataM7.js"></script>
 
 <script>
-// BIẾN TOÀN CỤC & TỪ ĐIỂN
-Chart.defaults.color = '#A0AAB5';
-Chart.defaults.borderColor = 'rgba(255,255,255,0.05)';
-
+// BIẾN TOÀN CỤC & TỪ ĐIỂN SONG NGỮ CHUẨN HOÁ
 const dict = {
     vi: {
         mainTitle: "RTM STRATEGIC DASHBOARD", subTitle: "Đánh giá Hiệu quả Phân phối, Thực thi Tuyến & Phân khúc Sức mua",
         lblMonth: "Tháng", lblWeek: "Tuần", lblRegion: "Miền", lblArea: "Khu vực", lblAll: "Tất cả",
-        secPulse: "CHỈ SỐ SINH TỬ", kpiSalesLbl: "TỔNG SELL-OUT", kpiSalesSub1: "VNĐ (Chưa VAT)", kpiSalesSub2: "Volume Flow",
+        secPulse: "CHỈ SỐ SINH TỬ", kpiSalesLbl: "TỔNG SELL-OUT", kpiSalesSub1: "VNĐ (Chưa VAT)", kpiSalesSub2: "Dòng tiền",
         kpiActiveLbl: "ĐỘ PHỦ SỐNG", kpiActiveSub2: "Trên tuyến", kpiStrikeLbl: "STRIKE RATE", kpiStrikeSub: "Tỷ lệ chốt đơn",
         kpiDropLbl: "DROP SIZE & TẦN SUẤT", treeTitle: "SƠ ĐỒ NHÂN SỰ & DOANH SỐ",
         secP1: "PHẦN 1: CHIẾN LƯỢC RTM & SỨC MUA", cAreaTitle: "HIỆU QUẢ SELL-OUT THEO KHU VỰC", cAreaSub: "⚠️ Cảnh báo đỏ cho vùng có Strike Rate < 50%",
@@ -249,7 +252,9 @@ const dict = {
         hmTitle: "TỶ TRỌNG DOANH SỐ PHÂN KHÚC", hmSub: "Phân bổ miếng bánh thị trường theo doanh thu",
         colArea: "KHU VỰC", colWeek: "TUẦN", colKam: "QUẢN LÝ", colKae: "SALESMAN",
         tbPlan: "Tuyến", tbActive: "Active", tbStrike: "Strike Rate", tbSales: "Sell-Out", tbDrop: "Drop Size", tbLppc: "LPPC",
-        sysTotal: "TỔNG TOÀN QUỐC", segColClass: "PHÂN KHÚC", segTblH1: "HIỆU SUẤT ĐIỂM BÁN"
+        sysTotal: "TỔNG TOÀN QUỐC", sysTotalSys: "TỔNG HỆ THỐNG",
+        segColClass: "PHÂN KHÚC", segTblH1: "HIỆU SUẤT ĐIỂM BÁN",
+        axisCust: "Đơn vị: Cửa hàng", axisVnd: "Đơn vị: VNĐ", legSales: "Doanh số", legTotal: "Tuyến", legActive: "Active"
     },
     en: {
         mainTitle: "RTM STRATEGIC DASHBOARD", subTitle: "Distribution Efficiency, Route Execution & Purchasing Power",
@@ -264,9 +269,15 @@ const dict = {
         hmTitle: "SEGMENT REVENUE SHARE", hmSub: "Market share distribution by revenue",
         colArea: "AREA", colWeek: "WEEK", colKam: "MANAGER", colKae: "REP",
         tbPlan: "Route", tbActive: "Active", tbStrike: "Strike Rate", tbSales: "Sell-Out", tbDrop: "Drop Size", tbLppc: "LPPC",
-        sysTotal: "NATIONWIDE", segColClass: "CLASS", segTblH1: "OUTLET PERFORMANCE"
+        sysTotal: "NATIONWIDE", sysTotalSys: "SYSTEM TOTAL",
+        segColClass: "CLASS", segTblH1: "OUTLET PERFORMANCE",
+        axisCust: "Unit: Outlets", axisVnd: "Unit: VND", legSales: "Sales", legTotal: "Route", legActive: "Active"
     }
 };
+
+const segNames = { 'A': 'Class A', 'B': 'Class B', 'C': 'Class C', 'D': 'Class D', 'N': 'Unclassified' };
+const segColors = { 'A': '#A8C8C4', 'B': '#6D8F8B', 'C': '#ea580c', 'D': '#dc2626', 'N': '#64748b' };
+const monthOrder = { "jan":1, "feb":2, "mar":3, "apr":4, "may":5, "jun":6, "jul":7, "aug":8, "sep":9, "oct":10, "nov":11, "dec":12 };
 
 let lang = 'vi';
 let filters = { month: [], week: [], hq: [], area: [] };
@@ -275,8 +286,38 @@ let dbMaster = []; let dbSales = [];
 
 const t = (k) => dict[lang][k] || k;
 const fmt = (n) => new Intl.NumberFormat('en-US').format(Math.round(n || 0));
+const getW = (d) => String(d.week || d.Week || "").toUpperCase().trim();
+const formatWM = (w, m) => { if (!m) return w; let mNum = monthOrder[m.toLowerCase()] || m; return lang === 'vi' ? `${w} T${mNum}` : `${w} M${mNum}`; };
 
-// ======================== ENGINE LỌC SIÊU TỐC ========================
+const cleanName = (name, isKamField = false, areaName = "") => {
+    let cleanStr = String(name || "").replace(/[✔️❌]/g, '').trim();
+    if (isKamField) {
+        cleanStr = cleanStr.toUpperCase(); 
+        if (typeof kamMap !== 'undefined') {
+            let areaKey = String(areaName || "").toUpperCase().trim() + "|" + cleanStr;
+            if (kamMap[areaKey]) return kamMap[areaKey];
+            if (kamMap[cleanStr]) return kamMap[cleanStr];
+        }
+    }
+    return cleanStr;
+};
+
+// ======================== TẦNG UI HOẠT HỌA & BỘ LỌC ========================
+function setLang(newLang) {
+    lang = newLang; 
+    document.getElementById('btn-vi').className = lang === 'vi' ? 'active' : ''; 
+    document.getElementById('btn-en').className = lang === 'en' ? 'active' : '';
+    document.querySelectorAll('[data-i18n]').forEach(el => { el.innerText = t(el.getAttribute('data-i18n')); });
+    renderFilters(); render();
+}
+
+function toggleMS(id) {
+    let d = document.getElementById('drop-'+id);
+    document.querySelectorAll('.ms-dropdown').forEach(el => { if(el!==d) el.style.display='none'; });
+    d.style.display = d.style.display==='block' ? 'none' : 'block';
+}
+document.addEventListener('click', e => { if(!e.target.closest('.ms-box')) document.querySelectorAll('.ms-dropdown').forEach(d => d.style.display = 'none'); });
+
 function updateF(type, val) {
     const loader = document.getElementById('loader-wrapper');
     loader.classList.remove('hidden');
@@ -292,27 +333,28 @@ function updateF(type, val) {
     }, 50);
 }
 
-function renderFilters() {
-    let all = [...dbMaster, ...dbSales];
-    const populate = (id, type, arr) => {
-        let drop = document.getElementById('drop-' + id);
-        let lbl = document.getElementById('lbl-' + id);
-        lbl.innerText = filters[type].length === 0 ? t('lblAll') : (filters[type].length === 1 ? filters[type][0] : filters[type].length + ' selected');
-        let html = `<div class="ms-opt ${filters[type].length === 0 ? 'selected' : ''}" onclick="updateF('${type}', 'all')">${t('lblAll')}</div>`;
-        arr.forEach(v => { html += `<div class="ms-opt ${filters[type].includes(v) ? 'selected' : ''}" onclick="updateF('${type}', '${v}')">${v}</div>`; });
-        drop.innerHTML = html;
-    };
-    populate('month', 'month', [...new Set(all.map(d => d.month))].filter(Boolean).sort((a,b) => (monthOrder[a.toLowerCase()]||99) - (monthOrder[b.toLowerCase()]||99)));
-    populate('week', 'week', [...new Set(all.map(d => d._w))].filter(Boolean).sort());
-    populate('hq', 'hq', [...new Set(all.map(d=>d.hq))].filter(Boolean).sort());
-    populate('area', 'area', [...new Set(all.filter(d => filters.hq.length === 0 || filters.hq.includes(d.hq)).map(d=>d.area))].filter(Boolean).sort());
+function populateDropdown(id, type, optionsArr) {
+    let drop = document.getElementById('drop-' + id); let lbl = document.getElementById('lbl-' + id);
+    if (filters[type].length === 0) lbl.innerText = t('lblAll');
+    else if (filters[type].length === 1) lbl.innerText = filters[type][0];
+    else lbl.innerText = filters[type].length + ' selected';
+    let htmlStr = `<div class="ms-opt ${filters[type].length === 0 ? 'selected' : ''}" onclick="updateF('${type}', 'all')">${t('lblAll')}</div>`;
+    optionsArr.forEach(opt => { htmlStr += `<div class="ms-opt ${filters[type].includes(opt) ? 'selected' : ''}" onclick="updateF('${type}', '${opt}')">${opt}</div>`; });
+    drop.innerHTML = htmlStr;
 }
 
-// ======================== RENDER ENGINE CHÍNH ========================
+function renderFilters() {
+    let all = [...dbMaster, ...dbSales];
+    populateDropdown('month', 'month', [...new Set(all.map(d => d.month))].filter(Boolean).sort((a,b) => (monthOrder[a.toLowerCase()]||99) - (monthOrder[b.toLowerCase()]||99)));
+    populateDropdown('week', 'week', [...new Set(all.map(d => d._w))].filter(Boolean).sort());
+    populateDropdown('hq', 'hq', [...new Set(all.map(d=>d.hq))].filter(Boolean).sort());
+    populateDropdown('area', 'area', [...new Set(all.filter(d => filters.hq.length === 0 || filters.hq.includes(d.hq)).map(d=>d.area))].filter(Boolean).sort());
+}
+
+// ======================== ENGINE SỬ LÝ SINGLE-PASS TỐC ĐỘ CAO ========================
 function render() {
-    const loader = document.getElementById('loader-wrapper');
-    
-    // Thuật toán quét 1 lần (Single-Pass)
+    if (dbMaster.length === 0 && dbSales.length === 0) return; 
+
     let sys = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
     let areaMap = {}, kamMap = {}, kaeMap = {}, weekMap = {}, treeMap = {}, segMap = {}, hmMap = { 'A':0, 'B':0, 'C':0, 'D':0, 'N':0 };
     
@@ -388,17 +430,18 @@ function render() {
         if (v > 0) { segMap[segKey].a.add(d.cusCode); hmMap[seg] += v; }
     });
 
-    // 1. KPIs THE PULSE
-    const sysKpi = { tc: sys.p.size, ac: sys.a.size, s: sys.s, avgSku: sys.invs > 0 ? sys.skus/sys.invs : 0, freq: sys.a.size > 0 ? sys.invs/sys.a.size : 0 };
+    // 1. UPDATE KPIs
+    let sysAc = sys.a.size; let sysTc = sys.p.size;
+    let sysKpiObj = { tc: sysTc, ac: sysAc, s: sys.s, avgSku: sys.invs > 0 ? sys.skus/sys.invs : 0 };
     document.getElementById("val-sales").innerText = fmt(sys.s);
-    document.getElementById("val-cust").innerText = fmt(sys.p.size);
-    document.getElementById("val-strike").innerText = fmt(sys.a.size);
-    document.getElementById("val-strike-rate").innerText = (sys.p.size > 0 ? (sys.a.size/sys.p.size*100).toFixed(1) : 0) + "%";
-    document.getElementById("val-drop-size").innerText = (sys.a.size > 0 ? fmt(sys.s/sys.a.size) : 0);
-    document.getElementById("val-freq").innerText = sysKpi.freq.toFixed(1);
-    document.getElementById("val-lppc").innerText = sysKpi.avgSku.toFixed(1);
+    document.getElementById("val-cust").innerText = fmt(sysTc);
+    document.getElementById("val-strike").innerText = fmt(sysAc);
+    document.getElementById("val-strike-rate").innerText = (sysTc > 0 ? (sysAc/sysTc*100).toFixed(1) : 0) + "%";
+    document.getElementById("val-drop-size").innerText = (sysAc > 0 ? fmt(sys.s/sysAc) : 0);
+    document.getElementById("val-freq").innerText = (sysAc > 0 ? (sys.invs/sysAc).toFixed(1) : "0.0");
+    document.getElementById("val-lppc").innerText = sysKpiObj.avgSku.toFixed(1);
 
-    // 2. TREEPersonnel
+    // 2. TREE PERSONNEL
     let treeHtml = '';
     Object.keys(treeMap).sort((a,b) => treeMap[b].s - treeMap[a].s).forEach(k => {
         treeHtml += `<details class="tree-node"><summary><span>${k}</span><span>${fmt(treeMap[k].s)}</span></summary><div class="t-children">`;
@@ -407,57 +450,54 @@ function render() {
         });
         treeHtml += `</div></details>`;
     });
-    document.getElementById('tree-container').innerHTML = treeHtml;
+    document.getElementById('tree-container').innerHTML = treeHtml || '<div style="color:var(--text-muted); font-style:italic;">No Personnel Data</div>';
 
-    // 3. CHARTS (Top 10 Horizontal)
-    const drawH = (id, data, label) => drawChart(id, data, label, true);
+    // 3. CHARTS AND DATA TABLES
     let areaData = Object.keys(areaMap).map(k => ({ label: k, tc: areaMap[k].p.size, ac: areaMap[k].a.size, s: areaMap[k].s, avgSku: areaMap[k].invs > 0 ? areaMap[k].skus/areaMap[k].invs : 0 })).sort((a,b) => b.s - a.s);
     drawChart('areaChart', areaData, 'label', false);
-    drawTable('areaHeaderRow', 'areaTableBody', areaData, t('colArea'), 'label', true, { label: t('sysTotal'), ...sysKpi }, true);
+    drawTable('areaHeaderRow', 'areaTableBody', areaData, t('colArea'), 'label', true, { label: t('sysTotal'), ...sysKpiObj }, true);
 
     let weekData = Object.keys(weekMap).map(k => ({ label: formatWM(weekMap[k].w, weekMap[k].m), tc: weekMap[k].p.size, ac: weekMap[k].a.size, s: weekMap[k].s, avgSku: weekMap[k].invs > 0 ? weekMap[k].skus/weekMap[k].invs : 0, w: weekMap[k].w, m: weekMap[k].m })).sort((a,b) => { let m1 = monthOrder[a.m.toLowerCase()]||99; let m2 = monthOrder[b.m.toLowerCase()]||99; return m1!==m2 ? m1-m2 : a.w.localeCompare(b.w); });
     drawChart('weekChart', weekData, 'label', false);
-    drawTable('weekHeaderRow', 'weekTableBody', weekData, t('colWeek'), 'label', true, { label: t('sysTotal'), ...sysKpi });
+    drawTable('weekHeaderRow', 'weekTableBody', weekData, t('colWeek'), 'label', true, { label: t('sysTotal'), ...sysKpiObj });
 
     let kamData = Object.keys(kamMap).map(k => ({ label: k, tc: kamMap[k].p.size, ac: kamMap[k].a.size, s: kamMap[k].s, avgSku: kamMap[k].invs > 0 ? kamMap[k].skus/kamMap[k].invs : 0 })).sort((a,b) => b.s - a.s).slice(0, 10);
-    drawH('kamChart', kamData, 'label');
+    drawChart('kamChart', kamData, 'label', true); // Top 10 Ép cột ngang
     drawTable('kamHeaderRow', 'kamTableBody', kamData, t('colKam'), 'label', false);
 
     let kaeData = Object.keys(kaeMap).map(k => ({ label: k, tc: kaeMap[k].p.size, ac: kaeMap[k].a.size, s: kaeMap[k].s, avgSku: kaeMap[k].invs > 0 ? kaeMap[k].skus/kaeMap[k].invs : 0 })).sort((a,b) => b.s - a.s).slice(0, 10);
-    drawH('dayChart', kaeData, 'label');
+    drawChart('dayChart', kaeData, 'label', true); // Top 10 Ép cột ngang
     drawTable('dayHeaderRow', 'dayTableBody', kaeData, t('colKae'), 'label', false);
 
-    // 4. PART 3: SEGMENT & HEATMAP
+    // 4. PART 3: SEGMENTATION & SQUARE MATRIX HEATMAP
     renderPart3(areaMap, segMap, hmMap);
 }
 
 function renderPart3(areaMap, segMap, hmMap) {
     let segList = ['A', 'B', 'C', 'D', 'N'];
-    let html = `<table class="segment-table" style="width:100%; border-collapse:collapse; font-size:11px;"><thead><tr><th rowspan="2">${t('colArea')}</th><th rowspan="2">${t('segColClass')}</th><th colspan="4">${t('segTblH1')}</th></tr><tr><th>${t('tbPlan')}</th><th>${t('tbActive')}</th><th>${t('tbStrike')}</th><th>${t('tbSales')}</th></tr></thead><tbody>`;
+    let html = `<table class="segment-table"><thead><tr><th rowspan="2">${t('colArea')}</th><th rowspan="2">${t('segColClass')}</th><th colspan="4">${t('segTblH1')}</th></tr><tr><th>${t('tbPlan')}</th><th>${t('tbActive')}</th><th>${t('tbStrike')}</th><th>${t('tbSales')}</th></tr></thead><tbody>`;
 
-    // Nếu đang chọn 1 Area, chỉ hiện Area đó, nếu không chọn hoặc chọn Tất cả, hiện gộp.
     let areaToRender = filters.area.length > 0 ? filters.area : Object.keys(areaMap).sort();
-    
     areaToRender.forEach(area => {
         let isF = true;
         segList.forEach(seg => {
             const data = segMap[area + '|' + seg] || { p: new Set(), a: new Set(), s: 0 };
-            let sr = data.p.size > 0 ? (data.a.size/data.p.size*100).toFixed(1) + '%' : '0%';
+            let sr = data.p.size > 0 ? (data.a.size/data.p.size*100).toFixed(1) + '%' : '0.0%';
             html += `<tr>`;
-            if(isF) { html += `<td rowspan="5" class="seg-area-cell" style="background:var(--bg-card); font-weight:800; border-right:1px solid var(--border-color); color:var(--primary); text-align:left; padding-left:10px;">${area}</td>`; isF = false; }
-            html += `<td style="text-align:left; padding-left:10px; color:var(--text-muted)">${segNames[seg]}</td><td>${fmt(data.p.size)}</td><td style="color:var(--primary)">${fmt(data.a.size)}</td><td>${sr}</td><td style="text-align:right; padding-right:10px; font-weight:600;">${fmt(data.s)}</td></tr>`;
+            if(isF) { html += `<td rowspan="5" class="seg-area-cell">${area}</td>`; isF = false; }
+            html += `<td class="seg-name-cell">${segNames[seg]}</td><td>${fmt(data.p.size)}</td><td style="color:var(--primary); font-weight:bold;">${fmt(data.a.size)}</td><td style="font-weight:bold;">${sr}</td><td style="text-align:right; font-weight:600; color:var(--primary);">${fmt(data.s)}</td></tr>`;
         });
     });
     html += `</tbody></table>`;
     document.getElementById('segmentAreaTableContainer').innerHTML = html;
 
-    // HEATMAP PROPORTION
+    // RENDER SQUARE MATRIX HEATMAP
     let hmHtml = '';
     let totalHm = Object.values(hmMap).reduce((a,b)=>a+b,0);
     segList.forEach(seg => {
         let val = hmMap[seg];
         let pct = totalHm > 0 ? (val/totalHm*100).toFixed(1) : 0;
-        hmHtml += `<div class="hm-item" style="background: ${segColors[seg]}22; border-bottom: 4px solid ${segColors[seg]}">
+        hmHtml += `<div class="hm-item" style="background: ${segColors[seg]}18; border-bottom: 4px solid ${segColors[seg]}">
             <div class="hm-label" style="color:${segColors[seg]}">${segNames[seg]}</div>
             <div class="hm-val">${fmt(val)}</div>
             <div class="hm-pct">${pct}% Contribution</div>
@@ -466,33 +506,48 @@ function renderPart3(areaMap, segMap, hmMap) {
     document.getElementById('heatmap-container').innerHTML = hmHtml;
 }
 
-// CÁC HÀM VẼ CƠ BẢN
+// ======================== CHART & TABLE CORE DRAWER ========================
 function drawChart(id, data, labelKey, isHorizontal) {
     if(charts[id]) charts[id].destroy();
+
+    // Đồng bộ Trục dựa trên định dạng Ngang/Dọc để tránh Chart.js bị vỡ luồng chạy
+    let scalesConfig = {};
+    if (isHorizontal) {
+        scalesConfig = {
+            y: { grid: { display: false } },
+            x: { beginAtZero: true, title: { display: true, text: t('axisCust') } },
+            xS: { position: 'top', beginAtZero: true, ticks: { callback: v => fmt(v) }, title: { display: true, text: t('axisVnd') }, grid: { display: false } }
+        };
+    } else {
+        scalesConfig = {
+            x: { grid: { display: false } },
+            y: { beginAtZero: true, title: { display: true, text: t('axisCust') } },
+            yS: { position: 'right', beginAtZero: true, ticks: { callback: v => fmt(v) }, title: { display: true, text: t('axisVnd') }, grid: { display: false } }
+        };
+    }
+
     charts[id] = new Chart(document.getElementById(id), {
         data: {
             labels: data.map(x => x[labelKey]),
             datasets: [
-                { type:'line', label: 'Sell-Out', data: data.map(x => x.s), borderColor:'#A8C8C4', yAxisID:'yS', tension:0.3 },
-                { type:'bar', label: 'Tuyến', data: data.map(x => x.tc), backgroundColor:'#6D8F8B', yAxisID:'y' },
-                { type:'bar', label: 'Active', data: data.map(x => x.ac), backgroundColor:'rgba(168,200,196,0.3)', yAxisID:'y' }
+                { type:'line', label: t('legSales'), data: data.map(x => x.s), borderColor:'#A8C8C4', backgroundColor:'#A8C8C4', xAxisID: isHorizontal ? 'xS' : undefined, yAxisID: isHorizontal ? undefined : 'yS', tension:0.3, pointRadius: 4 },
+                { type:'bar', label: t('legTotal'), data: data.map(x => x.tc), backgroundColor:'#6D8F8B', xAxisID: isHorizontal ? 'x' : undefined, yAxisID: isHorizontal ? undefined : 'y' },
+                { type:'bar', label: t('legActive'), data: data.map(x => x.ac), backgroundColor:'rgba(168,200,196,0.3)', xAxisID: isHorizontal ? 'x' : undefined, yAxisID: isHorizontal ? undefined : 'y' }
             ]
         },
         options: {
             indexAxis: isHorizontal ? 'y' : 'x',
             responsive: true, maintainAspectRatio: false,
-            scales: {
-                y: { beginAtZero: true, grid: { display:false } },
-                yS: { position: 'right', beginAtZero: true, grid: { display:false }, ticks: { callback: v => fmt(v) } }
-            },
-            plugins: { legend: { position: 'bottom' } }
+            scales: scalesConfig,
+            plugins: { legend: { position: 'bottom', labels: { boxWidth: 15 } } }
         }
     });
 }
 
 function drawTable(hid, bid, data, title, lKey, showTotal, exp, checkRisk) {
     let rd = [...data]; if (showTotal) rd.push(exp);
-    document.getElementById(hid).innerHTML = `<th class="label-cell">${title}</th>` + rd.map(x => `<th style="${x === rd[rd.length-1] && showTotal ? 'background:var(--primary);color:var(--bg-main)' : ''}">${x[lKey]}</th>`).join("");
+    document.getElementById(hid).innerHTML = `<th class="label-cell">${title}</th>` + rd.map(x => `<th style="${x === rd[rd.length-1] && showTotal ? 'background:var(--primary);color:var(--bg-main)' : ''}">${x[lKey] || ""}</th>`).join("");
+    
     let rows = [
         { l: t('tbPlan'), k: "tc", f: v => fmt(v) },
         { l: t('tbActive'), k: "ac", f: v => `<b style="color:var(--primary)">${fmt(v)}</b>` },
@@ -508,31 +563,29 @@ function drawTable(hid, bid, data, title, lKey, showTotal, exp, checkRisk) {
     document.getElementById(bid).innerHTML = rows.map(r => `<tr><td class="label-cell">${r.l}</td>${rd.map(x => `<td style="${x === rd[rd.length-1] && showTotal ? 'background:rgba(168,200,196,0.1);font-weight:800' : ''}">${r.f(x[r.k], x)}</td>`).join("")}</tr>`).join("");
 }
 
-function toggleMS(id) {
-    let d = document.getElementById('drop-'+id);
-    document.querySelectorAll('.ms-dropdown').forEach(el => { if(el!==d) el.style.display='none'; });
-    d.style.display = d.style.display==='block' ? 'none' : 'block';
-}
-
+// ======================== PHẦN KHỞI TẠO HỆ THỐNG ========================
 function init() {
     dbMaster = []; dbSales = [];
-    // Combine data...
     if (typeof dbMasterM5 !== 'undefined') { dbMaster = dbMaster.concat(dbMasterM5); dbSales = dbSales.concat(dbSalesM5); }
     if (typeof dbMasterM6 !== 'undefined') { dbMaster = dbMaster.concat(dbMasterM6); dbSales = dbSales.concat(dbSalesM6); }
     if (typeof dbMasterM7 !== 'undefined') { dbMaster = dbMaster.concat(dbMasterM7); dbSales = dbSales.concat(dbSalesM7); }
 
+    // Xây dựng ma trận phân khúc bảo vệ dữ liệu chống Null-safety
     const segMapPre = {};
-    dbMaster.forEach(d => { segMapPre[d.cusCode] = d.CusS ? String(d.CusS).toUpperCase().trim() : "N"; });
+    dbMaster.forEach(d => { if(d.cusCode) segMapPre[d.cusCode] = d.CusS ? String(d.CusS).toUpperCase().trim() : "N"; });
 
     const pre = (arr) => arr.forEach(d => {
-        d.month = String(d.month||"").trim();
+        d.month = d.month ? String(d.month).trim() : "";
         d._w = getW(d);
+        d.hq = d.hq ? String(d.hq).trim() : "";
+        d.area = d.area ? String(d.area).trim() : "Unknown Area";
         d._kam = cleanName(d.kam, true, d.area);
         d._kae = cleanName(d.kae, false, d.area);
         d._segMap = segMapPre;
     });
     pre(dbMaster); pre(dbSales);
 
+    // Kích hoạt dịch thuật và kết xuất đồ họa
     setLang('vi');
     setTimeout(() => { document.getElementById('loader-wrapper').classList.add('hidden'); }, 300);
 }
