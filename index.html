@@ -24,12 +24,9 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         
         body { 
-            margin: 0; 
-            font-family: 'Segoe UI', system-ui, sans-serif; 
-            background-color: var(--bg-main); 
-            color: var(--text-main); 
-            font-size: 13px; 
-            overflow-x: hidden; 
+            margin: 0; font-family: 'Segoe UI', system-ui, sans-serif; 
+            background-color: var(--bg-main); color: var(--text-main); 
+            font-size: 13px; overflow-x: hidden; 
         }
 
         /* =========================================================
@@ -53,14 +50,20 @@
         @keyframes pulse { 0%, 100% { opacity: 1; text-shadow: 0 0 10px rgba(168, 200, 196, 0.5); } 50% { opacity: 0.4; text-shadow: none; } }
         
         /* =========================================================
-           3. LAYOUT REPORT & COMPONENTS (FULL WIDTH)
+           3. LAYOUT REPORT & COMPONENTS
            ========================================================= */
         .main-content { padding: 30px; width: 100%; min-height: 100vh; }
         
-        /* TOP HEADER: Tiêu đề + Bộ lọc ngang */
-        .top-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; margin-bottom: 25px; gap: 20px; flex-wrap: wrap; }
-        .exec-title h1 { margin: 0; font-size: 22px; font-weight: 800; color: var(--primary); text-transform: uppercase; }
+        /* TOP HEADER: Tiêu đề + Song ngữ + Bộ lọc ngang */
+        .top-header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; margin-bottom: 25px; gap: 20px; flex-wrap: wrap; }
+        
+        .header-left { display: flex; align-items: flex-start; gap: 25px; flex-wrap: wrap; }
+        .exec-title h1 { margin: 0; font-size: 22px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
         .exec-title p { margin: 6px 0 0 0; color: var(--secondary); font-size: 12px; font-weight: 600; }
+
+        .lang-toggle { display: flex; gap: 6px; padding-top: 2px; }
+        .lang-toggle button { border: 1px solid var(--primary); background: transparent; color: var(--primary); padding: 5px 12px; font-size: 11px; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.2s; outline: none; }
+        .lang-toggle button.active { background: var(--primary); color: var(--bg-main); box-shadow: 0 0 8px rgba(168, 200, 196, 0.4); }
 
         .top-filters-horizontal { display: flex; gap: 15px; align-items: center; flex-wrap: wrap;}
         .filter-item-hz { display: flex; flex-direction: column; gap: 6px; min-width: 140px; }
@@ -75,7 +78,7 @@
         .ms-opt:hover { background: var(--secondary); color: var(--text-main); }
         .ms-opt.selected { background: var(--primary); color: var(--bg-main); font-weight: bold; }
 
-        /* THE PULSE CONTAINER (KPIs + TREE DIAGRAM) */
+        /* THE PULSE CONTAINER */
         .section-tag { display: inline-block; padding: 4px 10px; background: rgba(168, 200, 196, 0.1); border: 1px solid var(--secondary); color: var(--primary); font-size: 11px; font-weight: bold; border-radius: 4px; margin-bottom: 15px; letter-spacing: 1px; }
         
         .pulse-container { display: grid; grid-template-columns: 2fr 1.2fr; gap: 20px; margin-bottom: 35px; }
@@ -134,6 +137,7 @@
         }
 
         @media screen and (max-width: 768px) {
+            .top-header { flex-direction: column; align-items: flex-start; }
             .kpi-grid { grid-template-columns: 1fr 1fr; }
             .label-cell, .seg-area-cell, .seg-name-cell { position: relative; left: auto; z-index: 1; border-right: none !important; }
         }
@@ -149,88 +153,94 @@
 <main class="main-content">
     
     <header class="top-header">
-        <div class="exec-title">
-            <h1>RTM STRATEGIC DASHBOARD</h1>
-            <p id="sub-sys">Đánh giá Hiệu quả Phân phối, Thực thi Tuyến & Phân khúc Sức mua</p>
+        <div class="header-left">
+            <div class="exec-title">
+                <h1 data-i18n="mainTitle">RTM STRATEGIC DASHBOARD</h1>
+                <p data-i18n="subTitle">Đánh giá Hiệu quả Phân phối, Thực thi Tuyến & Phân khúc Sức mua</p>
+            </div>
+            <div class="lang-toggle">
+                <button id="btn-vi" onclick="setLang('vi')" class="active">VI</button>
+                <button id="btn-en" onclick="setLang('en')">EN</button>
+            </div>
         </div>
         
         <div class="top-filters-horizontal">
-            <div class="filter-item-hz"><label>Tháng</label><div class="ms-box" onclick="toggleMS('month')"><div class="ms-label" id="lbl-month">Tất cả</div><div class="ms-dropdown" id="drop-month"></div></div></div>
-            <div class="filter-item-hz"><label>Tuần</label><div class="ms-box" onclick="toggleMS('week')"><div class="ms-label" id="lbl-week">Tất cả</div><div class="ms-dropdown" id="drop-week"></div></div></div>
-            <div class="filter-item-hz"><label>Miền</label><div class="ms-box" onclick="toggleMS('hq')"><div class="ms-label" id="lbl-hq">Tất cả</div><div class="ms-dropdown" id="drop-hq"></div></div></div>
-            <div class="filter-item-hz"><label>Khu vực</label><div class="ms-box" onclick="toggleMS('area')"><div class="ms-label" id="lbl-area">Tất cả</div><div class="ms-dropdown" id="drop-area"></div></div></div>
+            <div class="filter-item-hz"><label data-i18n="lblMonth">Tháng</label><div class="ms-box" onclick="toggleMS('month')"><div class="ms-label" id="lbl-month">Tất cả</div><div class="ms-dropdown" id="drop-month"></div></div></div>
+            <div class="filter-item-hz"><label data-i18n="lblWeek">Tuần</label><div class="ms-box" onclick="toggleMS('week')"><div class="ms-label" id="lbl-week">Tất cả</div><div class="ms-dropdown" id="drop-week"></div></div></div>
+            <div class="filter-item-hz"><label data-i18n="lblRegion">Miền</label><div class="ms-box" onclick="toggleMS('hq')"><div class="ms-label" id="lbl-hq">Tất cả</div><div class="ms-dropdown" id="drop-hq"></div></div></div>
+            <div class="filter-item-hz"><label data-i18n="lblArea">Khu vực</label><div class="ms-box" onclick="toggleMS('area')"><div class="ms-label" id="lbl-area">Tất cả</div><div class="ms-dropdown" id="drop-area"></div></div></div>
         </div>
     </header>
 
-    <div class="section-tag">THE PULSE (CHỈ SỐ SINH TỬ)</div>
+    <div class="section-tag" data-i18n="secPulse">CHỈ SỐ SINH TỬ</div>
     
     <div class="pulse-container">
         <div class="kpi-grid">
             <div class="kpi-card md-focus">
-                <div class="label">TỔNG SELL-OUT (MD VIEW)</div>
+                <div class="label" data-i18n="kpiSalesLbl">TỔNG SELL-OUT</div>
                 <div class="value" id="val-sales">0</div>
-                <div class="sub"><span>VNĐ (Chưa VAT)</span> <span style="color:var(--text-muted)">Volume Flow</span></div>
+                <div class="sub"><span data-i18n="kpiSalesSub1">VNĐ (Chưa VAT)</span> <span style="color:var(--text-muted)" data-i18n="kpiSalesSub2">Dòng tiền</span></div>
             </div>
             <div class="kpi-card">
-                <div class="label">ĐỘ PHỦ SỐNG (ACTIVE OUTLETS)</div>
+                <div class="label" data-i18n="kpiActiveLbl">ĐỘ PHỦ SỐNG</div>
                 <div class="value" id="val-strike">0</div>
-                <div class="sub"><span>Cửa hàng đã lên đơn</span> <span style="color:var(--text-muted)">/ <span id="val-cust">0</span> (MCP Plan)</span></div>
+                <div class="sub"><span data-i18n="kpiActiveSub1">Cửa hàng đã lên đơn</span> <span style="color:var(--text-muted)">/ <span id="val-cust">0</span> <span data-i18n="kpiActiveSub2">Kế hoạch</span></span></div>
             </div>
             <div class="kpi-card">
-                <div class="label">STRIKE RATE (TỶ LỆ CHỐT ĐƠN)</div>
+                <div class="label" data-i18n="kpiStrikeLbl">STRIKE RATE</div>
                 <div class="value" id="val-strike-rate">0%</div>
-                <div class="sub"><span>SFE: Active / MCP Plan</span></div>
+                <div class="sub"><span data-i18n="kpiStrikeSub">Tỷ lệ chốt đơn</span></div>
             </div>
             <div class="kpi-card">
-                <div class="label">DROP SIZE (GIÁ TRỊ ĐƠN)</div>
+                <div class="label" data-i18n="kpiDropLbl">DROP SIZE</div>
                 <div class="value" id="val-drop-size">0</div>
-                <div class="sub"><span>VNĐ / Cửa hàng</span> <span style="color:var(--accent-warning)">LPPC: <span id="val-lppc">0</span> SKU</span></div>
+                <div class="sub"><span data-i18n="kpiDropSub1">VNĐ / Cửa hàng</span> <span style="color:var(--accent-warning)">LPPC: <span id="val-lppc">0</span> <span data-i18n="kpiDropSub2">Sản phẩm</span></span></div>
             </div>
         </div>
 
         <div class="tree-box">
-            <h3>SƠ ĐỒ NHÂN SỰ & DOANH SỐ (KAM -> KAE)</h3>
-            <div class="tree-content" id="tree-container">
-                </div>
+            <h3 data-i18n="treeTitle">SƠ ĐỒ NHÂN SỰ & DOANH SỐ</h3>
+            <div class="tree-content" id="tree-container"></div>
         </div>
     </div>
 
-    <div class="section-tag">PHẦN 1: TỔNG QUAN CHIẾN LƯỢC RTM & SỨC MUA (MD VIEW)</div>
+    <div class="section-tag" data-i18n="secP1">PHẦN 1: TỔNG QUAN CHIẾN LƯỢC RTM & SỨC MUA</div>
     
     <div class="chart-box">
-        <div class="chart-title">HIỆU QUẢ SELL-OUT THEO KHU VỰC (AREA PERFORMANCE & RISK)</div>
-        <div class="chart-subtitle">Đánh giá Vùng nào đang đóng góp chính, Vùng nào có rủi ro sụt giảm cần cảnh báo</div>
+        <div class="chart-title" data-i18n="cAreaTitle">HIỆU QUẢ SELL-OUT THEO KHU VỰC</div>
+        <div class="chart-subtitle" data-i18n="cAreaSub">Đánh giá Vùng nào đang đóng góp chính, Vùng nào có rủi ro sụt giảm cần cảnh báo</div>
         <div style="height: 380px;"><canvas id="areaChart"></canvas></div>
         <div class="table-wrap"><table class="data-table"><thead><tr id="areaHeaderRow"></tr></thead><tbody id="areaTableBody"></tbody></table></div>
     </div>
 
     <div class="chart-box">
-        <div class="chart-title">TỐC ĐỘ LUÂN CHUYỂN HÀNG HÓA THEO TUẦN (VELOCITY & TREND)</div>
-        <div class="chart-subtitle">Theo dõi chu kỳ biến động doanh số để đánh giá sức hấp thụ của thị trường</div>
+        <div class="chart-title" data-i18n="cWeekTitle">TỐC ĐỘ LUÂN CHUYỂN HÀNG HÓA THEO TUẦN</div>
+        <div class="chart-subtitle" data-i18n="cWeekSub">Theo dõi chu kỳ biến động doanh số để đánh giá sức hấp thụ của thị trường</div>
         <div style="height: 380px;"><canvas id="weekChart"></canvas></div>
+        <div class="table-wrap"><table class="data-table"><thead><tr id="weekHeaderRow"></tr></thead><tbody id="weekTableBody"></tbody></table></div>
     </div>
 
-    <div class="section-tag">PHẦN 2: CHỈ SỐ THỰC THI THỊ TRƯỜNG & SFE (SALES DIR VIEW)</div>
+    <div class="section-tag" data-i18n="secP2">PHẦN 2: CHỈ SỐ THỰC THI THỊ TRƯỜNG & SFE</div>
 
     <div class="chart-box">
-        <div class="chart-title">TOP 10 NĂNG SUẤT QUẢN LÝ VÙNG (KAM SFE SCORECARD)</div>
-        <div class="chart-subtitle">Đánh giá năng lực điều phối tuyến và chất lượng đơn hàng (Drop Size & LPPC) của Quản lý</div>
+        <div class="chart-title" data-i18n="cKamTitle">TOP 10 NĂNG SUẤT QUẢN LÝ VÙNG</div>
+        <div class="chart-subtitle" data-i18n="cKamSub">Đánh giá năng lực điều phối tuyến và chất lượng đơn hàng (Drop Size & LPPC) của Quản lý</div>
         <div style="height: 350px;"><canvas id="kamChart"></canvas></div>
         <div class="table-wrap"><table class="data-table"><thead><tr id="kamHeaderRow"></tr></thead><tbody id="kamTableBody"></tbody></table></div>
     </div>
 
     <div class="chart-box">
-        <div class="chart-title">TOP 10 NĂNG SUẤT SALES REP (KAE EXECUTION)</div>
-        <div class="chart-subtitle">Đã loại bỏ các số liệu do KAM trực tiếp bán. Tập trung soi Strike Rate & LPPC của đội ngũ Salesman</div>
+        <div class="chart-title" data-i18n="cKaeTitle">TOP 10 NĂNG SUẤT SALESMAN</div>
+        <div class="chart-subtitle" data-i18n="cKaeSub">Đã loại bỏ các số liệu do Quản lý trực tiếp bán. Tập trung soi Strike Rate & LPPC của đội ngũ Salesman</div>
         <div style="height: 350px;"><canvas id="dayChart"></canvas></div>
         <div class="table-wrap"><table class="data-table"><thead><tr id="dayHeaderRow"></tr></thead><tbody id="dayTableBody"></tbody></table></div>
     </div>
 
-    <div class="section-tag">PHẦN 3: ĐỘ PHỦ & CHIẾN LƯỢC ĐIỂM BÁN (CDM VIEW)</div>
+    <div class="section-tag" data-i18n="secP3">PHẦN 3: ĐỘ PHỦ & CHIẾN LƯỢC ĐIỂM BÁN</div>
 
     <div class="chart-box">
-        <div class="chart-title">PHÂN TÍCH SỨC MUA THEO PHÂN KHÚC TẠP HÓA (OUTLET SEGMENTATION)</div>
-        <div class="chart-subtitle">Cơ cấu đóng góp của nhóm Tạp hóa Lớn, Vừa, Nhỏ để ra quyết định chạy Trade Promos</div>
+        <div class="chart-title" data-i18n="cSegTitle">PHÂN TÍCH SỨC MUA THEO PHÂN KHÚC TẠP HÓA</div>
+        <div class="chart-subtitle" data-i18n="cSegSub">Cơ cấu đóng góp của nhóm Tạp hóa Lớn, Vừa, Nhỏ để ra quyết định phân bổ ngân sách khuyến mãi</div>
         <div class="table-wrap" id="segmentAreaTableContainer"></div>
     </div>
 </main>
@@ -247,17 +257,71 @@ Chart.defaults.color = '#A0AAB5';
 Chart.defaults.borderColor = 'rgba(168, 200, 196, 0.1)';
 Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
 
-const segNames = { 'A': 'Class A (Lớn)', 'B': 'Class B (Vừa)', 'C': 'Class C (Nhỏ)', 'D': 'Class D (Siêu nhỏ)', 'N': 'Chưa phân loại' };
+// TỪ ĐIỂN SONG NGỮ (ĐÃ LÀM SẠCH TIẾNG ANH TRONG BẢN VIỆT)
+const dict = {
+    vi: {
+        mainTitle: "RTM STRATEGIC DASHBOARD",
+        subTitle: "Đánh giá Hiệu quả Phân phối, Thực thi Tuyến & Phân khúc Sức mua",
+        lblMonth: "Tháng", lblWeek: "Tuần", lblRegion: "Miền", lblArea: "Khu vực", lblAll: "Tất cả",
+        secPulse: "CHỈ SỐ SINH TỬ",
+        kpiSalesLbl: "TỔNG SELL-OUT", kpiSalesSub1: "VNĐ (Chưa VAT)", kpiSalesSub2: "Dòng tiền",
+        kpiActiveLbl: "ĐỘ PHỦ SỐNG", kpiActiveSub1: "Cửa hàng đã lên đơn", kpiActiveSub2: "Kế hoạch",
+        kpiStrikeLbl: "STRIKE RATE", kpiStrikeSub: "Tỷ lệ chốt đơn",
+        kpiDropLbl: "DROP SIZE", kpiDropSub1: "VNĐ / Cửa hàng", kpiDropSub2: "Sản phẩm",
+        treeTitle: "SƠ ĐỒ NHÂN SỰ & DOANH SỐ", treeKam: "Quản lý:", treeSales: "Sales:",
+        secP1: "PHẦN 1: TỔNG QUAN CHIẾN LƯỢC RTM & SỨC MUA",
+        cAreaTitle: "HIỆU QUẢ SELL-OUT THEO KHU VỰC", cAreaSub: "Đánh giá Vùng nào đang đóng góp chính, Vùng nào có rủi ro sụt giảm cần cảnh báo",
+        cWeekTitle: "TỐC ĐỘ LUÂN CHUYỂN HÀNG HÓA THEO TUẦN", cWeekSub: "Theo dõi chu kỳ biến động doanh số để đánh giá sức hấp thụ của thị trường",
+        secP2: "PHẦN 2: CHỈ SỐ THỰC THI THỊ TRƯỜNG & SFE",
+        cKamTitle: "TOP 10 NĂNG SUẤT QUẢN LÝ VÙNG", cKamSub: "Đánh giá năng lực điều phối tuyến và chất lượng đơn hàng của Quản lý",
+        cKaeTitle: "TOP 10 NĂNG SUẤT SALESMAN", cKaeSub: "Đã loại bỏ số của Quản lý. Tập trung soi Strike Rate & LPPC của đội ngũ Sales",
+        secP3: "PHẦN 3: ĐỘ PHỦ & CHIẾN LƯỢC ĐIỂM BÁN",
+        cSegTitle: "PHÂN TÍCH SỨC MUA THEO PHÂN KHÚC TẠP HÓA", cSegSub: "Cơ cấu đóng góp của nhóm tạp hóa để ra quyết định phân bổ ngân sách",
+        colArea: "KHU VỰC", colWeek: "TUẦN", colKam: "QUẢN LÝ VÙNG", colKae: "SALESMAN",
+        tbPlan: "Kế Hoạch (Cửa hàng)", tbActive: "Cửa hàng Active", tbStrike: "Strike Rate", tbSales: "Tổng Sell-Out (VNĐ)", tbDrop: "Drop Size (VNĐ/Đơn)", tbLppc: "LPPC (SKU/Đơn)",
+        sysTotal: "TỔNG TOÀN QUỐC", sysTotalSys: "TỔNG HỆ THỐNG",
+        segColClass: "PHÂN KHÚC", segTblH1: "HIỆU SUẤT ĐIỂM BÁN THEO PHÂN KHÚC",
+        axisCust: "Đơn vị: Cửa hàng", axisVnd: "Đơn vị: VNĐ", legSales: "Sell-Out (VNĐ)", legTotal: "Kế hoạch", legActive: "Active"
+    },
+    en: {
+        mainTitle: "RTM STRATEGIC DASHBOARD",
+        subTitle: "Evaluating Distribution Efficiency, Route Execution & Purchasing Power Segments",
+        lblMonth: "Month", lblWeek: "Week", lblRegion: "Region", lblArea: "Area", lblAll: "All",
+        secPulse: "THE PULSE",
+        kpiSalesLbl: "TOTAL SELL-OUT", kpiSalesSub1: "VND (Excl. VAT)", kpiSalesSub2: "Volume Flow",
+        kpiActiveLbl: "ACTIVE OUTLETS", kpiActiveSub1: "Ordered outlets", kpiActiveSub2: "MCP Plan",
+        kpiStrikeLbl: "STRIKE RATE", kpiStrikeSub: "Conversion rate",
+        kpiDropLbl: "DROP SIZE", kpiDropSub1: "VND / Outlet", kpiDropSub2: "SKUs",
+        treeTitle: "PERSONNEL & SALES TREE", treeKam: "Manager:", treeSales: "Rep:",
+        secP1: "PART 1: RTM STRATEGY & PURCHASING POWER OVERVIEW",
+        cAreaTitle: "SELL-OUT EFFICIENCY BY AREA", cAreaSub: "Evaluate main contributing areas and identify decline risks",
+        cWeekTitle: "WEEKLY GOODS VELOCITY", cWeekSub: "Track sales fluctuation cycles to assess market absorption",
+        secP2: "PART 2: MARKET EXECUTION & SFE",
+        cKamTitle: "TOP 10 AREA MANAGER SFE", cKamSub: "Evaluate routing capacity and order quality (Drop Size & LPPC) of Managers",
+        cKaeTitle: "TOP 10 SALES REP PRODUCTIVITY", cKaeSub: "Excluded Manager's direct sales. Focus on Strike Rate & LPPC of Sales team",
+        secP3: "PART 3: COVERAGE & OUTLET STRATEGY",
+        cSegTitle: "PURCHASING POWER BY OUTLET SEGMENTATION", cSegSub: "Contribution structure of outlet groups for Trade Promos budget decisions",
+        colArea: "AREA", colWeek: "WEEK", colKam: "AREA MANAGER", colKae: "SALES REP",
+        tbPlan: "MCP Plan (Outlets)", tbActive: "Active Outlets", tbStrike: "Strike Rate", tbSales: "Total Sell-Out (VND)", tbDrop: "Drop Size (VND/Active)", tbLppc: "LPPC (Avg SKU)",
+        sysTotal: "NATIONWIDE TOTAL", sysTotalSys: "SYSTEM TOTAL",
+        segColClass: "CLASS SEGMENT", segTblH1: "OUTLET PERFORMANCE BY SEGMENT",
+        axisCust: "Unit: Outlets", axisVnd: "Unit: VND", legSales: "Sell-Out (VND)", legTotal: "MCP Plan", legActive: "Active Outlets"
+    }
+};
+
+const segNames = { 'A': 'Class A', 'B': 'Class B', 'C': 'Class C', 'D': 'Class D', 'N': 'Unclassified' };
 const segColors = { 'A': '#A8C8C4', 'B': '#6D8F8B', 'C': '#ea580c', 'D': '#dc2626', 'N': '#64748b' };
 const monthOrder = { "jan":1, "feb":2, "mar":3, "apr":4, "may":5, "jun":6, "jul":7, "aug":8, "sep":9, "oct":10, "nov":11, "dec":12 };
 
-let filters = { month: [], week: [], hq: [], area: [] }; // Loại bỏ KAM, KAE filter
+let lang = 'vi';
+let filters = { month: [], week: [], hq: [], area: [] }; 
 let charts = {};
 let dbMaster = []; let dbSales = [];
 
+const t = (key) => dict[lang][key] || key;
 const fmt = (n) => new Intl.NumberFormat('en-US').format(Math.round(n || 0));
 const getW = (d) => String(d.week || d.Week || "").toUpperCase().trim();
-const formatWM = (w, m) => { if (!m) return w; let mNum = monthOrder[m.toLowerCase()] || m; return `${w} T${mNum}`; };
+const formatWM = (w, m) => { if (!m) return w; let mNum = monthOrder[m.toLowerCase()] || m; return lang === 'vi' ? `${w} T${mNum}` : `${w} M${mNum}`; };
 
 const cleanName = (name, isKamField = false, areaName = "") => {
     let cleanStr = String(name || "").replace(/[✔️❌]/g, '').trim();
@@ -272,138 +336,298 @@ const cleanName = (name, isKamField = false, areaName = "") => {
     return cleanStr;
 };
 
-const aggregateDualData = (masterSubset, salesSubset) => {
-    let masterSet = new Set();
-    masterSubset.forEach(d => { if (d.cusCode) masterSet.add(d.cusCode); });
-    let totalC = masterSet.size;
-
-    let sales = 0, skuLines = 0, invoiceCount = 0;
-    let salesSet = new Set();
+// ======================== TẦNG UI & BỘ LỌC ========================
+function setLang(newLang) {
+    lang = newLang; 
+    document.getElementById('btn-vi').className = lang === 'vi' ? 'active' : ''; 
+    document.getElementById('btn-en').className = lang === 'en' ? 'active' : '';
     
-    salesSubset.forEach(d => {
-        let currentSales = Number(d.sales) || 0;
-        sales += currentSales; 
-        if (currentSales > 0) {
-            skuLines += (Number(d.skuLines) || 0);
-            invoiceCount++;
-            if (d.cusCode) salesSet.add(d.cusCode);
-        }
+    // Quét toàn bộ thẻ có data-i18n và thay text
+    document.querySelectorAll('[data-i18n]').forEach(el => { 
+        el.innerText = t(el.getAttribute('data-i18n')); 
     });
-
-    let activeC = salesSet.size;
-    let avgSku = invoiceCount > 0 ? (skuLines / invoiceCount) : 0;
-    return { s: sales, tc: totalC, ac: activeC, avgSku: avgSku };
-};
-
-// ======================== TẦNG UI ========================
-function renderTreeDiagram(mSub, sSub) {
-    let treeMap = {};
     
-    // Thu thập danh sách KAM/KAE từ file Master & Sales
-    let allItems = [...mSub, ...sSub];
-    allItems.forEach(d => {
-        let kamRaw = cleanName(d.kam, true, d.area) || "UNKNOWN KAM";
-        let kaeRaw = cleanName(d.kae) || "UNKNOWN KAE";
-
-        if (!treeMap[kamRaw]) treeMap[kamRaw] = { sales: 0, kaes: {} };
-        if (!treeMap[kamRaw].kaes[kaeRaw]) treeMap[kamRaw].kaes[kaeRaw] = { sales: 0 };
-    });
-
-    // Tính toán doanh số
-    sSub.forEach(d => {
-        let kamRaw = cleanName(d.kam, true, d.area) || "UNKNOWN KAM";
-        let kaeRaw = cleanName(d.kae) || "UNKNOWN KAE";
-        let val = Number(d.sales) || 0;
-        
-        treeMap[kamRaw].sales += val;
-        treeMap[kamRaw].kaes[kaeRaw].sales += val;
-    });
-
-    // Render HTML Tree
-    let html = '';
-    let sortedKams = Object.keys(treeMap).sort((a,b) => treeMap[b].sales - treeMap[a].sales);
-    
-    sortedKams.forEach(kam => {
-        let kData = treeMap[kam];
-        html += `<details class="tree-node"><summary><span class="t-name">Quản lý: ${kam}</span><span class="t-val">${fmt(kData.sales)}</span></summary><div class="t-children">`;
-
-        let sortedKaes = Object.keys(kData.kaes).sort((a,b) => kData.kaes[b].sales - kData.kaes[a].sales);
-        sortedKaes.forEach(kae => {
-            let kaeSales = kData.kaes[kae].sales;
-            html += `<div class="t-leaf"><span class="t-name">Sales: ${kae}</span><span class="t-val">${fmt(kaeSales)}</span></div>`;
-        });
-        html += `</div></details>`;
-    });
-
-    if(html === '') html = '<div style="color:var(--text-muted); font-style:italic;">Không có dữ liệu nhân sự</div>';
-    document.getElementById('tree-container').innerHTML = html;
+    renderFilters(); 
+    render();
 }
 
-function renderSegmentTable(masterSubset, salesSubset) {
-    let cusSegmentMap = {}; let uniqueMasterCus = new Set();
-    masterSubset.forEach(d => { if (d.cusCode) { cusSegmentMap[d.cusCode] = d.CusS ? String(d.CusS).toUpperCase().trim() : "N"; uniqueMasterCus.add(d.cusCode); } });
+function toggleMS(id) {
+    let drop = document.getElementById('drop-'+id);
+    document.querySelectorAll('.ms-dropdown').forEach(d => { if(d !== drop) d.style.display = 'none'; });
+    drop.style.display = drop.style.display === 'block' ? 'none' : 'block';
+}
 
-    let matrix = {};
-    masterSubset.forEach(d => {
-        let area = d.area || "Unknown Area"; let code = d.cusCode; let seg = cusSegmentMap[code] || "N";
-        if (!matrix[area]) matrix[area] = {};
-        if (!matrix[area][seg]) matrix[area][seg] = { planSet: new Set(), activeSet: new Set(), salesSum: 0 };
-        if (code) matrix[area][seg].planSet.add(code);
+document.addEventListener('click', e => { 
+    if(!e.target.closest('.ms-box')) document.querySelectorAll('.ms-dropdown').forEach(d => d.style.display = 'none'); 
+});
+
+function updateF(type, val) { 
+    const loader = document.getElementById('loader-wrapper');
+    loader.classList.remove('hidden');
+
+    setTimeout(() => {
+        if (val === 'all') { 
+            filters[type] = []; 
+            if (type === 'month') filters.week = [];
+            if (type === 'hq') filters.area = []; 
+        } else {
+            let idx = filters[type].indexOf(val);
+            if (idx > -1) filters[type].splice(idx, 1); 
+            else filters[type].push(val); 
+        }
+        renderFilters(); 
+        render(); 
+        loader.classList.add('hidden');
+    }, 50);
+}
+
+function populateDropdown(id, type, optionsArr) {
+    let drop = document.getElementById('drop-' + id); let lbl = document.getElementById('lbl-' + id);
+    if (filters[type].length === 0) lbl.innerText = t('lblAll');
+    else if (filters[type].length === 1) lbl.innerText = filters[type][0];
+    else lbl.innerText = filters[type].length + ' selected';
+    let htmlStr = `<div class="ms-opt ${filters[type].length === 0 ? 'selected' : ''}" onclick="updateF('${type}', 'all')">${t('lblAll')}</div>`;
+    optionsArr.forEach(opt => { let isSel = filters[type].includes(opt) ? 'selected' : ''; htmlStr += `<div class="ms-opt ${isSel}" onclick="updateF('${type}', '${opt}')">${opt}</div>`; });
+    drop.innerHTML = htmlStr;
+}
+
+function renderFilters() {
+    let allData = [...dbMaster, ...dbSales];
+    populateDropdown('month', 'month', [...new Set(allData.map(d => d.month))].filter(Boolean).sort((a,b) => (monthOrder[a.toLowerCase()]||99) - (monthOrder[b.toLowerCase()]||99)));
+    populateDropdown('week', 'week', [...new Set(allData.map(d => d._w))].filter(Boolean).sort());
+    populateDropdown('hq', 'hq', [...new Set(allData.map(d=>d.hq))].filter(Boolean).sort());
+    populateDropdown('area', 'area', [...new Set(allData.filter(d => filters.hq.length === 0 || filters.hq.includes(d.hq)).map(d=>d.area))].filter(Boolean).sort());
+}
+
+// ======================== ENGINE RENDER ========================
+function render() {
+    if (dbMaster.length === 0 && dbSales.length === 0) return; 
+
+    const baseMaster = [];
+    for (let i = 0; i < dbMaster.length; i++) {
+        let d = dbMaster[i];
+        if ((filters.month.length === 0 || filters.month.includes(d.month)) && 
+            (filters.week.length === 0 || filters.week.includes(d._w)) && 
+            (filters.hq.length === 0 || filters.hq.includes(d.hq)) && 
+            (filters.area.length === 0 || filters.area.includes(d.area))) {
+            baseMaster.push(d);
+        }
+    }
+
+    const baseSales = [];
+    for (let i = 0; i < dbSales.length; i++) {
+        let d = dbSales[i];
+        if ((filters.month.length === 0 || filters.month.includes(d.month)) && 
+            (filters.week.length === 0 || filters.week.includes(d._w)) && 
+            (filters.hq.length === 0 || filters.hq.includes(d.hq)) && 
+            (filters.area.length === 0 || filters.area.includes(d.area))) {
+            baseSales.push(d);
+        }
+    }
+
+    let sys = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
+    let areaMap = {};
+    let kamMap = {};
+    let kaeMap = {};
+    let weekMap = {};
+    let treeMap = {};
+    let cusSegmentMap = {}; 
+    let segMap = {};
+
+    for(let i=0; i<baseMaster.length; i++) {
+        let d = baseMaster[i];
+        let cus = d.cusCode;
+        if(!cus) continue;
+
+        sys.p.add(cus);
+        
+        let a = d.area || "Unknown Area";
+        if(!areaMap[a]) areaMap[a] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
+        areaMap[a].p.add(cus);
+
+        let kam = d._kam;
+        if(kam) {
+            if(!kamMap[kam]) kamMap[kam] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
+            kamMap[kam].p.add(cus);
+        }
+
+        let kae = d._kae;
+        if(kae && !kae.toUpperCase().startsWith('KAM')) {
+            if(!kaeMap[kae]) kaeMap[kae] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
+            kaeMap[kae].p.add(cus);
+        }
+
+        let w = d._w; let m = d.month;
+        if (w) {
+            let wk = w + '|' + m;
+            if (!weekMap[wk]) weekMap[wk] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0, w: w, m: m };
+            weekMap[wk].p.add(cus);
+        }
+
+        let seg = d.CusS ? String(d.CusS).toUpperCase().trim() : "N";
+        cusSegmentMap[cus] = seg;
+        let segKey = a + '|' + seg;
+        if(!segMap[segKey]) segMap[segKey] = { p: new Set(), a: new Set(), s: 0 };
+        segMap[segKey].p.add(cus);
+    }
+
+    for(let i=0; i<baseSales.length; i++) {
+        let d = baseSales[i];
+        let cus = d.cusCode;
+        let v = Number(d.sales) || 0;
+        let skus = Number(d.skuLines) || 0;
+        
+        sys.s += v;
+        if(v > 0 && cus) { sys.a.add(cus); sys.skus += skus; sys.invs++; }
+
+        let a = d.area || "Unknown Area";
+        if(!areaMap[a]) areaMap[a] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
+        areaMap[a].s += v;
+        if(v > 0 && cus) { areaMap[a].a.add(cus); areaMap[a].skus += skus; areaMap[a].invs++; }
+
+        let kam = d._kam;
+        if(kam) {
+            if(!kamMap[kam]) kamMap[kam] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
+            kamMap[kam].s += v;
+            if(v > 0 && cus) { kamMap[kam].a.add(cus); kamMap[kam].skus += skus; kamMap[kam].invs++; }
+        }
+
+        let kae = d._kae;
+        if(kae && !kae.toUpperCase().startsWith('KAM')) {
+            if(!kaeMap[kae]) kaeMap[kae] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
+            kaeMap[kae].s += v;
+            if(v > 0 && cus) { kaeMap[kae].a.add(cus); kaeMap[kae].skus += skus; kaeMap[kae].invs++; }
+        }
+
+        if(kam && kae) {
+            if (!treeMap[kam]) treeMap[kam] = { sales: 0, kaes: {} };
+            if (!treeMap[kam].kaes[kae]) treeMap[kam].kaes[kae] = { sales: 0 };
+            treeMap[kam].sales += v;
+            treeMap[kam].kaes[kae].sales += v;
+        }
+
+        let w = d._w; let m = d.month;
+        if (w) {
+            let wk = w + '|' + m;
+            if (!weekMap[wk]) weekMap[wk] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0, w: w, m: m };
+            weekMap[wk].s += v;
+            if (v > 0 && cus) { weekMap[wk].a.add(cus); weekMap[wk].skus += skus; weekMap[wk].invs++; }
+        }
+
+        let seg = cusSegmentMap[cus] || "N";
+        let segKey = a + '|' + seg;
+        if(!segMap[segKey]) segMap[segKey] = { p: new Set(), a: new Set(), s: 0 };
+        segMap[segKey].s += v;
+        if(v > 0 && cus) { segMap[segKey].a.add(cus); }
+    }
+
+    // 1. UPDATE THE PULSE KPIs
+    let sysAc = sys.a.size; let sysTc = sys.p.size;
+    let sysKpiObj = { tc: sysTc, ac: sysAc, s: sys.s, avgSku: sys.invs > 0 ? sys.skus/sys.invs : 0 };
+    document.getElementById("val-sales").innerText = fmt(sys.s);
+    document.getElementById("val-cust").innerText = fmt(sysTc);
+    document.getElementById("val-strike").innerText = fmt(sysAc);
+    document.getElementById("val-strike-rate").innerText = (sysTc > 0 ? (sysAc/sysTc*100).toFixed(1) : 0) + "%";
+    document.getElementById("val-drop-size").innerText = (sysAc > 0 ? fmt(sys.s / sysAc) : 0);
+    document.getElementById("val-lppc").innerText = sysKpiObj.avgSku.toFixed(1);
+
+    // 2. MD VIEW: AREA CHART
+    let areaData = Object.keys(areaMap).map(k => {
+        let st = areaMap[k];
+        return { label: k, tc: st.p.size, ac: st.a.size, s: st.s, avgSku: st.invs > 0 ? st.skus/st.invs : 0 };
+    }).sort((a,b) => b.s - a.s);
+    drawChart('areaChart', areaData, 'label');
+    drawTable('areaHeaderRow', 'areaTableBody', areaData, t('colArea'), 'label', true, { label: t('sysTotal'), ...sysKpiObj });
+
+    // 3. MD VIEW: TREND CHART (Kèm bảng số liệu tuần theo yêu cầu)
+    let weekData = Object.keys(weekMap).map(k => {
+        let st = weekMap[k];
+        return { label: formatWM(st.w, st.m), tc: st.p.size, ac: st.a.size, s: st.s, avgSku: st.invs > 0 ? st.skus/st.invs : 0, wRaw: st.w, mRaw: st.m };
+    }).sort((a, b) => { 
+        let m1 = monthOrder[a.mRaw.toLowerCase()] || 99; let m2 = monthOrder[b.mRaw.toLowerCase()] || 99; 
+        return m1 !== m2 ? m1 - m2 : a.wRaw.localeCompare(b.wRaw); 
     });
+    drawChart('weekChart', weekData, 'label');
+    drawTable('weekHeaderRow', 'weekTableBody', weekData, t('colWeek'), 'label', true, { label: t('sysTotal'), ...sysKpiObj });
 
-    salesSubset.forEach(d => {
-        let area = d.area || "Unknown Area"; let code = d.cusCode; if (!code) return; let seg = cusSegmentMap[code] || "N";
-        if (!matrix[area]) matrix[area] = {};
-        if (!matrix[area][seg]) matrix[area][seg] = { planSet: new Set(), activeSet: new Set(), salesSum: 0 };
-        let currentSales = Number(d.sales) || 0; matrix[area][seg].salesSum += currentSales;
-        if (currentSales > 0) matrix[area][seg].activeSet.add(code);
+    // 4. SD VIEW: TOP KAM / KAE SFE
+    let kamData = Object.keys(kamMap).map(k => {
+        let st = kamMap[k]; return { label: k, tc: st.p.size, ac: st.a.size, s: st.s, avgSku: st.invs > 0 ? st.skus/st.invs : 0 };
+    }).sort((a,b) => b.s - a.s).slice(0, 10);
+    drawChart('kamChart', kamData, 'label');
+    drawTable('kamHeaderRow', 'kamTableBody', kamData, t('colKam'), 'label', true, { 'label': t('sysTotalSys'), ...sysKpiObj }); 
+
+    let kaeData = Object.keys(kaeMap).map(k => {
+        let st = kaeMap[k]; return { label: k, tc: st.p.size, ac: st.a.size, s: st.s, avgSku: st.invs > 0 ? st.skus/st.invs : 0 };
+    }).sort((a,b) => b.s - a.s).slice(0, 10);
+    drawChart('dayChart', kaeData, 'label');
+    drawTable('dayHeaderRow', 'dayTableBody', kaeData, t('colKae'), 'label', true, { 'label': t('sysTotalSys'), ...sysKpiObj }); 
+
+    // 5. TREE DIAGRAM
+    let treeHtml = '';
+    let sortedKams = Object.keys(treeMap).sort((a,b) => treeMap[b].sales - treeMap[a].sales);
+    sortedKams.forEach(kam => {
+        let kData = treeMap[kam];
+        treeHtml += `<details class="tree-node"><summary><span class="t-name">${t('treeKam')} ${kam}</span><span class="t-val">${fmt(kData.sales)}</span></summary><div class="t-children">`;
+        let sortedKaes = Object.keys(kData.kaes).sort((a,b) => kData.kaes[b].sales - kData.kaes[a].sales);
+        sortedKaes.forEach(kae => {
+            treeHtml += `<div class="t-leaf"><span class="t-name">${t('treeSales')} ${kae}</span><span class="t-val">${fmt(kData.kaes[kae].sales)}</span></div>`;
+        });
+        treeHtml += `</div></details>`;
     });
+    document.getElementById('tree-container').innerHTML = treeHtml || '<div style="color:var(--text-muted); font-style:italic;">No data</div>';
 
+    // 6. CDM VIEW: SEGMENTATION
     let segList = ['A', 'B', 'C', 'D', 'N'];
-    let html = `<table class="segment-table"><thead><tr><th rowspan="2" style="width:20%;">KHU VỰC (AREA)</th><th rowspan="2" style="width:25%;">PHÂN KHÚC (CLASS)</th><th colspan="5" style="padding:4px;">HIỆU SUẤT ĐIỂM BÁN THEO PHÂN KHÚC</th></tr><tr><th style="width:11%;">MCP Plan (Cửa hàng)</th><th style="width:11%;">Active Outlets</th><th style="width:11%;">Strike Rate</th><th style="width:11%;">Sell-Out (VNĐ)</th><th style="width:11%;">Drop Size (VNĐ/Đơn)</th></tr></thead><tbody>`;
+    let htmlSeg = `<table class="segment-table"><thead><tr><th rowspan="2" style="width:20%;">${t('colArea')}</th><th rowspan="2" style="width:25%;">${t('segColClass')}</th><th colspan="5" style="padding:4px;">${t('segTblH1')}</th></tr><tr><th style="width:11%;">${t('tbPlan')}</th><th style="width:11%;">${t('tbActive')}</th><th style="width:11%;">${t('tbStrike')}</th><th style="width:11%;">${t('tbSales')}</th><th style="width:11%;">${t('tbDrop')}</th></tr></thead><tbody>`;
 
-    let sortedAreas = Object.keys(matrix).sort();
+    let sortedAreas = Object.keys(areaMap).sort();
     sortedAreas.forEach(area => {
         let isFirst = true; let areaPlanCount = 0; let areaActCount = 0; let areaSalesSum = 0;
-        segList.forEach(seg => { let data = matrix[area][seg] || { planSet: new Set(), activeSet: new Set(), salesSum: 0 }; areaPlanCount += data.planSet.size; areaActCount += data.activeSet.size; areaSalesSum += data.salesSum; });
+        
+        segList.forEach(seg => {
+            let key = area + '|' + seg;
+            let data = segMap[key] || { p: new Set(), a: new Set(), s: 0 };
+            areaPlanCount += data.p.size; areaActCount += data.a.size; areaSalesSum += data.s;
+        });
 
         segList.forEach(seg => {
-            let data = matrix[area][seg] || { planSet: new Set(), activeSet: new Set(), salesSum: 0 };
-            let planCount = data.planSet.size; let actCount = data.activeSet.size;
-            let sr = planCount > 0 ? ((actCount / planCount) * 100).toFixed(1) + '%' : '0.0%';
-            let avg = actCount > 0 ? Math.round(data.salesSum / actCount) : 0;
-            html += `<tr>`;
-            if (isFirst) { html += `<td rowspan="6" class="seg-area-cell">${area}</td>`; isFirst = false; }
-            html += `<td class="seg-name-cell">${segNames[seg]}</td><td>${fmt(planCount)}</td><td style="color:var(--primary); font-weight:bold;">${fmt(actCount)}</td><td style="font-weight:bold;">${sr}</td><td style="text-align:right;">${fmt(data.salesSum)}</td><td style="text-align:right; color:var(--primary); font-weight:600;">${fmt(avg)}</td></tr>`;
+            let key = area + '|' + seg;
+            let data = segMap[key] || { p: new Set(), a: new Set(), s: 0 };
+            let pSize = data.p.size; let aSize = data.a.size;
+            let sr = pSize > 0 ? ((aSize / pSize) * 100).toFixed(1) + '%' : '0.0%';
+            let avg = aSize > 0 ? Math.round(data.s / aSize) : 0;
+            htmlSeg += `<tr>`;
+            if (isFirst) { htmlSeg += `<td rowspan="6" class="seg-area-cell">${area}</td>`; isFirst = false; }
+            htmlSeg += `<td class="seg-name-cell">${segNames[seg]}</td><td>${fmt(pSize)}</td><td style="color:var(--primary); font-weight:bold;">${fmt(aSize)}</td><td style="font-weight:bold;">${sr}</td><td style="text-align:right;">${fmt(data.s)}</td><td style="text-align:right; color:var(--primary); font-weight:600;">${fmt(avg)}</td></tr>`;
         });
 
         let areaSr = areaPlanCount > 0 ? ((areaActCount / areaPlanCount) * 100).toFixed(1) + '%' : '0.0%';
         let areaAvg = areaActCount > 0 ? Math.round(areaSalesSum / areaActCount) : 0;
-
-        html += `<tr style="background-color: var(--bg-card); font-weight: bold; border-top: 2px solid var(--secondary);"><td class="seg-name-cell" style="color: var(--text-main);">TỔNG CỘNG</td><td>${fmt(areaPlanCount)}</td><td style="color:var(--primary);">${fmt(areaActCount)}</td><td style="color:var(--text-main);">${areaSr}</td><td style="text-align:right; color:var(--text-main);">${fmt(areaSalesSum)}</td><td style="text-align:right; color:var(--primary);">${fmt(areaAvg)}</td></tr>`;
+        htmlSeg += `<tr style="background-color: var(--bg-card); font-weight: bold; border-top: 2px solid var(--secondary);"><td class="seg-name-cell" style="color: var(--text-main);">${t('sysTotal')}</td><td>${fmt(areaPlanCount)}</td><td style="color:var(--primary);">${fmt(areaActCount)}</td><td style="color:var(--text-main);">${areaSr}</td><td style="text-align:right; color:var(--text-main);">${fmt(areaSalesSum)}</td><td style="text-align:right; color:var(--primary);">${fmt(areaAvg)}</td></tr>`;
     });
-    html += `</tbody></table>`;
-    document.getElementById('segmentAreaTableContainer').innerHTML = html;
+    htmlSeg += `</tbody></table>`;
+    document.getElementById('segmentAreaTableContainer').innerHTML = htmlSeg;
 }
 
+// CÁC HÀM VẼ 
 function drawChart(chartId, dataArray, labelKey) {
     if(charts[chartId]) charts[chartId].destroy();
-    
     let shortLabels = dataArray.map(x => { let lbl = x[labelKey] || ""; return lbl.length > 20 ? lbl.substring(0, 18) + '...' : lbl; });
 
     charts[chartId] = new Chart(document.getElementById(chartId), {
         data: {
             labels: shortLabels,
             datasets: [
-                { type:'line', label: 'Sell-Out (VNĐ)', data: dataArray.map(x => (x.s === "-" ? null : x.s)), borderColor:'#A8C8C4', backgroundColor:'#A8C8C4', yAxisID:'yS', order: 0, tension: 0.3, pointRadius: 5 },
-                { type:'bar', label: 'MCP Plan', data: dataArray.map(x => (x.tc === "-" ? null : x.tc)), backgroundColor:'#6D8F8B', order: 1 },
-                { type:'bar', label: 'Active Outlets', data: dataArray.map(x => (x.ac === "-" ? null : x.ac)), backgroundColor:'rgba(168, 200, 196, 0.4)', order: 1 }
+                { type:'line', label: t('legSales'), data: dataArray.map(x => (x.s === "-" ? null : x.s)), borderColor:'#A8C8C4', backgroundColor:'#A8C8C4', yAxisID:'yS', order: 0, tension: 0.3, pointRadius: 5 },
+                { type:'bar', label: t('legTotal'), data: dataArray.map(x => (x.tc === "-" ? null : x.tc)), backgroundColor:'#6D8F8B', order: 1 },
+                { type:'bar', label: t('legActive'), data: dataArray.map(x => (x.ac === "-" ? null : x.ac)), backgroundColor:'rgba(168, 200, 196, 0.4)', order: 1 }
             ]
         }, options: { 
             responsive:true, maintainAspectRatio:false, layout: { padding: { top: 30 } }, 
             scales: { 
-                y: { beginAtZero: true, title: { display:true, text: 'Đơn vị: Cửa hàng', font:{weight:'bold', size:12}, align:'end', padding: { bottom: 10 } }, ticks:{ font:{size:10} }, grid: { color: 'rgba(168, 200, 196, 0.1)' } }, 
-                yS: { position:'right', grid:{drawOnChartArea:false}, beginAtZero: true, title: { display:true, text: 'Đơn vị: VNĐ', font:{weight:'bold', size:12}, align:'end', padding: { bottom: 10 } }, ticks:{ font:{size:10}, callback: (v) => fmt(v) } }, 
+                y: { beginAtZero: true, title: { display:true, text: t('axisCust'), font:{weight:'bold', size:12}, align:'end', padding: { bottom: 10 } }, ticks:{ font:{size:10} }, grid: { color: 'rgba(168, 200, 196, 0.1)' } }, 
+                yS: { position:'right', grid:{drawOnChartArea:false}, beginAtZero: true, title: { display:true, text: t('axisVnd'), font:{weight:'bold', size:12}, align:'end', padding: { bottom: 10 } }, ticks:{ font:{size:10}, callback: (v) => fmt(v) } }, 
                 x: { grid: { display: false }, ticks: { font: { weight: 'bold' } } } 
             }, 
             plugins: { legend: { position: 'bottom', labels: { boxWidth: 15, font: { size: 11 } } } } 
@@ -421,123 +645,18 @@ function drawTable(headerId, bodyId, dataArray, titleColName, labelKey, showTota
     }).join("");
     
     let rows = [
-        { l: "MCP Plan (Cửa hàng)", k: "tc", f: v => v === "-" ? "-" : fmt(v) },
-        { l: "Active Outlets", k: "ac", f: v => v === "-" ? "-" : `<b style="color: var(--primary);">${fmt(v)}</b>` },
-        { l: "Strike Rate (SFE)", k: "r", f: (_, i) => (i.tc > 0 && i.tc !== "-" && i.ac !== "-") ? `<b style="color:var(--accent-success)">${(i.ac/i.tc*100).toFixed(1)}%</b>` : '-' },
-        { l: "Tổng Sell-Out (VNĐ)", k: "s", f: v => v === "-" ? "-" : fmt(v) },
-        { l: "Drop Size (VNĐ/Active)", k: "ds", f: (_, i) => (i.ac > 0 && i.ac !== "-" && i.s !== "-") ? fmt(i.s/i.ac) : '-' },
-        { l: "LPPC (Avg SKU/Đơn)", k: "avgSku", f: v => v === "-" ? "-" : `<span style="color:var(--accent-warning); font-weight:700">${Number(v||0).toFixed(1)}</span>` }
+        { l: t('tbPlan'), k: "tc", f: v => v === "-" ? "-" : fmt(v) },
+        { l: t('tbActive'), k: "ac", f: v => v === "-" ? "-" : `<b style="color: var(--primary);">${fmt(v)}</b>` },
+        { l: t('tbStrike'), k: "r", f: (_, i) => (i.tc > 0 && i.tc !== "-" && i.ac !== "-") ? `<b style="color:var(--accent-success)">${(i.ac/i.tc*100).toFixed(1)}%</b>` : '-' },
+        { l: t('tbSales'), k: "s", f: v => v === "-" ? "-" : fmt(v) },
+        { l: t('tbDrop'), k: "ds", f: (_, i) => (i.ac > 0 && i.ac !== "-" && i.s !== "-") ? fmt(i.s/i.ac) : '-' },
+        { l: t('tbLppc'), k: "avgSku", f: v => v === "-" ? "-" : `<span style="color:var(--accent-warning); font-weight:700">${Number(v||0).toFixed(1)}</span>` }
     ];
 
     document.getElementById(bodyId).innerHTML = rows.map(r => `<tr><td class="label-cell">${r.l}</td>${renderData.map(item => { let isTotalCol = showTotal && item === renderData[renderData.length - 1]; return `<td style="${isTotalCol ? 'background: var(--secondary); font-weight: bold; color: var(--text-main);' : ''}">${r.f(item[r.k], item)}</td>`; }).join("")}</tr>`).join("");
 }
 
-// ======================== TẦNG TƯƠNG TÁC (FILTERS) ========================
-function toggleMS(id) {
-    let drop = document.getElementById('drop-'+id);
-    document.querySelectorAll('.ms-dropdown').forEach(d => { if(d !== drop) d.style.display = 'none'; });
-    drop.style.display = drop.style.display === 'block' ? 'none' : 'block';
-}
-document.addEventListener('click', e => { if(!e.target.closest('.ms-box')) document.querySelectorAll('.ms-dropdown').forEach(d => d.style.display = 'none'); });
-
-function updateF(type, val) { 
-    if (val === 'all') { 
-        filters[type] = []; 
-        if (type === 'month') filters.week = [];
-        if (type === 'hq') filters.area = []; 
-    } else {
-        let idx = filters[type].indexOf(val);
-        if (idx > -1) filters[type].splice(idx, 1); 
-        else filters[type].push(val); 
-    }
-    renderFilters(); render(); 
-}
-
-function populateDropdown(id, type, optionsArr) {
-    let drop = document.getElementById('drop-' + id); let lbl = document.getElementById('lbl-' + id);
-    if (filters[type].length === 0) lbl.innerText = "Tất cả";
-    else if (filters[type].length === 1) lbl.innerText = filters[type][0];
-    else lbl.innerText = filters[type].length + ' đã chọn';
-    let htmlStr = `<div class="ms-opt ${filters[type].length === 0 ? 'selected' : ''}" onclick="updateF('${type}', 'all')">Tất cả</div>`;
-    optionsArr.forEach(opt => { let isSel = filters[type].includes(opt) ? 'selected' : ''; htmlStr += `<div class="ms-opt ${isSel}" onclick="updateF('${type}', '${opt}')">${opt}</div>`; });
-    drop.innerHTML = htmlStr;
-}
-
-function renderFilters() {
-    let allData = [...dbMaster, ...dbSales];
-    populateDropdown('month', 'month', [...new Set(allData.map(d => d.month))].filter(Boolean).sort((a,b) => (monthOrder[a.toLowerCase()]||99) - (monthOrder[b.toLowerCase()]||99)));
-    populateDropdown('week', 'week', [...new Set(allData.map(d => getW(d)))].filter(Boolean).sort());
-    populateDropdown('hq', 'hq', [...new Set(allData.map(d=>d.hq))].filter(Boolean).sort());
-    populateDropdown('area', 'area', [...new Set(allData.filter(d => filters.hq.length === 0 || filters.hq.includes(d.hq)).map(d=>d.area))].filter(Boolean).sort());
-}
-
-// ======================== ENGINE RENDER CHÍNH ========================
-function render() {
-    if (dbMaster.length === 0 && dbSales.length === 0) return; 
-
-    const baseApplyF = d => (filters.month.length === 0 || filters.month.includes(d.month)) && 
-                            (filters.week.length === 0 || filters.week.includes(getW(d).toUpperCase())) && 
-                            (filters.hq.length === 0 || filters.hq.includes(d.hq)) && 
-                            (filters.area.length === 0 || filters.area.includes(d.area));
-    
-    const baseMaster = dbMaster.filter(baseApplyF);
-    const baseSales = dbSales.filter(baseApplyF);
-
-    // 1. UPDATE THE PULSE KPIs
-    const sysKPI = aggregateDualData(baseMaster, baseSales);
-    document.getElementById("val-sales").innerText = fmt(sysKPI.s);
-    document.getElementById("val-cust").innerText = fmt(sysKPI.tc);
-    document.getElementById("val-strike").innerText = fmt(sysKPI.ac);
-    document.getElementById("val-strike-rate").innerText = (sysKPI.tc > 0 ? (sysKPI.ac/sysKPI.tc*100).toFixed(1) : 0) + "%";
-    document.getElementById("val-drop-size").innerText = (sysKPI.ac > 0 ? fmt(sysKPI.s / sysKPI.ac) : 0);
-    document.getElementById("val-lppc").innerText = Number(sysKPI.avgSku || 0).toFixed(1);
-
-    // Render Sơ đồ cây (Tree Diagram)
-    renderTreeDiagram(baseMaster, baseSales);
-
-    // 2. MD VIEW: AREA CHART
-    const areas = [...new Set([...baseMaster.map(d=>d.area), ...baseSales.map(d=>d.area)])].filter(Boolean); 
-    const areaData = areas.map(a => ({ label: a, ...aggregateDualData(baseMaster.filter(d => d.area === a), baseSales.filter(d => d.area === a)) })).sort((a,b) => b.s - a.s); 
-    drawChart('areaChart', areaData, 'label');
-    drawTable('areaHeaderRow', 'areaTableBody', areaData, "KHU VỰC (AREA)", 'label', true, { label: "TỔNG TOÀN QUỐC", ...sysKPI });
-
-    // 3. MD VIEW: TREND CHART
-    let realWMs = Array.from(new Set([...baseMaster, ...baseSales].map(d => getW(d) ? getW(d) + '|' + d.month : null).filter(Boolean))).map(str => { let p = str.split('|'); return { w: p[0], m: p[1] }; }).sort((a, b) => { let m1 = monthOrder[a.m.toLowerCase()] || 99; let m2 = monthOrder[b.m.toLowerCase()] || 99; return m1 !== m2 ? m1 - m2 : a.w.localeCompare(b.w); });
-    const weekData = realWMs.map(item => ({ label: formatWM(item.w, item.m), ...aggregateDualData(baseMaster.filter(d => getW(d) === item.w && d.month === item.m), baseSales.filter(d => getW(d) === item.w && d.month === item.m)) }));
-    drawChart('weekChart', weekData, 'label');
-
-    // 4. SD VIEW: TOP KAM / KAE SFE
-    const getTopData = (mSub, sSub, key) => {
-        let isKam = key === 'kam';
-        let isKae = key === 'kae'; // Cờ nhận biết KAE
-
-        let rawNames = new Set([...mSub.map(d => cleanName(d[key], isKam, d.area)), ...sSub.map(d => cleanName(d[key], isKam, d.area))]);
-        
-        let dataArr = [];
-        rawNames.forEach(name => {
-            if(!name) return;
-            
-            // LUẬT LÀM SẠCH: NẾU LÀ BẢNG KAE VÀ TÊN BẮT ĐẦU BẰNG "KAM", LOẠI BỎ NGAY LẬP TỨC
-            if (isKae && name.toUpperCase().startsWith('KAM')) return;
-
-            let mF = mSub.filter(d => cleanName(d[key], isKam, d.area) === name);
-            let sF = sSub.filter(d => cleanName(d[key], isKam, d.area) === name);
-            dataArr.push({ label: name, ...aggregateDualData(mF, sF) });
-        });
-
-        dataArr.sort((a,b) => b.s - a.s);
-        return dataArr.slice(0, 10);
-    };
-
-    drawChart('kamChart', getTopData(baseMaster, baseSales, 'kam'), 'label');
-    drawTable('kamHeaderRow', 'kamTableBody', getTopData(baseMaster, baseSales, 'kam'), "TOP QUẢN LÝ VÙNG", 'label', true, { 'label': "TỔNG HỆ THỐNG", ...sysKPI }); 
-    drawChart('dayChart', getTopData(baseMaster, baseSales, 'kae'), 'label');
-    drawTable('dayHeaderRow', 'dayTableBody', getTopData(baseMaster, baseSales, 'kae'), "TOP SALESMAN", 'label', true, { 'label': "TỔNG HỆ THỐNG", ...sysKPI }); 
-
-    // 5. CDM VIEW: SEGMENTATION
-    renderSegmentTable(baseMaster, baseSales);
-}
-
+// ======================== KHỞI TẠO HỆ THỐNG ========================
 function init() {
     dbMaster = []; dbSales = [];
     if (typeof dbMasterM5 !== 'undefined') dbMaster = dbMaster.concat(dbMasterM5);
@@ -546,12 +665,30 @@ function init() {
     if (typeof dbSalesM6 !== 'undefined')  dbSales  = dbSales.concat(dbSalesM6);
     if (typeof dbMasterM7 !== 'undefined') dbMaster = dbMaster.concat(dbMasterM7);
     if (typeof dbSalesM7 !== 'undefined')  dbSales  = dbSales.concat(dbSalesM7);
+    if (typeof dbMasterM8 !== 'undefined') dbMaster = dbMaster.concat(dbMasterM8);
+    if (typeof dbSalesM8 !== 'undefined')  dbSales  = dbSales.concat(dbSalesM8);
+    if (typeof dbMasterM9 !== 'undefined') dbMaster = dbMaster.concat(dbMasterM9);
+    if (typeof dbSalesM9 !== 'undefined')  dbSales  = dbSales.concat(dbSalesM9);
+    const preComputeData = (arr) => { 
+        arr.forEach(d => { 
+            if (d.month) d.month = String(d.month).trim(); 
+            d._w = getW(d);
+            if (d.hq) d.hq = String(d.hq).trim(); 
+            if (d.area) d.area = String(d.area).trim(); 
+            d._kam = cleanName(d.kam, true, d.area);
+            d._kae = cleanName(d.kae, false, d.area);
+        }); 
+    };
+    preComputeData(dbMaster); 
+    preComputeData(dbSales);
 
-    const cleanRawData = (arr) => { arr.forEach(d => { if (d.month) d.month = String(d.month).trim(); if (d.week) d.week = String(d.week).trim(); if (d.Week) d.Week = String(d.Week).trim(); if (d.hq) d.hq = String(d.hq).trim(); if (d.area) d.area = String(d.area).trim(); }); };
-    cleanRawData(dbMaster); cleanRawData(dbSales);
-
-    renderFilters(); render();
-    setTimeout(() => { const loader = document.getElementById('loader-wrapper'); if (loader) loader.classList.add('hidden'); }, 500);
+    // Kích hoạt dịch thuật lần đầu
+    setLang('vi');
+    
+    setTimeout(() => { 
+        const loader = document.getElementById('loader-wrapper'); 
+        if (loader) loader.classList.add('hidden'); 
+    }, 100);
 }
 
 window.onload = init;
