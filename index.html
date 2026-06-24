@@ -6,20 +6,28 @@
     <title>RTM Strategic Analytics © 2026 TCI</title>
     <style>
         /* =========================================================
-           1. CẤU HÌNH DARK THEME CAO CẤP
+           1. CẤU HÌNH DARK THEME CAO CẤP (5 COLORS PALETTE)
            ========================================================= */
         :root {
-            --bg-main: #1E1F23;
-            --bg-card: #25272C;
-            --primary: #A8C8C4;
-            --secondary: #6D8F8B;
+            --bg-main: #1A1C22;
+            --bg-card: #23252B;
+            
+            /* Bảng 5 màu thực tế từ hình ảnh minh họa */
+            --color-1: #0B486B;
+            --color-2: #3B8686;
+            --color-3: #79BD9A;
+            --color-4: #A8DBA8;
+            --color-5: #CFF09E;
+
+            --primary: var(--color-4);
+            --secondary: var(--color-2);
             --text-main: #FFFFFF;
             --text-muted: #A0AAB5;
-            --border-color: rgba(168, 200, 196, 0.15);
+            --border-color: rgba(121, 189, 154, 0.15);
             --border-radius: 12px;
             --accent-warning: #ea580c;
             --accent-danger: #dc2626;
-            --accent-success: #16a34a;
+            --accent-success: var(--color-5);
         }
 
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -43,7 +51,7 @@
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
         /* =========================================================
-           3. LAYOUT REPORT & RESPONSIVE (TRÀN VIỀN KHI ZOOM)
+           3. LAYOUT REPORT & RESPONSIVE
            ========================================================= */
         .main-content { padding: 30px; width: 100%; min-height: 100vh; }
         
@@ -68,7 +76,7 @@
         .ms-opt.selected { background: var(--primary); color: var(--bg-main); font-weight: bold; }
 
         /* THE PULSE BLOCK */
-        .section-tag { display: inline-block; padding: 4px 10px; background: rgba(168, 200, 196, 0.08); border-left: 3px solid var(--primary); color: var(--primary); font-size: 11px; font-weight: 800; margin-bottom: 15px; border-radius: 0 4px 4px 0; }
+        .section-tag { display: inline-block; padding: 4px 10px; background: rgba(121, 189, 154, 0.08); border-left: 3px solid var(--primary); color: var(--primary); font-size: 11px; font-weight: 800; margin-bottom: 15px; border-radius: 0 4px 4px 0; }
         .pulse-row { display: grid; grid-template-columns: 1.8fr 1fr; gap: 20px; margin-bottom: 35px; }
         .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
         .kpi-card { background: var(--bg-card); border-radius: var(--border-radius); padding: 20px; border: 1px solid var(--border-color); transition: 0.3s; }
@@ -96,14 +104,14 @@
         
         .table-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border-color); margin-top: 20px; width: 100%; }
         .data-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 500px; }
-        .data-table th { background: var(--secondary); color: var(--bg-main); padding: 12px 10px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 10px; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+        .data-table th { background: var(--secondary); color: var(--text-main); padding: 12px 10px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 10px; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
         .data-table td { padding: 10px 12px; border-bottom: 1px solid var(--border-color); text-align: center; color: var(--text-main); white-space: nowrap; }
         .data-table tr:hover td { background: rgba(255,255,255,0.02); }
         .label-cell { background: var(--bg-card); color: var(--primary); font-weight: 800; text-align: left !important; width: 160px; position: sticky; left: 0; z-index: 2; border-right: 1px solid var(--border-color); }
         .risk-flag { color: var(--accent-danger) !important; font-weight: 800 !important; }
 
-        .pct-badge { background: rgba(168, 200, 196, 0.15); color: var(--primary); padding: 3px 6px; border-radius: 4px; font-size: 9px; margin-left: 8px; font-weight: 800; display: inline-block;}
-        .pct-badge.active-badge { background: rgba(22, 163, 74, 0.15); color: var(--accent-success); }
+        .pct-badge { background: rgba(121, 189, 154, 0.15); color: var(--primary); padding: 3px 6px; border-radius: 4px; font-size: 9px; margin-left: 8px; font-weight: 800; display: inline-block;}
+        .pct-badge.active-badge { background: rgba(207, 240, 158, 0.15); color: var(--accent-success); }
 
         .segment-table { width:100%; border-collapse: collapse; margin-top: 15px; font-size: 12px; background: var(--bg-main); min-width: 600px; border: 1px solid var(--border-color); }
         .segment-table th { padding: 10px; border: 1px solid var(--border-color); white-space: nowrap; background: var(--secondary); color: var(--text-main); font-size: 11px; text-transform: uppercase;}
@@ -466,25 +474,25 @@ function render() {
     });
     document.getElementById('tree-container').innerHTML = treeHtml || '<div style="color:var(--text-muted); font-style:italic;">No Personnel Data</div>';
 
-    // 3. CHARTS P1 (BIỂU ĐỒ NGANG, BẢNG DÀN NGANG) -> Lần này ĐÚNG: isHorizontal = true
+    // 3. CHARTS P1 (BIỂU ĐỒ ĐỨNG, BẢNG DỌC THEO YÊU CẦU MỚI) -> isHorizontal = false
     let p1Total = { tc: 0, ac: 0, s: 0, skus: 0, invs: 0 };
     Object.values(areaMapP1).forEach(m => { p1Total.tc+=m.p.size; p1Total.ac+=m.a.size; p1Total.s+=m.s; p1Total.skus+=m.skus; p1Total.invs+=m.invs; });
     let p1Kpi = { tc: p1Total.tc, ac: p1Total.ac, s: p1Total.s, avgSku: p1Total.invs > 0 ? p1Total.skus/p1Total.invs : 0, freq: p1Total.ac > 0 ? p1Total.invs/p1Total.ac : 0 };
 
     let areaData = Object.keys(areaMapP1).map(k => ({ label: k, tc: areaMapP1[k].p.size, ac: areaMapP1[k].a.size, s: areaMapP1[k].s, avgSku: areaMapP1[k].invs > 0 ? areaMapP1[k].skus/areaMapP1[k].invs : 0, freq: areaMapP1[k].a.size > 0 ? areaMapP1[k].invs/areaMapP1[k].a.size : 0 })).sort((a,b) => b.s - a.s);
-    drawChart('areaChart', areaData, 'label', true); // isHorizontal = true
-    drawHorizontalTable('areaHeaderRow', 'areaTableBody', areaData, t('colArea'), true, { label: t('sysTotal'), ...p1Kpi }, true); 
+    drawChart('areaChart', areaData, 'label', false); // Chuyển thành Cột đứng (false)
+    drawVerticalTable('areaHeaderRow', 'areaTableBody', areaData, t('colArea'), true, { label: t('sysTotal'), ...p1Kpi }, true); 
 
     let weekData = Object.keys(weekMapP1).map(k => ({ label: formatWM(weekMapP1[k].w, weekMapP1[k].m), tc: weekMapP1[k].p.size, ac: weekMapP1[k].a.size, s: weekMapP1[k].s, avgSku: weekMapP1[k].invs > 0 ? weekMapP1[k].skus/weekMapP1[k].invs : 0, freq: weekMapP1[k].a.size > 0 ? weekMapP1[k].invs/weekMapP1[k].a.size : 0, w: weekMapP1[k].w, m: weekMapP1[k].m })).sort((a,b) => { let m1 = monthOrder[a.m.toLowerCase()]||99; let m2 = monthOrder[b.m.toLowerCase()]||99; return m1!==m2 ? m1-m2 : a.w.localeCompare(b.w); });
-    drawChart('weekChart', weekData, 'label', true); // isHorizontal = true
-    drawHorizontalTable('weekHeaderRow', 'weekTableBody', weekData, t('colWeek'), true, { label: t('sysTotal'), ...p1Kpi }, false); 
+    drawChart('weekChart', weekData, 'label', false); // Chuyển thành Cột đứng (false)
+    drawVerticalTable('weekHeaderRow', 'weekTableBody', weekData, t('colWeek'), true, { label: t('sysTotal'), ...p1Kpi }, false); 
 
-    // 4. CHARTS P2 (BIỂU ĐỒ NGANG, BẢNG DỌC)
+    // 4. CHARTS P2 (GIỮ NGUYÊN BIỂU ĐỒ NGANG, BẢNG DỌC CỦA PHẦN THỰC THI SFE)
     let kamData = Object.keys(kamMap).map(k => ({ label: k, tc: kamMap[k].p.size, ac: kamMap[k].a.size, s: kamMap[k].s, avgSku: kamMap[k].invs > 0 ? kamMap[k].skus/kamMap[k].invs : 0, freq: kamMap[k].a.size > 0 ? kamMap[k].invs/kamMap[k].a.size : 0 })).sort((a,b) => b.s - a.s).slice(0, 10);
     drawChart('kamChart', kamData, 'label', true); 
     drawVerticalTable('kamHeaderRow', 'kamTableBody', kamData, t('colKam'), false); 
 
-    let kaeData = Object.keys(kaeMap).map(k => ({ label: k, tc: kaeMap[k].p.size, ac: kaeMap[k].a.size, s: kaeMap[k].s, avgSku: kaeMap[k].invs > 0 ? kaeMap[k].skus/kaeMap[k].invs : 0, freq: kaeMap[k].a.size > 0 ? kaeMap[k].invs/kaeMap[k].a.size : 0 })).sort((a,b) => b.s - a.s).slice(0, 10);
+    let kaeData = Object.keys(kaeMap).map(k => ({ label: k, tc: kaeMap[k].p.size, ac: kaeMap[k].a.size, s: kaeMap[k].s, avgSku: kaeMap[k].invs > 0 ? kaeMap[k].skus/kamMap[k].invs : 0, freq: kaeMap[k].a.size > 0 ? kaeMap[k].invs/kaeMap[k].a.size : 0 })).sort((a,b) => b.s - a.s).slice(0, 10);
     drawChart('dayChart', kaeData, 'label', true); 
     drawVerticalTable('dayHeaderRow', 'dayTableBody', kaeData, t('colKae'), false); 
 
@@ -497,7 +505,6 @@ function renderPart3(segMap, sysKpiObj) {
     let html = `<table class="segment-table"><thead><tr><th rowspan="2">${t('colArea')}</th><th rowspan="2">${t('segColClass')}</th><th colspan="4">${t('segTblH1')}</th></tr><tr><th>${t('tbPlan')}</th><th>${t('tbActive')}</th><th>${t('tbStrike')}</th><th>${t('tbSales')}</th></tr></thead><tbody>`;
 
     if(filters.area.length === 0) {
-        // GỘP THÀNH BẢNG TỔNG TOÀN QUỐC
         let aggSeg = { 'A':{p:0,a:0,s:0}, 'B':{p:0,a:0,s:0}, 'C':{p:0,a:0,s:0}, 'D':{p:0,a:0,s:0}, 'N':{p:0,a:0,s:0} };
         Object.keys(segMap).forEach(key => {
             let seg = key.split('|')[1];
@@ -526,7 +533,6 @@ function renderPart3(segMap, sysKpiObj) {
                  <td style="color:var(--text-main);">${sysKpiObj.tc > 0 ? (sysKpiObj.ac/sysKpiObj.tc*100).toFixed(1) : 0}%</td>
                  <td style="text-align:right; color:var(--text-main);">${fmt(sysKpiObj.s)}</td></tr>`;
     } else {
-        // TÁCH BẢNG THEO KHU VỰC
         let sysPlanCount = 0; let sysActCount = 0; let sysSalesSum = 0;
         filters.area.forEach(area => {
             let isF = true; let areaPlanCount = 0; let areaActCount = 0; let areaSalesSum = 0;
@@ -624,7 +630,7 @@ function drawVerticalTable(hid, bid, data, titleNameLabel, showTotal, exp, check
     if (showTotal && exp) {
         let sr = exp.tc > 0 ? (exp.ac/exp.tc*100) : 0;
         let ds = exp.ac > 0 ? exp.s/exp.ac : 0;
-        bodyHtml += `<tr style="background:rgba(168,200,196,0.1);">
+        bodyHtml += `<tr style="background:rgba(121, 189, 154, 0.15);">
             <td class="label-cell" style="color:var(--text-main); font-weight:900">${exp.label}</td>
             <td style="font-weight:bold">${fmt(exp.tc)}</td>
             <td><b style="color:var(--primary)">${fmt(exp.ac)}</b></td>
@@ -657,13 +663,18 @@ function drawChart(id, data, labelKey, isHorizontal) {
         };
     }
 
+    // Áp dụng bảng màu thực tế phối trộn từ hình thiết kế
+    const colorLine = '#CFF09E';       // Màu số 5: Cho biểu đồ đường (Line Sell-Out)
+    const colorBarTotal = '#0B486B';   // Màu số 1: Cho cột Tổng Tuyến
+    const colorBarActive = '#79BD9A';  // Màu số 3: Cho cột Khách hàng Active
+
     charts[id] = new Chart(document.getElementById(id), {
         data: {
             labels: data.map(x => x[labelKey]),
             datasets: [
-                { type:'line', label: t('legSales'), data: data.map(x => x.s), borderColor:'#A8C8C4', backgroundColor:'#A8C8C4', xAxisID: isHorizontal ? 'xS' : undefined, yAxisID: isHorizontal ? undefined : 'yS', tension:0.3, pointRadius: 4 },
-                { type:'bar', label: t('legTotal'), data: data.map(x => x.tc), backgroundColor:'#6D8F8B', xAxisID: isHorizontal ? 'x' : undefined, yAxisID: isHorizontal ? undefined : 'y', barPercentage: 0.85, categoryPercentage: 0.85 },
-                { type:'bar', label: t('legActive'), data: data.map(x => x.ac), backgroundColor:'rgba(168,200,196,0.3)', xAxisID: isHorizontal ? 'x' : undefined, yAxisID: isHorizontal ? undefined : 'y', barPercentage: 0.85, categoryPercentage: 0.85 }
+                { type:'line', label: t('legSales'), data: data.map(x => x.s), borderColor: colorLine, backgroundColor: colorLine, xAxisID: isHorizontal ? 'xS' : undefined, yAxisID: isHorizontal ? undefined : 'yS', tension:0.3, pointRadius: 4 },
+                { type:'bar', label: t('legTotal'), data: data.map(x => x.tc), backgroundColor: colorBarTotal, xAxisID: isHorizontal ? 'x' : undefined, yAxisID: isHorizontal ? undefined : 'y', barPercentage: 0.85, categoryPercentage: 0.85 },
+                { type:'bar', label: t('legActive'), data: data.map(x => x.ac), backgroundColor: colorBarActive, xAxisID: isHorizontal ? 'x' : undefined, yAxisID: isHorizontal ? undefined : 'y', barPercentage: 0.85, categoryPercentage: 0.85 }
             ]
         },
         options: {
