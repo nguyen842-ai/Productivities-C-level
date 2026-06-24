@@ -19,11 +19,9 @@
             --border-radius: 12px;
             --accent-warning: #ea580c;
             --accent-success: #16a34a;
-            
-            --sidebar-width: 440px;
         }
 
-        * { -webkit-tap-highlight-color: transparent; }
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         
         body { 
             margin: 0; 
@@ -55,55 +53,59 @@
         @keyframes pulse { 0%, 100% { opacity: 1; text-shadow: 0 0 10px rgba(168, 200, 196, 0.5); } 50% { opacity: 0.4; text-shadow: none; } }
         
         /* =========================================================
-           3. LAYOUT REPORT & COMPONENTS
+           3. LAYOUT REPORT & COMPONENTS (FULL WIDTH)
            ========================================================= */
-        .db-container { display: flex; min-height: 100vh; position: relative; }
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 99; opacity: 0; transition: opacity 0.3s; }
-        .overlay.show { display: block; opacity: 1; }
-
-        .sidebar { width: var(--sidebar-width); flex-shrink: 0; background: var(--bg-card); padding: 20px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; gap: 12px; box-sizing: border-box; z-index: 100; border-right: 1px solid var(--border-color); }
-        .resizer { width: 6px; background: var(--bg-main); cursor: col-resize; position: sticky; top: 0; height: 100vh; z-index: 10; transition: background 0.2s; border-right: 1px solid var(--border-color); }
-        .resizer:hover, .resizer.resizing { background: var(--secondary); }
+        .main-content { padding: 30px; width: 100%; min-height: 100vh; }
         
-        .header-wrap { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 8px; margin-bottom: 5px; }
-        .sidebar-header { font-size: 14px; font-weight: 800; color: var(--primary); text-transform: uppercase; }
-        
-        .top-filters { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .filter-item label { display: block; font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; }
-        .ms-box { position: relative; width: 100%; border: 1px solid var(--border-color); border-radius: var(--border-radius); background: var(--bg-main); cursor: pointer; }
-        .ms-label { padding: 9px; font-size: 12px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; user-select: none; font-weight: 600;}
-        .ms-label::after { content: '▼'; float: right; font-size: 10px; color: var(--secondary); margin-top: 2px;}
-        .ms-dropdown { position: absolute; top: 100%; left: 0; width: 100%; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--border-radius); z-index: 999; max-height: 250px; overflow-y: auto; display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.5); padding: 5px 0; margin-top: 4px; overscroll-behavior: contain;}
-        .ms-opt { display: flex; align-items: center; padding: 10px 12px; font-size: 12px; cursor: pointer; color: var(--text-main); user-select: none; transition: 0.2s;}
-        .ms-opt:hover { background: var(--secondary); color: var(--text-main); }
-        .ms-opt.selected { background: var(--primary); color: var(--bg-main); font-weight: bold; }
-
-        .personnel-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; flex-grow: 1; overflow: hidden; margin-top: 5px; }
-        .list-container { display: flex; flex-direction: column; height: 100%; border: 1px solid var(--border-color); border-radius: var(--border-radius); overflow: hidden; }
-        .list-label { font-size: 11px; font-weight: 700; color: var(--bg-main); background: var(--primary); padding: 12px; text-align: center; text-transform: uppercase; }
-        .scroll-list { overflow-y: auto; flex-grow: 1; background: var(--bg-main); overscroll-behavior-y: contain; }
-        .list-item { padding: 12px 14px; border-bottom: 1px solid var(--border-color); cursor: pointer; font-size: 11px; transition: 0.2s; user-select: none; color: var(--text-muted); }
-        .list-item:hover { background: var(--bg-card); color: var(--text-main); }
-        .list-item.selected { background: var(--secondary); color: var(--text-main); font-weight: 600; }
-
-        .main-content { flex: 1; min-width: 0; padding: 25px; overflow-y: auto; width: 100%; box-sizing: border-box; }
-        
-        /* Chỉnh lại Header báo cáo */
-        .exec-title { margin-bottom: 25px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
+        /* TOP HEADER: Tiêu đề + Bộ lọc ngang */
+        .top-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; margin-bottom: 25px; gap: 20px; flex-wrap: wrap; }
         .exec-title h1 { margin: 0; font-size: 22px; font-weight: 800; color: var(--primary); text-transform: uppercase; }
         .exec-title p { margin: 6px 0 0 0; color: var(--secondary); font-size: 12px; font-weight: 600; }
 
-        /* KPI Grouping */
+        .top-filters-horizontal { display: flex; gap: 15px; align-items: center; flex-wrap: wrap;}
+        .filter-item-hz { display: flex; flex-direction: column; gap: 6px; min-width: 140px; }
+        .filter-item-hz label { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+        
+        /* Dropdown Styling */
+        .ms-box { position: relative; width: 100%; border: 1px solid var(--border-color); border-radius: var(--border-radius); background: var(--bg-main); cursor: pointer; }
+        .ms-label { padding: 9px 12px; font-size: 12px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; user-select: none; font-weight: 600;}
+        .ms-label::after { content: '▼'; float: right; font-size: 10px; color: var(--secondary); margin-top: 2px;}
+        .ms-dropdown { position: absolute; top: 100%; right: 0; min-width: 100%; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--border-radius); z-index: 999; max-height: 250px; overflow-y: auto; display: none; box-shadow: 0 8px 20px rgba(0,0,0,0.8); padding: 5px 0; margin-top: 6px;}
+        .ms-opt { display: flex; align-items: center; padding: 10px 15px; font-size: 12px; cursor: pointer; color: var(--text-main); user-select: none; transition: 0.2s; white-space: nowrap;}
+        .ms-opt:hover { background: var(--secondary); color: var(--text-main); }
+        .ms-opt.selected { background: var(--primary); color: var(--bg-main); font-weight: bold; }
+
+        /* THE PULSE CONTAINER (KPIs + TREE DIAGRAM) */
         .section-tag { display: inline-block; padding: 4px 10px; background: rgba(168, 200, 196, 0.1); border: 1px solid var(--secondary); color: var(--primary); font-size: 11px; font-weight: bold; border-radius: 4px; margin-bottom: 15px; letter-spacing: 1px; }
         
-        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 35px; }
-        .kpi-card { background: var(--bg-card); border-radius: var(--border-radius); padding: 18px; border: 1px solid var(--border-color); position: relative; overflow: hidden;}
+        .pulse-container { display: grid; grid-template-columns: 2fr 1.2fr; gap: 20px; margin-bottom: 35px; }
+        
+        .kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; align-content: start;}
+        .kpi-card { background: var(--bg-card); border-radius: var(--border-radius); padding: 22px 18px; border: 1px solid var(--border-color); position: relative; overflow: hidden;}
         .kpi-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: var(--secondary); }
         .kpi-card.md-focus::before { background: var(--primary); }
         .kpi-card .label { font-size: 11px; color: var(--text-muted); font-weight: 700; margin-bottom: 8px; text-transform: uppercase; }
-        .kpi-card .value { font-size: 24px; font-weight: 800; color: var(--text-main); }
-        .kpi-card .sub { font-size: 11px; color: var(--primary); margin-top: 6px; font-weight: 600; display: flex; justify-content: space-between;}
+        .kpi-card .value { font-size: 26px; font-weight: 800; color: var(--text-main); }
+        .kpi-card .sub { font-size: 11px; color: var(--primary); margin-top: 8px; font-weight: 600; display: flex; justify-content: space-between;}
 
+        /* TREE DIAGRAM STYLES */
+        .tree-box { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 20px; height: 100%; display: flex; flex-direction: column; max-height: 250px; }
+        .tree-box h3 { margin: 0 0 15px 0; font-size: 12px; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;}
+        .tree-content { flex-grow: 1; overflow-y: auto; padding-right: 5px; }
+        
+        .tree-node summary { display: flex; justify-content: space-between; padding: 10px 12px; background: rgba(168, 200, 196, 0.05); border-radius: 6px; cursor: pointer; margin-bottom: 6px; font-weight: bold; color: var(--text-main); font-size: 11px; list-style: none; transition: 0.2s;}
+        .tree-node summary:hover { background: rgba(168, 200, 196, 0.15); }
+        .tree-node summary::-webkit-details-marker { display: none; }
+        .tree-node summary::before { content: '▶'; display: inline-block; width: 15px; font-size: 9px; color: var(--secondary); transition: transform 0.2s; }
+        .tree-node[open] summary::before { transform: rotate(90deg); }
+        
+        .t-children { padding-left: 12px; margin-bottom: 10px; border-left: 2px solid var(--border-color); margin-left: 8px; margin-top: 4px; }
+        .t-leaf { display: flex; justify-content: space-between; padding: 8px 12px; font-size: 11px; color: var(--text-muted); transition: 0.2s; border-bottom: 1px dashed rgba(168, 200, 196, 0.1); }
+        .t-leaf:last-child { border-bottom: none; }
+        .t-leaf:hover { background: rgba(109, 143, 139, 0.1); color: var(--text-main); border-radius: 4px; }
+        .t-val { color: var(--primary); font-weight: 600; }
+
+        /* CHARTS & TABLES */
         .chart-box { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 25px; margin-bottom: 30px; }
         .chart-title { font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; display: flex; align-items: center; text-transform: uppercase; }
         .chart-title::before { content: ""; display: inline-block; width: 4px; height: 16px; background: var(--primary); margin-right: 10px; border-radius: 2px;}
@@ -126,10 +128,12 @@
         ::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
+        @media screen and (max-width: 1100px) {
+            .pulse-container { grid-template-columns: 1fr; }
+            .tree-box { max-height: 400px; }
+        }
+
         @media screen and (max-width: 768px) {
-            .sidebar { position: fixed; top: 0; left: -100%; width: 85% !important; max-width: 380px; transition: left 0.3s; }
-            .sidebar.open { left: 0; } 
-            .resizer { display: none; }
             .kpi-grid { grid-template-columns: 1fr 1fr; }
             .label-cell, .seg-area-cell, .seg-name-cell { position: relative; left: auto; z-index: 1; border-right: none !important; }
         }
@@ -142,36 +146,25 @@
     <div class="loader-text">Loading Data...</div>
 </div>
 
-<div class="db-container">
-    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
-
-    <div class="sidebar" id="sidebar">
-        <div class="header-wrap">
-            <div class="sidebar-header">RTM STRATEGY SETTINGS</div>
-        </div>
-        
-        <div class="top-filters">
-            <div class="filter-item"><label>Tháng</label><div class="ms-box" onclick="toggleMS('month')"><div class="ms-label" id="lbl-month">Tất cả</div><div class="ms-dropdown" id="drop-month"></div></div></div>
-            <div class="filter-item"><label>Tuần</label><div class="ms-box" onclick="toggleMS('week')"><div class="ms-label" id="lbl-week">Tất cả</div><div class="ms-dropdown" id="drop-week"></div></div></div>
-            <div class="filter-item"><label>Miền</label><div class="ms-box" onclick="toggleMS('hq')"><div class="ms-label" id="lbl-hq">Tất cả</div><div class="ms-dropdown" id="drop-hq"></div></div></div>
-            <div class="filter-item"><label>Khu vực</label><div class="ms-box" onclick="toggleMS('area')"><div class="ms-label" id="lbl-area">Tất cả</div><div class="ms-dropdown" id="drop-area"></div></div></div>
-        </div>
-
-        <div class="personnel-filters">
-            <div class="list-container"><div class="list-label">KAM (AREA MGR)</div><div class="scroll-list" id="kamList"></div></div>
-            <div class="list-container"><div class="list-label">KAE / DSR (SALES REP)</div><div class="scroll-list" id="kaeList"></div></div>
-        </div>
-    </div>
+<main class="main-content">
     
-    <div class="resizer" id="dragMe"></div>
-
-    <main class="main-content">
+    <header class="top-header">
         <div class="exec-title">
             <h1>RTM STRATEGIC DASHBOARD</h1>
             <p id="sub-sys">Đánh giá Hiệu quả Phân phối, Thực thi Tuyến & Phân khúc Sức mua</p>
         </div>
+        
+        <div class="top-filters-horizontal">
+            <div class="filter-item-hz"><label>Tháng</label><div class="ms-box" onclick="toggleMS('month')"><div class="ms-label" id="lbl-month">Tất cả</div><div class="ms-dropdown" id="drop-month"></div></div></div>
+            <div class="filter-item-hz"><label>Tuần</label><div class="ms-box" onclick="toggleMS('week')"><div class="ms-label" id="lbl-week">Tất cả</div><div class="ms-dropdown" id="drop-week"></div></div></div>
+            <div class="filter-item-hz"><label>Miền</label><div class="ms-box" onclick="toggleMS('hq')"><div class="ms-label" id="lbl-hq">Tất cả</div><div class="ms-dropdown" id="drop-hq"></div></div></div>
+            <div class="filter-item-hz"><label>Khu vực</label><div class="ms-box" onclick="toggleMS('area')"><div class="ms-label" id="lbl-area">Tất cả</div><div class="ms-dropdown" id="drop-area"></div></div></div>
+        </div>
+    </header>
 
-        <div class="section-tag">THE PULSE (CHỈ SỐ SINH TỬ)</div>
+    <div class="section-tag">THE PULSE (CHỈ SỐ SINH TỬ)</div>
+    
+    <div class="pulse-container">
         <div class="kpi-grid">
             <div class="kpi-card md-focus">
                 <div class="label">TỔNG SELL-OUT (MD VIEW)</div>
@@ -189,52 +182,58 @@
                 <div class="sub"><span>SFE: Active / MCP Plan</span></div>
             </div>
             <div class="kpi-card">
-                <div class="label">DROP SIZE (GIÁ TRỊ ĐƠN TRUNG BÌNH)</div>
+                <div class="label">DROP SIZE (GIÁ TRỊ ĐƠN)</div>
                 <div class="value" id="val-drop-size">0</div>
-                <div class="sub"><span>VNĐ / Cửa hàng</span> <span style="color:var(--accent-warning)">LPPC: <span id="val-lppc">0</span> SKU/Đơn</span></div>
+                <div class="sub"><span>VNĐ / Cửa hàng</span> <span style="color:var(--accent-warning)">LPPC: <span id="val-lppc">0</span> SKU</span></div>
             </div>
         </div>
 
-        <div class="section-tag">PHẦN 1: TỔNG QUAN CHIẾN LƯỢC RTM & SỨC MUA (MD VIEW)</div>
-        
-        <div class="chart-box">
-            <div class="chart-title">HIỆU QUẢ SELL-OUT THEO KHU VỰC (AREA PERFORMANCE & RISK)</div>
-            <div class="chart-subtitle">Đánh giá Vùng nào đang đóng góp chính, Vùng nào có rủi ro sụt giảm cần cảnh báo</div>
-            <div style="height: 380px;"><canvas id="areaChart"></canvas></div>
-            <div class="table-wrap"><table class="data-table"><thead><tr id="areaHeaderRow"></tr></thead><tbody id="areaTableBody"></tbody></table></div>
+        <div class="tree-box">
+            <h3>SƠ ĐỒ NHÂN SỰ & DOANH SỐ (KAM -> KAE)</h3>
+            <div class="tree-content" id="tree-container">
+                </div>
         </div>
+    </div>
 
-        <div class="chart-box">
-            <div class="chart-title">TỐC ĐỘ LUÂN CHUYỂN HÀNG HÓA THEO TUẦN (VELOCITY & TREND)</div>
-            <div class="chart-subtitle">Theo dõi chu kỳ biến động doanh số để đánh giá sức hấp thụ của thị trường</div>
-            <div style="height: 380px;"><canvas id="weekChart"></canvas></div>
-        </div>
+    <div class="section-tag">PHẦN 1: TỔNG QUAN CHIẾN LƯỢC RTM & SỨC MUA (MD VIEW)</div>
+    
+    <div class="chart-box">
+        <div class="chart-title">HIỆU QUẢ SELL-OUT THEO KHU VỰC (AREA PERFORMANCE & RISK)</div>
+        <div class="chart-subtitle">Đánh giá Vùng nào đang đóng góp chính, Vùng nào có rủi ro sụt giảm cần cảnh báo</div>
+        <div style="height: 380px;"><canvas id="areaChart"></canvas></div>
+        <div class="table-wrap"><table class="data-table"><thead><tr id="areaHeaderRow"></tr></thead><tbody id="areaTableBody"></tbody></table></div>
+    </div>
 
-        <div class="section-tag">PHẦN 2: CHỈ SỐ THỰC THI THỊ TRƯỜNG & SFE (SALES DIR VIEW)</div>
+    <div class="chart-box">
+        <div class="chart-title">TỐC ĐỘ LUÂN CHUYỂN HÀNG HÓA THEO TUẦN (VELOCITY & TREND)</div>
+        <div class="chart-subtitle">Theo dõi chu kỳ biến động doanh số để đánh giá sức hấp thụ của thị trường</div>
+        <div style="height: 380px;"><canvas id="weekChart"></canvas></div>
+    </div>
 
-        <div class="chart-box">
-            <div class="chart-title">TOP 10 NĂNG SUẤT QUẢN LÝ VÙNG (KAM SFE SCORECARD)</div>
-            <div class="chart-subtitle">Đánh giá năng lực điều phối tuyến và chất lượng đơn hàng (Drop Size & LPPC) của Quản lý</div>
-            <div style="height: 350px;"><canvas id="kamChart"></canvas></div>
-            <div class="table-wrap"><table class="data-table"><thead><tr id="kamHeaderRow"></tr></thead><tbody id="kamTableBody"></tbody></table></div>
-        </div>
+    <div class="section-tag">PHẦN 2: CHỈ SỐ THỰC THI THỊ TRƯỜNG & SFE (SALES DIR VIEW)</div>
 
-        <div class="chart-box">
-            <div class="chart-title">TOP 10 NĂNG SUẤT SALES REP NGOÀI THỊ TRƯỜNG (KAE EXECUTION)</div>
-            <div class="chart-subtitle">Kiểm soát tình trạng "lười bán SKU phụ", tập trung soi Strike Rate & LPPC của Salesman</div>
-            <div style="height: 350px;"><canvas id="dayChart"></canvas></div>
-            <div class="table-wrap"><table class="data-table"><thead><tr id="dayHeaderRow"></tr></thead><tbody id="dayTableBody"></tbody></table></div>
-        </div>
+    <div class="chart-box">
+        <div class="chart-title">TOP 10 NĂNG SUẤT QUẢN LÝ VÙNG (KAM SFE SCORECARD)</div>
+        <div class="chart-subtitle">Đánh giá năng lực điều phối tuyến và chất lượng đơn hàng (Drop Size & LPPC) của Quản lý</div>
+        <div style="height: 350px;"><canvas id="kamChart"></canvas></div>
+        <div class="table-wrap"><table class="data-table"><thead><tr id="kamHeaderRow"></tr></thead><tbody id="kamTableBody"></tbody></table></div>
+    </div>
 
-        <div class="section-tag">PHẦN 3: ĐỘ PHỦ & CHIẾN LƯỢC ĐIỂM BÁN (CDM VIEW)</div>
+    <div class="chart-box">
+        <div class="chart-title">TOP 10 NĂNG SUẤT SALES REP (KAE EXECUTION)</div>
+        <div class="chart-subtitle">Đã loại bỏ các số liệu do KAM trực tiếp bán. Tập trung soi Strike Rate & LPPC của đội ngũ Salesman</div>
+        <div style="height: 350px;"><canvas id="dayChart"></canvas></div>
+        <div class="table-wrap"><table class="data-table"><thead><tr id="dayHeaderRow"></tr></thead><tbody id="dayTableBody"></tbody></table></div>
+    </div>
 
-        <div class="chart-box">
-            <div class="chart-title">PHÂN TÍCH SỨC MUA THEO PHÂN KHÚC TẠP HÓA (OUTLET SEGMENTATION)</div>
-            <div class="chart-subtitle">Cơ cấu đóng góp của nhóm Tạp hóa Lớn, Vừa, Nhỏ để ra quyết định chạy Trade Promos</div>
-            <div class="table-wrap" id="segmentAreaTableContainer"></div>
-        </div>
-    </main>
-</div>
+    <div class="section-tag">PHẦN 3: ĐỘ PHỦ & CHIẾN LƯỢC ĐIỂM BÁN (CDM VIEW)</div>
+
+    <div class="chart-box">
+        <div class="chart-title">PHÂN TÍCH SỨC MUA THEO PHÂN KHÚC TẠP HÓA (OUTLET SEGMENTATION)</div>
+        <div class="chart-subtitle">Cơ cấu đóng góp của nhóm Tạp hóa Lớn, Vừa, Nhỏ để ra quyết định chạy Trade Promos</div>
+        <div class="table-wrap" id="segmentAreaTableContainer"></div>
+    </div>
+</main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="kamMap.js"></script>
@@ -252,7 +251,7 @@ const segNames = { 'A': 'Class A (Lớn)', 'B': 'Class B (Vừa)', 'C': 'Class C
 const segColors = { 'A': '#A8C8C4', 'B': '#6D8F8B', 'C': '#ea580c', 'D': '#dc2626', 'N': '#64748b' };
 const monthOrder = { "jan":1, "feb":2, "mar":3, "apr":4, "may":5, "jun":6, "jul":7, "aug":8, "sep":9, "oct":10, "nov":11, "dec":12 };
 
-let filters = { month: [], week: [], hq: [], area: [], kam: [], kae: [] };
+let filters = { month: [], week: [], hq: [], area: [] }; // Loại bỏ KAM, KAE filter
 let charts = {};
 let dbMaster = []; let dbSales = [];
 
@@ -271,19 +270,6 @@ const cleanName = (name, isKamField = false, areaName = "") => {
         }
     }
     return cleanStr;
-};
-
-const buildStatusMap = (subset, key) => {
-    let map = {}; let isKamField = (key === 'kam');
-    for (let i = subset.length - 1; i >= 0; i--) {
-        let clean = cleanName(subset[i][key], isKamField, subset[i].area);
-        if (!map[clean]) {
-            let raw = String(subset[i][key]).trim();
-            let match = raw.match(/^[✔️❌]/);
-            map[clean] = match ? match[0] + ' ' + clean : clean;
-        }
-    }
-    return map;
 };
 
 const aggregateDualData = (masterSubset, salesSubset) => {
@@ -310,6 +296,49 @@ const aggregateDualData = (masterSubset, salesSubset) => {
 };
 
 // ======================== TẦNG UI ========================
+function renderTreeDiagram(mSub, sSub) {
+    let treeMap = {};
+    
+    // Thu thập danh sách KAM/KAE từ file Master & Sales
+    let allItems = [...mSub, ...sSub];
+    allItems.forEach(d => {
+        let kamRaw = cleanName(d.kam, true, d.area) || "UNKNOWN KAM";
+        let kaeRaw = cleanName(d.kae) || "UNKNOWN KAE";
+
+        if (!treeMap[kamRaw]) treeMap[kamRaw] = { sales: 0, kaes: {} };
+        if (!treeMap[kamRaw].kaes[kaeRaw]) treeMap[kamRaw].kaes[kaeRaw] = { sales: 0 };
+    });
+
+    // Tính toán doanh số
+    sSub.forEach(d => {
+        let kamRaw = cleanName(d.kam, true, d.area) || "UNKNOWN KAM";
+        let kaeRaw = cleanName(d.kae) || "UNKNOWN KAE";
+        let val = Number(d.sales) || 0;
+        
+        treeMap[kamRaw].sales += val;
+        treeMap[kamRaw].kaes[kaeRaw].sales += val;
+    });
+
+    // Render HTML Tree
+    let html = '';
+    let sortedKams = Object.keys(treeMap).sort((a,b) => treeMap[b].sales - treeMap[a].sales);
+    
+    sortedKams.forEach(kam => {
+        let kData = treeMap[kam];
+        html += `<details class="tree-node"><summary><span class="t-name">Quản lý: ${kam}</span><span class="t-val">${fmt(kData.sales)}</span></summary><div class="t-children">`;
+
+        let sortedKaes = Object.keys(kData.kaes).sort((a,b) => kData.kaes[b].sales - kData.kaes[a].sales);
+        sortedKaes.forEach(kae => {
+            let kaeSales = kData.kaes[kae].sales;
+            html += `<div class="t-leaf"><span class="t-name">Sales: ${kae}</span><span class="t-val">${fmt(kaeSales)}</span></div>`;
+        });
+        html += `</div></details>`;
+    });
+
+    if(html === '') html = '<div style="color:var(--text-muted); font-style:italic;">Không có dữ liệu nhân sự</div>';
+    document.getElementById('tree-container').innerHTML = html;
+}
+
 function renderSegmentTable(masterSubset, salesSubset) {
     let cusSegmentMap = {}; let uniqueMasterCus = new Set();
     masterSubset.forEach(d => { if (d.cusCode) { cusSegmentMap[d.cusCode] = d.CusS ? String(d.CusS).toUpperCase().trim() : "N"; uniqueMasterCus.add(d.cusCode); } });
@@ -404,7 +433,6 @@ function drawTable(headerId, bodyId, dataArray, titleColName, labelKey, showTota
 }
 
 // ======================== TẦNG TƯƠNG TÁC (FILTERS) ========================
-function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('show'); }
 function toggleMS(id) {
     let drop = document.getElementById('drop-'+id);
     document.querySelectorAll('.ms-dropdown').forEach(d => { if(d !== drop) d.style.display = 'none'; });
@@ -417,7 +445,6 @@ function updateF(type, val) {
         filters[type] = []; 
         if (type === 'month') filters.week = [];
         if (type === 'hq') filters.area = []; 
-        if (type === 'kam') filters.kae = []; 
     } else {
         let idx = filters[type].indexOf(val);
         if (idx > -1) filters[type].splice(idx, 1); 
@@ -442,28 +469,6 @@ function renderFilters() {
     populateDropdown('week', 'week', [...new Set(allData.map(d => getW(d)))].filter(Boolean).sort());
     populateDropdown('hq', 'hq', [...new Set(allData.map(d=>d.hq))].filter(Boolean).sort());
     populateDropdown('area', 'area', [...new Set(allData.filter(d => filters.hq.length === 0 || filters.hq.includes(d.hq)).map(d=>d.area))].filter(Boolean).sort());
-
-    const baseApplyF = d => (filters.month.length === 0 || filters.month.includes(d.month)) && 
-                            (filters.week.length === 0 || filters.week.includes(getW(d).toUpperCase())) && 
-                            (filters.hq.length === 0 || filters.hq.includes(d.hq)) && 
-                            (filters.area.length === 0 || filters.area.includes(d.area));
-    
-    const baseMaster = dbMaster.filter(baseApplyF);
-    
-    // Build KAM List
-    let kamStatusMap = buildStatusMap(allData, 'kam');
-    let allKams = [...new Set([...dbMaster, ...dbSales].filter(baseApplyF).map(d => cleanName(d.kam, true, d.area)))].filter(Boolean).sort();
-    let kamHtml = `<div class="list-item ${filters.kam.length === 0 ? 'selected' : ''}" onclick="updateF('kam', 'all')">TẤT CẢ KAM</div>`;
-    allKams.forEach(k => { kamHtml += `<div class="list-item ${filters.kam.includes(k) ? 'selected' : ''}" onclick="updateF('kam', '${k}')">${kamStatusMap[k] || k}</div>`; });
-    document.getElementById("kamList").innerHTML = kamHtml;
-
-    // Build KAE List
-    const kamApplyF = d => baseApplyF(d) && (filters.kam.length === 0 || filters.kam.includes(cleanName(d.kam, true, d.area)));
-    let kaeStatusMap = buildStatusMap(allData, 'kae');
-    let allKaes = [...new Set([...dbMaster, ...dbSales].filter(kamApplyF).map(d => cleanName(d.kae)))].filter(Boolean).sort();
-    let kaeHtml = `<div class="list-item ${filters.kae.length === 0 ? 'selected' : ''}" onclick="updateF('kae', 'all')">TẤT CẢ KAE</div>`;
-    allKaes.forEach(n => { kaeHtml += `<div class="list-item ${filters.kae.includes(n) ? 'selected' : ''}" onclick="updateF('kae', '${n}')">${kaeStatusMap[n] || n}</div>`; });
-    document.getElementById("kaeList").innerHTML = kaeHtml;
 }
 
 // ======================== ENGINE RENDER CHÍNH ========================
@@ -475,19 +480,8 @@ function render() {
                             (filters.hq.length === 0 || filters.hq.includes(d.hq)) && 
                             (filters.area.length === 0 || filters.area.includes(d.area));
     
-    let inferredKams = [...filters.kam];
-    if (inferredKams.length === 0 && filters.kae.length > 0) { 
-        let tempKams = new Set();
-        filters.kae.forEach(k => { const fKam = dbMaster.find(d => cleanName(d.kae) === k) || dbSales.find(d => cleanName(d.kae) === k); if (fKam && fKam.kam) tempKams.add(cleanName(fKam.kam, true, fKam.area)); });
-        inferredKams = [...tempKams];
-    }
-    
-    const finalApplyF = d => baseApplyF(d) && 
-                           (inferredKams.length === 0 || inferredKams.includes(cleanName(d.kam, true, d.area))) &&
-                           (filters.kae.length === 0 || filters.kae.includes(cleanName(d.kae)));
-                           
-    const baseMaster = dbMaster.filter(finalApplyF);
-    const baseSales = dbSales.filter(finalApplyF);
+    const baseMaster = dbMaster.filter(baseApplyF);
+    const baseSales = dbSales.filter(baseApplyF);
 
     // 1. UPDATE THE PULSE KPIs
     const sysKPI = aggregateDualData(baseMaster, baseSales);
@@ -497,6 +491,9 @@ function render() {
     document.getElementById("val-strike-rate").innerText = (sysKPI.tc > 0 ? (sysKPI.ac/sysKPI.tc*100).toFixed(1) : 0) + "%";
     document.getElementById("val-drop-size").innerText = (sysKPI.ac > 0 ? fmt(sysKPI.s / sysKPI.ac) : 0);
     document.getElementById("val-lppc").innerText = Number(sysKPI.avgSku || 0).toFixed(1);
+
+    // Render Sơ đồ cây (Tree Diagram)
+    renderTreeDiagram(baseMaster, baseSales);
 
     // 2. MD VIEW: AREA CHART
     const areas = [...new Set([...baseMaster.map(d=>d.area), ...baseSales.map(d=>d.area)])].filter(Boolean); 
@@ -512,10 +509,26 @@ function render() {
     // 4. SD VIEW: TOP KAM / KAE SFE
     const getTopData = (mSub, sSub, key) => {
         let isKam = key === 'kam';
-        return Array.from(new Set([...mSub.map(d => cleanName(d[key], isKam, d.area)), ...sSub.map(d => cleanName(d[key], isKam, d.area))])).filter(Boolean).map(name => {
-            return { label: name, ...aggregateDualData(mSub.filter(d => cleanName(d[key], isKam, d.area) === name), sSub.filter(d => cleanName(d[key], isKam, d.area) === name)) };
-        }).sort((a,b) => b.s - a.s).slice(0, 10); 
+        let isKae = key === 'kae'; // Cờ nhận biết KAE
+
+        let rawNames = new Set([...mSub.map(d => cleanName(d[key], isKam, d.area)), ...sSub.map(d => cleanName(d[key], isKam, d.area))]);
+        
+        let dataArr = [];
+        rawNames.forEach(name => {
+            if(!name) return;
+            
+            // LUẬT LÀM SẠCH: NẾU LÀ BẢNG KAE VÀ TÊN BẮT ĐẦU BẰNG "KAM", LOẠI BỎ NGAY LẬP TỨC
+            if (isKae && name.toUpperCase().startsWith('KAM')) return;
+
+            let mF = mSub.filter(d => cleanName(d[key], isKam, d.area) === name);
+            let sF = sSub.filter(d => cleanName(d[key], isKam, d.area) === name);
+            dataArr.push({ label: name, ...aggregateDualData(mF, sF) });
+        });
+
+        dataArr.sort((a,b) => b.s - a.s);
+        return dataArr.slice(0, 10);
     };
+
     drawChart('kamChart', getTopData(baseMaster, baseSales, 'kam'), 'label');
     drawTable('kamHeaderRow', 'kamTableBody', getTopData(baseMaster, baseSales, 'kam'), "TOP QUẢN LÝ VÙNG", 'label', true, { 'label': "TỔNG HỆ THỐNG", ...sysKPI }); 
     drawChart('dayChart', getTopData(baseMaster, baseSales, 'kae'), 'label');
