@@ -465,26 +465,26 @@ function render() {
     });
     document.getElementById('tree-container').innerHTML = treeHtml || '<div style="color:var(--text-muted); font-style:italic;">No Personnel Data</div>';
 
-    // 3. CHARTS P1 (ĐẢO THÀNH BẢNG NGANG - HORIZONTAL TABLE)
+    // 3. CHARTS P1 (BIỂU ĐỒ DỌC NHƯNG BẢNG THÌ NGANG)
     let p1Total = { tc: 0, ac: 0, s: 0, skus: 0, invs: 0 };
     Object.values(areaMapP1).forEach(m => { p1Total.tc+=m.p.size; p1Total.ac+=m.a.size; p1Total.s+=m.s; p1Total.skus+=m.skus; p1Total.invs+=m.invs; });
     let p1Kpi = { tc: p1Total.tc, ac: p1Total.ac, s: p1Total.s, avgSku: p1Total.invs > 0 ? p1Total.skus/p1Total.invs : 0 };
 
     let areaData = Object.keys(areaMapP1).map(k => ({ label: k, tc: areaMapP1[k].p.size, ac: areaMapP1[k].a.size, s: areaMapP1[k].s, avgSku: areaMapP1[k].invs > 0 ? areaMapP1[k].skus/areaMapP1[k].invs : 0 })).sort((a,b) => b.s - a.s);
-    drawChart('areaChart', areaData, 'label', true); // isHorizontal = true -> Cột ngang
+    drawChart('areaChart', areaData, 'label', false); // Cột dọc (false)
     drawHorizontalTable('areaHeaderRow', 'areaTableBody', areaData, t('colArea'), true, { label: t('sysTotal'), ...p1Kpi }, true); // Bảng ngang
 
     let weekData = Object.keys(weekMapP1).map(k => ({ label: formatWM(weekMapP1[k].w, weekMapP1[k].m), tc: weekMapP1[k].p.size, ac: weekMapP1[k].a.size, s: weekMapP1[k].s, avgSku: weekMapP1[k].invs > 0 ? weekMapP1[k].skus/weekMapP1[k].invs : 0, w: weekMapP1[k].w, m: weekMapP1[k].m })).sort((a,b) => { let m1 = monthOrder[a.m.toLowerCase()]||99; let m2 = monthOrder[b.m.toLowerCase()]||99; return m1!==m2 ? m1-m2 : a.w.localeCompare(b.w); });
-    drawChart('weekChart', weekData, 'label', true); // isHorizontal = true -> Cột ngang
+    drawChart('weekChart', weekData, 'label', false); // Cột dọc (false)
     drawHorizontalTable('weekHeaderRow', 'weekTableBody', weekData, t('colWeek'), true, { label: t('sysTotal'), ...p1Kpi }, false); // Bảng ngang
 
-    // 4. CHARTS P2 (BẢNG DỌC ĐỂ KHÔNG PHÁ VỠ GRID 1FR 1FR)
+    // 4. CHARTS P2 (BIỂU ĐỒ NGANG, BẢNG DỌC ĐỂ KHÔNG PHÁ VỠ GRID 1FR 1FR)
     let kamData = Object.keys(kamMap).map(k => ({ label: k, tc: kamMap[k].p.size, ac: kamMap[k].a.size, s: kamMap[k].s, avgSku: kamMap[k].invs > 0 ? kamMap[k].skus/kamMap[k].invs : 0 })).sort((a,b) => b.s - a.s).slice(0, 10);
-    drawChart('kamChart', kamData, 'label', true); 
+    drawChart('kamChart', kamData, 'label', true); // Cột ngang (true)
     drawVerticalTable('kamHeaderRow', 'kamTableBody', kamData, t('colKam'), false); 
 
     let kaeData = Object.keys(kaeMap).map(k => ({ label: k, tc: kaeMap[k].p.size, ac: kaeMap[k].a.size, s: kaeMap[k].s, avgSku: kaeMap[k].invs > 0 ? kaeMap[k].skus/kaeMap[k].invs : 0 })).sort((a,b) => b.s - a.s).slice(0, 10);
-    drawChart('dayChart', kaeData, 'label', true); 
+    drawChart('dayChart', kaeData, 'label', true); // Cột ngang (true)
     drawVerticalTable('dayHeaderRow', 'dayTableBody', kaeData, t('colKae'), false); 
 
     // 5. PART 3: SEGMENTATION & BOX %
@@ -569,14 +569,12 @@ function renderPart3(segMap, sysKpiObj) {
     document.getElementById('segmentAreaTableContainer').innerHTML = html;
 }
 
-// ======================== DRAW X-Y TRANSPOSED TABLES ========================
+// ======================== DRAW X-Y ========================
 function drawHorizontalTable(hid, bid, data, titleNameLabel, showTotal, exp, checkRisk) {
     let rd = [...data]; if (showTotal && exp) rd.push(exp);
     
-    // Header ngang
     document.getElementById(hid).innerHTML = `<th class="label-cell" style="background:var(--bg-card);">${titleNameLabel}</th>` + rd.map(x => `<th style="${x === rd[rd.length-1] && showTotal ? 'background: var(--primary); color: var(--bg-main);' : ''}">${x.label || ""}</th>`).join("");
     
-    // Dòng (Metrics) ngang
     let rows = [
         { l: t('tbPlan'), k: "tc", f: v => fmt(v) },
         { l: t('tbActive'), k: "ac", f: v => `<b style="color:var(--primary)">${fmt(v)}</b>` },
@@ -649,8 +647,8 @@ function drawChart(id, data, labelKey, isHorizontal) {
     } else {
         scalesConfig = {
             x: { grid: { display: false } },
-            y: { beginAtZero: true, title: { display: true, text: t('axisCust') } },
-            yS: { position: 'right', beginAtZero: true, ticks: { callback: v => fmt(v) }, title: { display: true, text: t('axisVnd') }, grid: { display: false } }
+            y: { position: 'right', beginAtZero: true, title: { display: true, text: t('axisCust') }, grid: { display: false } },
+            yS: { position: 'left', beginAtZero: true, ticks: { callback: v => fmt(v) }, title: { display: true, text: t('axisVnd') }, grid: { color: 'rgba(255,255,255,0.05)' } }
         };
     }
 
