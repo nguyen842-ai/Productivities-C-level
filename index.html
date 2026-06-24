@@ -9,7 +9,7 @@
            1. CẤU HÌNH DARK THEME PREMIUM (iOS STYLING & 5 COLORS)
            ========================================================= */
         :root {
-            --bg-main: #16181D; /* Nền tối sâu kiểu iOS Dark Mode */
+            --bg-main: #16181D;
             --bg-card: #21232A;
             
             /* Bảng 5 màu thực tế từ hình ảnh minh họa */
@@ -110,7 +110,7 @@
         .side-by-side { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 25px; }
         
         /* Bo tròn bảng dữ liệu mượt mà */
-        .table-wrap { overflow: hidden; border-radius: var(--border-radius-sm); border: 1px solid var(--border-color); margin-top: 20px; width: 100%; }
+        .table-wrap { overflow-x: auto; border-radius: var(--border-radius-sm); border: 1px solid var(--border-color); margin-top: 20px; width: 100%; }
         .data-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 500px; }
         .data-table th { background: var(--secondary); color: var(--text-main); padding: 12px 10px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 10px; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
         .data-table td { padding: 11px 12px; border-bottom: 1px solid var(--border-color); text-align: center; color: var(--text-main); white-space: nowrap; }
@@ -366,10 +366,7 @@ function renderFilters() {
 function render() {
     if (dbMaster.length === 0 && dbSales.length === 0) return; 
 
-    // Filter cho PHẦN 1: Chỉ chịu ảnh hưởng bởi Month, Week
     const filterP1 = (d) => (filters.month.length === 0 || filters.month.includes(d.month)) && (filters.week.length === 0 || filters.week.includes(d._w));
-    
-    // Filter cho PHẦN 2 & 3: Chịu ảnh hưởng bởi TẤT CẢ bộ lọc
     const filterMain = (d) => filterP1(d) && (filters.hq.length === 0 || filters.hq.includes(d.hq)) && (filters.area.length === 0 || filters.area.includes(d.area));
 
     let sys = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
@@ -483,27 +480,26 @@ function render() {
     });
     document.getElementById('tree-container').innerHTML = treeHtml || '<div style="color:var(--text-muted); font-style:italic;">No Personnel Data</div>';
 
-   // 3. CHARTS P1 
+    // 3. CHARTS P1 (BIỂU ĐỒ CỘT ĐỨNG, BẢNG NGANG, ẨN FREQ Ở BẢNG TUẦN)
     let p1Total = { tc: 0, ac: 0, s: 0, skus: 0, invs: 0 };
     Object.values(areaMapP1).forEach(m => { p1Total.tc+=m.p.size; p1Total.ac+=m.a.size; p1Total.s+=m.s; p1Total.skus+=m.skus; p1Total.invs+=m.invs; });
     let p1Kpi = { tc: p1Total.tc, ac: p1Total.ac, s: p1Total.s, avgSku: p1Total.invs > 0 ? p1Total.skus/p1Total.invs : 0, freq: p1Total.ac > 0 ? p1Total.invs/p1Total.ac : 0 };
 
     let areaData = Object.keys(areaMapP1).map(k => ({ label: k, tc: areaMapP1[k].p.size, ac: areaMapP1[k].a.size, s: areaMapP1[k].s, avgSku: areaMapP1[k].invs > 0 ? areaMapP1[k].skus/areaMapP1[k].invs : 0, freq: areaMapP1[k].a.size > 0 ? areaMapP1[k].invs/areaMapP1[k].a.size : 0 })).sort((a,b) => b.s - a.s);
     drawChart('areaChart', areaData, 'label', false); // Cột đứng
-    // Gọi hàm drawHorizontalTable để vẽ bảng
+    // Bảng ngang, HIỆN Freq (mặc định)
     drawHorizontalTable('areaHeaderRow', 'areaTableBody', areaData, t('colArea'), true, { label: t('sysTotal'), ...p1Kpi }, true); 
 
     let weekData = Object.keys(weekMapP1).map(k => ({ label: formatWM(weekMapP1[k].w, weekMapP1[k].m), tc: weekMapP1[k].p.size, ac: weekMapP1[k].a.size, s: weekMapP1[k].s, avgSku: weekMapP1[k].invs > 0 ? weekMapP1[k].skus/weekMapP1[k].invs : 0, freq: weekMapP1[k].a.size > 0 ? weekMapP1[k].invs/weekMapP1[k].a.size : 0, w: weekMapP1[k].w, m: weekMapP1[k].m })).sort((a,b) => { let m1 = monthOrder[a.m.toLowerCase()]||99; let m2 = monthOrder[b.m.toLowerCase()]||99; return m1!==m2 ? m1-m2 : a.w.localeCompare(b.w); });
     drawChart('weekChart', weekData, 'label', false); // Cột đứng
-    // Gọi hàm drawHorizontalTable để vẽ bảng
-    drawHorizontalTable('weekHeaderRow', 'weekTableBody', weekData, t('colWeek'), true, { label: t('sysTotal'), ...p1Kpi }, false);
+    // Bảng ngang, ẨN Freq (thêm tham số true cuối cùng)
+    drawHorizontalTable('weekHeaderRow', 'weekTableBody', weekData, t('colWeek'), true, { label: t('sysTotal'), ...p1Kpi }, false, true); 
 
-    // 4. CHARTS P2 (FIXED TYPO & GIỮ NGUYÊN BIỂU ĐỒ NGANG SFE)
+    // 4. CHARTS P2 (FIXED TYPO KAE, BIỂU ĐỒ NGANG SFE)
     let kamData = Object.keys(kamMap).map(k => ({ label: k, tc: kamMap[k].p.size, ac: kamMap[k].a.size, s: kamMap[k].s, avgSku: kamMap[k].invs > 0 ? kamMap[k].skus/kamMap[k].invs : 0, freq: kamMap[k].a.size > 0 ? kamMap[k].invs/kamMap[k].a.size : 0 })).sort((a,b) => b.s - a.s).slice(0, 10);
     drawChart('kamChart', kamData, 'label', true); 
     drawVerticalTable('kamHeaderRow', 'kamTableBody', kamData, t('colKam'), false); 
 
-    // ĐÃ SỬA: Thay kamMap[k].invs thành kaeMap[k].invs để loại bỏ hoàn toàn sập màn hình Loading
     let kaeData = Object.keys(kaeMap).map(k => ({ label: k, tc: kaeMap[k].p.size, ac: kaeMap[k].a.size, s: kaeMap[k].s, avgSku: kaeMap[k].invs > 0 ? kaeMap[k].skus/kaeMap[k].invs : 0, freq: kaeMap[k].a.size > 0 ? kaeMap[k].invs/kaeMap[k].a.size : 0 })).sort((a,b) => b.s - a.s).slice(0, 10);
     drawChart('dayChart', kaeData, 'label', true); 
     drawVerticalTable('dayHeaderRow', 'dayTableBody', kaeData, t('colKae'), false); 
@@ -588,8 +584,8 @@ function renderPart3(segMap, sysKpiObj) {
     document.getElementById('segmentAreaTableContainer').innerHTML = html;
 }
 
-// ======================== DRAW HORIZONTAL & VERTICAL TABLES ========================
-function drawHorizontalTable(hid, bid, data, titleNameLabel, showTotal, exp, checkRisk) {
+// Cập nhật hàm Horizontal Table thêm tham số hideFreq
+function drawHorizontalTable(hid, bid, data, titleNameLabel, showTotal, exp, checkRisk, hideFreq = false) {
     let rd = [...data]; if (showTotal && exp) rd.push(exp);
     
     document.getElementById(hid).innerHTML = `<th class="label-cell" style="background:var(--bg-card);">${titleNameLabel}</th>` + rd.map(x => `<th style="${x === rd[rd.length-1] && showTotal ? 'background: var(--primary); color: var(--bg-main);' : ''}">${x.label || ""}</th>`).join("");
@@ -603,10 +599,14 @@ function drawHorizontalTable(hid, bid, data, titleNameLabel, showTotal, exp, che
             return `<b class="${risk}">${sr.toFixed(1)}% ${risk ? '⚠️' : ''}</b>`;
         }},
         { l: t('tbSales'), k: "s", f: v => fmt(v) },
-        { l: t('tbDrop'), k: "ds", f: (_, i) => fmt(i.ac > 0 ? i.s/i.ac : 0) },
-        { l: t('tbFreq'), k: "freq", f: v => `<span style="color:var(--accent-success); font-weight:800">${(Number(v)||0).toFixed(1)}</span>` },
-        { l: t('tbLppc'), k: "avgSku", f: v => `<span style="color:var(--accent-warning); font-weight:800">${(Number(v)||0).toFixed(1)}</span>` }
+        { l: t('tbDrop'), k: "ds", f: (_, i) => fmt(i.ac > 0 ? i.s/i.ac : 0) }
     ];
+
+    if (!hideFreq) {
+        rows.push({ l: t('tbFreq'), k: "freq", f: v => `<span style="color:var(--accent-success); font-weight:800">${(Number(v)||0).toFixed(1)}</span>` });
+    }
+    
+    rows.push({ l: t('tbLppc'), k: "avgSku", f: v => `<span style="color:var(--accent-warning); font-weight:800">${(Number(v)||0).toFixed(1)}</span>` });
 
     document.getElementById(bid).innerHTML = rows.map(r => `<tr><td class="label-cell">${r.l}</td>${rd.map(x => `<td style="${x === rd[rd.length-1] && showTotal ? 'background:rgba(121, 189, 154, 0.1);font-weight:800' : ''}">${r.f(x[r.k], x)}</td>`).join("")}</tr>`).join("");
 }
@@ -675,7 +675,6 @@ function drawChart(id, data, labelKey, isHorizontal) {
         };
     }
 
-    // Áp dụng bảng màu thực tế phối trộn chuẩn xác từ hình thiết kế
     const colorLine = '#CFF09E';       
     const colorBarTotal = '#0B486B';   
     const colorBarActive = '#79BD9A';  
