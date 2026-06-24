@@ -89,13 +89,18 @@
         .kpi-card .value { font-size: 26px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; margin-bottom: 8px; }
         .kpi-card .sub { font-size: 11px; color: var(--primary); font-weight: 600; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px; margin-top: auto; }
         
+        /* Cấu hình mới cho Danh mục nhân sự tự cuộn ngang và rải cột Grid */
         .tree-box { background: var(--bg-card); border-radius: var(--border-radius); padding: 22px; border: 1px solid var(--border-color); box-shadow: var(--ios-shadow); height: 100%; display: flex; flex-direction: column; min-height: 250px;}
-        .tree-content { flex-grow: 1; overflow-y: auto; max-height: 300px; }
-        .tree-node summary { padding: 10px 14px; background: rgba(255,255,255,0.03); border-radius: var(--border-radius-sm); cursor: pointer; font-weight: 800; font-size: 11px; list-style: none; margin-bottom: 6px; display: flex; justify-content: space-between; }
-        .tree-node summary::before { content: '▶'; font-size: 8px; margin-right: 10px; color: var(--secondary); transition: 0.2s; }
-        .tree-node[open] summary::before { transform: rotate(90deg); }
-        .t-children { border-left: 1px solid var(--secondary); margin-left: 18px; padding-left: 12px; margin-bottom: 10px; }
-        .t-leaf { display: flex; justify-content: space-between; padding: 7px 12px; font-size: 11px; color: var(--text-muted); border-bottom: 1px solid rgba(255,255,255,0.02); }
+        .tree-content { flex-grow: 1; overflow-y: auto; overflow-x: auto; max-height: 300px; }
+        .tree-node summary { padding: 10px 14px; background: rgba(255,255,255,0.03); border-radius: var(--border-radius-sm); cursor: pointer; font-weight: 800; font-size: 11px; list-style: none; margin-bottom: 6px; }
+        .tree-node summary::-webkit-details-marker { display: none; }
+        .t-name { display: flex; align-items: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; color: var(--text-main);}
+        .t-name::before { content: '▶'; font-size: 8px; margin-right: 10px; color: var(--secondary); transition: 0.2s; flex-shrink: 0; }
+        .tree-node[open] summary .t-name::before { transform: rotate(90deg); }
+        .t-children { border-left: 1px solid var(--secondary); margin-left: 18px; padding-left: 0; margin-bottom: 10px; }
+        .t-leaf { padding: 7px 14px; font-size: 11px; color: var(--text-muted); border-bottom: 1px solid rgba(255,255,255,0.02); }
+        .leaf-name { padding-left: 18px; color: var(--text-muted); }
+        .leaf-name::before { display: none; }
 
         /* CHARTS & TABLES */
         .chart-box { background: var(--bg-card); border-radius: var(--border-radius); border: 1px solid var(--border-color); box-shadow: var(--ios-shadow); padding: 25px; margin-bottom: 35px; width: 100%; overflow: hidden;}
@@ -412,16 +417,16 @@ function render() {
     const filterP1 = (d) => (filters.month.length === 0 || filters.month.includes(d.month)) && (filters.week.length === 0 || filters.week.includes(d._w));
     const filterMain = (d) => filterP1(d) && (filters.hq.length === 0 || filters.hq.includes(d.hq)) && (filters.area.length === 0 || filters.area.includes(d.area));
 
-    // Nhận diện Tháng hiện tại và Tháng trước để tính MoM
     let curM = filters.month.length === 1 ? filters.month[0].toLowerCase() : null;
     let prevMNum = curM ? monthOrder[curM] - 1 : null;
     let prevM = Object.keys(monthOrder).find(k => monthOrder[k] === prevMNum);
+
+    let activeMonths = new Set(); // Dùng để rải cột cho Danh mục nhân sự
 
     let sys = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
     let areaMapP1 = {}, weekMapP1 = {}; 
     let kamMap = {}, kaeMap = {}, treeMap = {}, segMap = {}; 
     
-    // Trackers cho KAE và DSR
     let kaeActive = new Set(), dsrActive = new Set();
     let kaeSales = 0, dsrSales = 0;
     let kaeActivePrev = new Set(), dsrActivePrev = new Set();
@@ -445,6 +450,7 @@ function render() {
 
         if(isMain) {
             sys.p.add(d.cusCode);
+            activeMonths.add(d.month.toUpperCase()); // Thu thập các tháng đang Active trong dữ liệu
             
             const kam = d._kam;
             if (kam) {
@@ -460,7 +466,6 @@ function render() {
                 kaeMap[kae].p.add(d.cusCode);
                 kaeMap[kae].areas.add(d.area);
                 
-                // Gom nhóm KAE vs DSR hiện tại (bỏ qua những người có dấu nghỉ việc ❌)
                 if (!rawKae.includes('❌')) {
                     if (kae.toUpperCase().includes('DSR')) dsrActive.add(kae);
                     else kaeActive.add(kae);
@@ -473,7 +478,6 @@ function render() {
             segMap[segKey].p.add(d.cusCode);
         }
 
-        // Lấy data Tháng trước (Prev Month) cho Headcount MoM
         if (isPrevMonth) {
             const kae = d._kae;
             let rawKae = String(d.kae).trim();
@@ -522,7 +526,6 @@ function render() {
                 kaeMap[kae].areas.add(d.area);
                 if (v > 0) { kaeMap[kae].a.add(d.cusCode); kaeMap[kae].skus += skus; kaeMap[kae].invs++; }
                 
-                // Doanh số chia nhóm hiện tại
                 if (kae.toUpperCase().includes('DSR')) dsrSales += v;
                 else kaeSales += v;
             }
@@ -530,10 +533,19 @@ function render() {
             if (kam && kae) {
                 let kamDisplay = d._kam_display;
                 let kaeDisplay = d._kae_display;
-                if (!treeMap[kam]) treeMap[kam] = { s: 0, kaes: {}, display: kamDisplay };
-                if (!treeMap[kam].kaes[kae]) treeMap[kam].kaes[kae] = { s: 0, display: kaeDisplay };
                 
-                treeMap[kam].s += v; treeMap[kam].kaes[kae].s += v;
+                // Mở rộng object treeMap để chứa dữ liệu theo từng tháng (sByM)
+                if (!treeMap[kam]) treeMap[kam] = { s: 0, sByM: {}, kaes: {}, display: kamDisplay };
+                if (!treeMap[kam].kaes[kae]) treeMap[kam].kaes[kae] = { s: 0, sByM: {}, display: kaeDisplay };
+                
+                let m = d.month.toUpperCase();
+                if (!treeMap[kam].sByM[m]) treeMap[kam].sByM[m] = 0;
+                if (!treeMap[kam].kaes[kae].sByM[m]) treeMap[kam].kaes[kae].sByM[m] = 0;
+                
+                treeMap[kam].s += v; 
+                treeMap[kam].kaes[kae].s += v;
+                treeMap[kam].sByM[m] += v; 
+                treeMap[kam].kaes[kae].sByM[m] += v;
                 
                 if (kamDisplay.match(/[✔️❌]/)) treeMap[kam].display = kamDisplay;
                 if (kaeDisplay.match(/[✔️❌]/)) treeMap[kam].kaes[kae].display = kaeDisplay;
@@ -546,7 +558,6 @@ function render() {
             if (v > 0) { segMap[segKey].a.add(d.cusCode); }
         }
 
-        // Lấy Sales Tháng trước cho Năng suất MoM
         if (isPrevMonth) {
             const kae = d._kae;
             if (kae && !kae.toUpperCase().startsWith('KAM')) {
@@ -576,7 +587,6 @@ function render() {
     document.getElementById("val-avg-kae").innerText = fmt(curAvgKae);
     document.getElementById("val-avg-dsr").innerText = fmt(curAvgDsr);
 
-    // Tính và in HTML của MoM (Chỉ khi chọn đúng 1 Tháng & Có dữ liệu lịch sử)
     if (filters.month.length === 1 && prevM) {
         document.getElementById("mom-headcount-kae").innerHTML = getMoMHtml(kaeActive.size, kaeActivePrev.size);
         document.getElementById("mom-headcount-dsr").innerHTML = getMoMHtml(dsrActive.size, dsrActivePrev.size);
@@ -586,25 +596,53 @@ function render() {
         document.getElementById("mom-avg-kae").innerHTML = getMoMHtml(curAvgKae, prevAvgKae);
         document.getElementById("mom-avg-dsr").innerHTML = getMoMHtml(curAvgDsr, prevAvgDsr);
     } else {
-        // Xóa trống mục MoM nếu chọn "Tất cả" hoặc lọc trúng tháng đầu tiên (Tháng 5)
         document.getElementById("mom-headcount-kae").innerHTML = '';
         document.getElementById("mom-headcount-dsr").innerHTML = '';
         document.getElementById("mom-avg-kae").innerHTML = '';
         document.getElementById("mom-avg-dsr").innerHTML = '';
     }
 
-    // 3. TREE PERSONNEL
-    let treeHtml = '';
+    // 3. TREE PERSONNEL (BẢN UPDATE: CHIA CỘT THEO THÁNG SỬ DỤNG CSS GRID)
+    // Sắp xếp các tháng active để đưa lên Header của lưới
+    let getMonthNum = (mStr) => { 
+        let c = mStr.toLowerCase().replace('m','').replace('t','').trim(); 
+        return !isNaN(c) ? parseInt(c) : (monthOrder[mStr.toLowerCase()] || 99); 
+    };
+    let sortedMonths = Array.from(activeMonths).sort((a,b) => getMonthNum(a) - getMonthNum(b));
+    let colCount = sortedMonths.length + 1; // +1 cho cột Tổng
+    
+    // Tạo style rải cột tự động
+    let gridStyle = `grid-template-columns: minmax(130px, 2.5fr) repeat(${colCount}, minmax(60px, 1fr)); gap: 10px; align-items: center; text-align: right; width: 100%;`;
+
+    let treeHtml = `<div style="min-width: 450px;">`; // Cho phép scroll ngang trên mobile
+    treeHtml += `<div style="display:grid; ${gridStyle} padding: 0 14px 10px 14px; font-weight: 800; color: var(--text-muted); font-size: 10px; text-transform: uppercase; border-bottom: 1px solid var(--border-color); margin-bottom: 10px;">
+        <span style="text-align: left;">Nhân sự</span>
+        ${sortedMonths.map(m => `<span>${m}</span>`).join('')}
+        <span style="color: var(--primary);">Tổng</span>
+    </div>`;
+
     Object.keys(treeMap).sort((a,b) => treeMap[b].s - treeMap[a].s).forEach(k => {
-        treeHtml += `<details class="tree-node"><summary><span>${treeMap[k].display}</span><span>${fmt(treeMap[k].s)}</span></summary><div class="t-children">`;
+        let kamMonthHtml = sortedMonths.map(m => `<span>${fmt(treeMap[k].sByM[m] || 0)}</span>`).join('');
+        treeHtml += `<details class="tree-node"><summary style="display:grid; ${gridStyle}">
+            <div class="t-name">${treeMap[k].display}</div>
+            ${kamMonthHtml}
+            <span style="color: var(--primary);">${fmt(treeMap[k].s)}</span>
+        </summary><div class="t-children">`;
+        
         Object.keys(treeMap[k].kaes).sort((a,b) => treeMap[k].kaes[b].s - treeMap[k].kaes[a].s).forEach(ke => {
-            treeHtml += `<div class="t-leaf"><span>${treeMap[k].kaes[ke].display}</span><span>${fmt(treeMap[k].kaes[ke].s)}</span></div>`;
+            let kaeMonthHtml = sortedMonths.map(m => `<span>${fmt(treeMap[k].kaes[ke].sByM[m] || 0)}</span>`).join('');
+            treeHtml += `<div class="t-leaf" style="display:grid; ${gridStyle}">
+                <div class="t-name leaf-name">${treeMap[k].kaes[ke].display}</div>
+                ${kaeMonthHtml}
+                <span style="color: var(--primary);">${fmt(treeMap[k].kaes[ke].s)}</span>
+            </div>`;
         });
         treeHtml += `</div></details>`;
     });
+    treeHtml += `</div>`; // Đóng tag cuộn ngang
     document.getElementById('tree-container').innerHTML = treeHtml || '<div style="color:var(--text-muted); font-style:italic;">No Personnel Data</div>';
 
-    // 4. CHARTS P1 (BIỂU ĐỒ CỘT ĐỨNG, BẢNG NGANG, ẨN FREQ Ở BẢNG TUẦN)
+    // 4. CHARTS P1
     let p1Total = { tc: 0, ac: 0, s: 0, skus: 0, invs: 0 };
     Object.values(areaMapP1).forEach(m => { p1Total.tc+=m.p.size; p1Total.ac+=m.a.size; p1Total.s+=m.s; p1Total.skus+=m.skus; p1Total.invs+=m.invs; });
     let p1Kpi = { tc: p1Total.tc, ac: p1Total.ac, s: p1Total.s, avgSku: p1Total.invs > 0 ? p1Total.skus/p1Total.invs : 0, freq: p1Total.ac > 0 ? p1Total.invs/p1Total.ac : 0 };
@@ -617,7 +655,7 @@ function render() {
     drawChart('weekChart', weekData, 'label', false); // Cột đứng
     drawHorizontalTable('weekHeaderRow', 'weekTableBody', weekData, t('colWeek'), true, { label: t('sysTotal'), ...p1Kpi }, false, true); 
 
-    // 5. CHARTS P2 (BIỂU ĐỒ DỌC + THÊM CỘT KHU VỰC)
+    // 5. CHARTS P2
     let kamData = Object.keys(kamMap).map(k => ({
         label: k, areaStr: Array.from(kamMap[k].areas).join(', '),
         tc: kamMap[k].p.size, ac: kamMap[k].a.size, s: kamMap[k].s, avgSku: kamMap[k].invs > 0 ? kamMap[k].skus/kamMap[k].invs : 0, freq: kamMap[k].a.size > 0 ? kamMap[k].invs/kamMap[k].a.size : 0
@@ -712,7 +750,6 @@ function renderPart3(segMap, sysKpiObj) {
     document.getElementById('segmentAreaTableContainer').innerHTML = html;
 }
 
-// Thêm tham số hideFreq
 function drawHorizontalTable(hid, bid, data, titleNameLabel, showTotal, exp, checkRisk, hideFreq = false) {
     let rd = [...data]; if (showTotal && exp) rd.push(exp);
     
@@ -739,7 +776,6 @@ function drawHorizontalTable(hid, bid, data, titleNameLabel, showTotal, exp, che
     document.getElementById(bid).innerHTML = rows.map(r => `<tr><td class="label-cell">${r.l}</td>${rd.map(x => `<td style="${x === rd[rd.length-1] && showTotal ? 'background:rgba(121, 189, 154, 0.1);font-weight:800' : ''}">${r.f(x[r.k], x)}</td>`).join("")}</tr>`).join("");
 }
 
-// Thêm tham số showAreaCol cho bảng P2 để hiển thị cột Khu vực mà không hỏng bố cục Sticky
 function drawVerticalTable(hid, bid, data, titleNameLabel, showTotal, exp, checkRisk, hideFreq = false, showAreaCol = false) {
     let areaTh = showAreaCol ? `<th class="label-cell" style="width:100px; min-width:100px; max-width:100px; z-index:3;">${t('colArea')}</th>` : '';
     let nameThStyle = showAreaCol ? `style="left: 100px; border-left: 1px solid var(--border-color); z-index:3;"` : '';
