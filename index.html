@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>RTM Strategic Dashboard © 2026 TCI</title>
+    <title>RTM Strategic Analytics © 2026 TCI</title>
     <style>
         /* =========================================================
-           1. CẤU HÌNH MÀU SẮC & GIAO DIỆN CHUNG (DARK THEME)
+           1. CẤU HÌNH DARK THEME CAO CẤP
            ========================================================= */
         :root {
             --bg-main: #1E1F23;
@@ -18,128 +18,103 @@
             --border-color: rgba(168, 200, 196, 0.15);
             --border-radius: 12px;
             --accent-warning: #ea580c;
+            --accent-danger: #dc2626;
             --accent-success: #16a34a;
         }
 
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        
-        body { 
-            margin: 0; font-family: 'Segoe UI', system-ui, sans-serif; 
-            background-color: var(--bg-main); color: var(--text-main); 
-            font-size: 13px; overflow-x: hidden; 
-        }
+        body { margin: 0; font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg-main); color: var(--text-main); font-size: 13px; overflow-x: hidden; }
 
         /* =========================================================
-           2. MÀN HÌNH LOADING
+           2. LOADER & TRANSITIONS
            ========================================================= */
         #loader-wrapper {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: var(--bg-main); z-index: 99999;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: opacity 0.6s ease, visibility 0.6s ease;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-main); z-index: 99999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; transition: 0.6s ease;
         }
         #loader-wrapper.hidden { opacity: 0; visibility: hidden; }
-        .spinner-container { position: relative; width: 80px; height: 80px; margin-bottom: 25px; }
-        .spinner-ring { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 3px solid transparent; box-sizing: border-box; }
-        .spinner-ring:nth-child(1) { border-top-color: var(--primary); border-left-color: var(--primary); animation: spin 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite; box-shadow: 0 0 15px rgba(168, 200, 196, 0.3); }
-        .spinner-ring:nth-child(2) { width: 70%; height: 70%; top: 15%; left: 15%; border-bottom-color: var(--secondary); border-right-color: var(--secondary); animation: spin-reverse 1s linear infinite; }
-        .loader-text { color: var(--primary); font-size: 14px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; animation: pulse 1.5s ease-in-out infinite; }
-
+        .spinner-container { position: relative; width: 60px; height: 60px; margin-bottom: 20px; }
+        .spinner-ring { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 3px solid transparent; }
+        .spinner-ring:nth-child(1) { border-top-color: var(--primary); animation: spin 1s linear infinite; }
+        .spinner-ring:nth-child(2) { border-bottom-color: var(--secondary); animation: spin-reverse 1.2s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes spin-reverse { 0% { transform: rotate(360deg); } 100% { transform: rotate(0deg); } }
-        @keyframes pulse { 0%, 100% { opacity: 1; text-shadow: 0 0 10px rgba(168, 200, 196, 0.5); } 50% { opacity: 0.4; text-shadow: none; } }
-        
+        .loader-text { color: var(--primary); font-size: 11px; letter-spacing: 3px; text-transform: uppercase; animation: pulse 1s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
         /* =========================================================
-           3. LAYOUT REPORT & COMPONENTS
+           3. LAYOUT REPORT
            ========================================================= */
-        .main-content { padding: 30px; width: 100%; min-height: 100vh; }
+        .main-content { padding: 30px; width: 100%; min-height: 100vh; max-width: 1600px; margin: 0 auto; }
         
-        /* TOP HEADER: Tiêu đề + Song ngữ + Bộ lọc ngang */
-        .top-header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; margin-bottom: 25px; gap: 20px; flex-wrap: wrap; }
+        /* HEADER SECTION */
+        .top-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; margin-bottom: 30px; gap: 20px; }
+        .exec-title h1 { margin: 0; font-size: 24px; font-weight: 800; color: var(--primary); letter-spacing: -0.5px; }
+        .exec-title p { margin: 4px 0 0 0; color: var(--secondary); font-size: 12px; font-weight: 600; }
         
-        .header-left { display: flex; align-items: flex-start; gap: 25px; flex-wrap: wrap; }
-        .exec-title h1 { margin: 0; font-size: 22px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
-        .exec-title p { margin: 6px 0 0 0; color: var(--secondary); font-size: 12px; font-weight: 600; }
+        .header-controls { display: flex; align-items: center; gap: 20px; }
+        .lang-toggle { display: flex; background: var(--bg-card); padding: 4px; border-radius: 8px; border: 1px solid var(--border-color); }
+        .lang-toggle button { background: transparent; border: none; color: var(--text-muted); padding: 6px 12px; font-size: 11px; font-weight: 800; cursor: pointer; border-radius: 6px; transition: 0.2s; }
+        .lang-toggle button.active { background: var(--primary); color: var(--bg-main); }
 
-        .lang-toggle { display: flex; gap: 6px; padding-top: 2px; }
-        .lang-toggle button { border: 1px solid var(--primary); background: transparent; color: var(--primary); padding: 5px 12px; font-size: 11px; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.2s; outline: none; }
-        .lang-toggle button.active { background: var(--primary); color: var(--bg-main); box-shadow: 0 0 8px rgba(168, 200, 196, 0.4); }
-
-        .top-filters-horizontal { display: flex; gap: 15px; align-items: center; flex-wrap: wrap;}
-        .filter-item-hz { display: flex; flex-direction: column; gap: 6px; min-width: 140px; }
-        .filter-item-hz label { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
-        
-        /* Dropdown Styling */
-        .ms-box { position: relative; width: 100%; border: 1px solid var(--border-color); border-radius: var(--border-radius); background: var(--bg-main); cursor: pointer; }
-        .ms-label { padding: 9px 12px; font-size: 12px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; user-select: none; font-weight: 600;}
-        .ms-label::after { content: '▼'; float: right; font-size: 10px; color: var(--secondary); margin-top: 2px;}
-        .ms-dropdown { position: absolute; top: 100%; right: 0; min-width: 100%; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--border-radius); z-index: 999; max-height: 250px; overflow-y: auto; display: none; box-shadow: 0 8px 20px rgba(0,0,0,0.8); padding: 5px 0; margin-top: 6px;}
-        .ms-opt { display: flex; align-items: center; padding: 10px 15px; font-size: 12px; cursor: pointer; color: var(--text-main); user-select: none; transition: 0.2s; white-space: nowrap;}
-        .ms-opt:hover { background: var(--secondary); color: var(--text-main); }
+        .top-filters-hz { display: flex; gap: 15px; }
+        .filter-item-hz label { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 5px; }
+        .ms-box { position: relative; width: 150px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-card); cursor: pointer; }
+        .ms-label { padding: 8px 12px; font-size: 12px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .ms-label::after { content: '▼'; float: right; font-size: 8px; color: var(--secondary); margin-top: 3px; }
+        .ms-dropdown { position: absolute; top: 100%; right: 0; min-width: 100%; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; z-index: 999; max-height: 250px; overflow-y: auto; display: none; box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
+        .ms-opt { padding: 10px 15px; font-size: 12px; cursor: pointer; transition: 0.2s; }
+        .ms-opt:hover { background: var(--secondary); }
         .ms-opt.selected { background: var(--primary); color: var(--bg-main); font-weight: bold; }
 
-        /* THE PULSE CONTAINER */
-        .section-tag { display: inline-block; padding: 4px 10px; background: rgba(168, 200, 196, 0.1); border: 1px solid var(--secondary); color: var(--primary); font-size: 11px; font-weight: bold; border-radius: 4px; margin-bottom: 15px; letter-spacing: 1px; }
+        /* THE PULSE BLOCK */
+        .section-tag { display: inline-block; padding: 4px 10px; background: rgba(168, 200, 196, 0.08); border-left: 3px solid var(--primary); color: var(--primary); font-size: 11px; font-weight: 800; margin-bottom: 15px; border-radius: 0 4px 4px 0; }
+        .pulse-row { display: grid; grid-template-columns: 1.8fr 1fr; gap: 20px; margin-bottom: 35px; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .kpi-card { background: var(--bg-card); border-radius: var(--border-radius); padding: 20px; border: 1px solid var(--border-color); transition: 0.3s; }
+        .kpi-card:hover { border-color: var(--primary); }
+        .kpi-card .label { font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 10px; }
+        .kpi-card .value { font-size: 28px; font-weight: 800; color: var(--text-main); }
+        .kpi-card .sub { font-size: 11px; color: var(--primary); margin-top: 8px; font-weight: 600; display: flex; justify-content: space-between; }
         
-        .pulse-container { display: grid; grid-template-columns: 2fr 1.2fr; gap: 20px; margin-bottom: 35px; }
-        
-        .kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; align-content: start;}
-        .kpi-card { background: var(--bg-card); border-radius: var(--border-radius); padding: 22px 18px; border: 1px solid var(--border-color); position: relative; overflow: hidden;}
-        .kpi-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: var(--secondary); }
-        .kpi-card.md-focus::before { background: var(--primary); }
-        .kpi-card .label { font-size: 11px; color: var(--text-muted); font-weight: 700; margin-bottom: 8px; text-transform: uppercase; }
-        .kpi-card .value { font-size: 26px; font-weight: 800; color: var(--text-main); }
-        .kpi-card .sub { font-size: 11px; color: var(--primary); margin-top: 8px; font-weight: 600; display: flex; justify-content: space-between;}
-
-        /* TREE DIAGRAM STYLES */
-        .tree-box { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 20px; height: 100%; display: flex; flex-direction: column; max-height: 250px; }
-        .tree-box h3 { margin: 0 0 15px 0; font-size: 12px; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;}
-        .tree-content { flex-grow: 1; overflow-y: auto; padding-right: 5px; }
-        
-        .tree-node summary { display: flex; justify-content: space-between; padding: 10px 12px; background: rgba(168, 200, 196, 0.05); border-radius: 6px; cursor: pointer; margin-bottom: 6px; font-weight: bold; color: var(--text-main); font-size: 11px; list-style: none; transition: 0.2s;}
-        .tree-node summary:hover { background: rgba(168, 200, 196, 0.15); }
-        .tree-node summary::-webkit-details-marker { display: none; }
-        .tree-node summary::before { content: '▶'; display: inline-block; width: 15px; font-size: 9px; color: var(--secondary); transition: transform 0.2s; }
+        .tree-box { background: var(--bg-card); border-radius: var(--border-radius); padding: 20px; border: 1px solid var(--border-color); height: 100%; display: flex; flex-direction: column; }
+        .tree-content { flex-grow: 1; overflow-y: auto; max-height: 250px; }
+        .tree-node summary { padding: 10px; background: rgba(255,255,255,0.03); border-radius: 6px; cursor: pointer; font-weight: 800; font-size: 11px; list-style: none; margin-bottom: 4px; display: flex; justify-content: space-between; }
+        .tree-node summary::before { content: '▶'; font-size: 8px; margin-right: 10px; color: var(--secondary); transition: 0.2s; }
         .tree-node[open] summary::before { transform: rotate(90deg); }
+        .t-children { border-left: 1px solid var(--secondary); margin-left: 15px; padding-left: 10px; margin-bottom: 10px; }
+        .t-leaf { display: flex; justify-content: space-between; padding: 6px 10px; font-size: 11px; color: var(--text-muted); border-bottom: 1px solid rgba(255,255,255,0.02); }
+
+        /* DATA VISUALS */
+        .chart-box { background: var(--bg-card); border-radius: var(--border-radius); border: 1px solid var(--border-color); padding: 25px; margin-bottom: 30px; }
+        .chart-header { margin-bottom: 20px; }
+        .chart-title { font-size: 14px; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
+        .chart-title::before { content: ""; width: 4px; height: 16px; background: var(--primary); border-radius: 2px; }
+        .chart-subtitle { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 4px; }
         
-        .t-children { padding-left: 12px; margin-bottom: 10px; border-left: 2px solid var(--border-color); margin-left: 8px; margin-top: 4px; }
-        .t-leaf { display: flex; justify-content: space-between; padding: 8px 12px; font-size: 11px; color: var(--text-muted); transition: 0.2s; border-bottom: 1px dashed rgba(168, 200, 196, 0.1); }
-        .t-leaf:last-child { border-bottom: none; }
-        .t-leaf:hover { background: rgba(109, 143, 139, 0.1); color: var(--text-main); border-radius: 4px; }
-        .t-val { color: var(--primary); font-weight: 600; }
+        .table-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border-color); margin-top: 15px; }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .data-table th { background: var(--secondary); color: var(--bg-main); padding: 12px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 10px; }
+        .data-table td { padding: 10px; border-bottom: 1px solid var(--border-color); text-align: center; }
+        .label-cell { background: var(--bg-card); color: var(--primary); font-weight: 800; text-align: left !important; width: 180px; position: sticky; left: 0; z-index: 2; border-right: 1px solid var(--border-color); }
+        .risk-flag { color: var(--accent-danger) !important; font-weight: 800 !important; }
 
-        /* CHARTS & TABLES */
-        .chart-box { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 25px; margin-bottom: 30px; }
-        .chart-title { font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; display: flex; align-items: center; text-transform: uppercase; }
-        .chart-title::before { content: ""; display: inline-block; width: 4px; height: 16px; background: var(--primary); margin-right: 10px; border-radius: 2px;}
-        .chart-subtitle { font-size: 11px; color: var(--text-muted); margin-bottom: 20px; padding-left: 14px; font-style: italic; }
-        
-        .table-wrap { overflow-x: auto; border-radius: var(--border-radius); border: 1px solid var(--border-color); margin-top: 15px; width: 100%; display: block; -webkit-overflow-scrolling: touch; }
-        .data-table { width: 100%; border-collapse: collapse; background: var(--bg-main); font-size: 12px; min-width: 800px; } 
-        .data-table th { background: var(--secondary); color: var(--text-main); padding: 12px; border: 1px solid var(--border-color); white-space: nowrap; font-weight: 600; text-transform: uppercase; font-size: 11px;}
-        .data-table td { padding: 10px 12px; border: 1px solid var(--border-color); text-align: center; white-space: nowrap; color: var(--text-main); }
-        .label-cell { background: var(--bg-card); color: var(--primary); font-weight: 800; text-align: left !important; width: 180px; position: sticky; left: 0; z-index: 2; border-right: 2px solid var(--border-color) !important; }
+        /* PART 3: 60/40 SPLIT + HEATMAP */
+        .segment-container { display: flex; gap: 20px; flex-wrap: wrap; }
+        .segment-left { flex: 0 0 calc(62% - 10px); }
+        .segment-right { flex: 0 0 calc(38% - 10px); }
 
-        .segment-table { width:100%; border-collapse: collapse; margin-top: 15px; font-size: 12px; background: var(--bg-main); min-width: 800px; }
-        .segment-table th { padding: 10px; border: 1px solid var(--border-color); white-space: nowrap; background: var(--secondary); color: var(--text-main); font-size: 11px; text-transform: uppercase;}
-        .segment-table td { padding: 8px 10px; border: 1px solid var(--border-color); text-align: center; white-space: nowrap; color: var(--text-main); }
-        .seg-area-cell { background-color: var(--bg-card); font-weight: bold; text-align: left !important; color: var(--primary); border-right: 2px solid var(--border-color) !important; position: sticky; left: 0; z-index: 2;}
-        .seg-name-cell { text-align: left !important; font-weight: 600; color: var(--text-muted); position: sticky; left: 0; background: var(--bg-main); z-index: 1; border-right: 1px solid var(--border-color); }
+        .heatmap-box { background: var(--bg-card); border-radius: var(--border-radius); border: 1px solid var(--border-color); padding: 20px; height: 100%; }
+        .hm-grid { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: minmax(100px, auto); gap: 10px; height: 350px; }
+        .hm-item { border-radius: 8px; padding: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+        .hm-item .hm-label { font-size: 10px; font-weight: 800; text-transform: uppercase; opacity: 0.8; }
+        .hm-item .hm-val { font-size: 18px; font-weight: 800; margin: 5px 0; }
+        .hm-item .hm-pct { font-size: 10px; font-weight: 600; padding: 2px 6px; background: rgba(0,0,0,0.2); border-radius: 4px; }
 
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-main); }
-        ::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
-
-        @media screen and (max-width: 1100px) {
-            .pulse-container { grid-template-columns: 1fr; }
-            .tree-box { max-height: 400px; }
-        }
-
-        @media screen and (max-width: 768px) {
+        @media (max-width: 1200px) {
             .top-header { flex-direction: column; align-items: flex-start; }
-            .kpi-grid { grid-template-columns: 1fr 1fr; }
-            .label-cell, .seg-area-cell, .seg-name-cell { position: relative; left: auto; z-index: 1; border-right: none !important; }
+            .pulse-row { grid-template-columns: 1fr; }
+            .segment-left, .segment-right { flex: 0 0 100%; }
         }
     </style>
 </head>
@@ -147,24 +122,23 @@
 
 <div id="loader-wrapper">
     <div class="spinner-container"><div class="spinner-ring"></div><div class="spinner-ring"></div></div>
-    <div class="loader-text">Loading Data...</div>
+    <div class="loader-text">Analyzing Strategic Data...</div>
 </div>
 
 <main class="main-content">
-    
     <header class="top-header">
         <div class="header-left">
             <div class="exec-title">
                 <h1 data-i18n="mainTitle">RTM STRATEGIC DASHBOARD</h1>
                 <p data-i18n="subTitle">Đánh giá Hiệu quả Phân phối, Thực thi Tuyến & Phân khúc Sức mua</p>
             </div>
-            <div class="lang-toggle">
+            <div class="lang-toggle" style="margin-top:15px;">
                 <button id="btn-vi" onclick="setLang('vi')" class="active">VI</button>
                 <button id="btn-en" onclick="setLang('en')">EN</button>
             </div>
         </div>
         
-        <div class="top-filters-horizontal">
+        <div class="top-filters-hz">
             <div class="filter-item-hz"><label data-i18n="lblMonth">Tháng</label><div class="ms-box" onclick="toggleMS('month')"><div class="ms-label" id="lbl-month">Tất cả</div><div class="ms-dropdown" id="drop-month"></div></div></div>
             <div class="filter-item-hz"><label data-i18n="lblWeek">Tuần</label><div class="ms-box" onclick="toggleMS('week')"><div class="ms-label" id="lbl-week">Tất cả</div><div class="ms-dropdown" id="drop-week"></div></div></div>
             <div class="filter-item-hz"><label data-i18n="lblRegion">Miền</label><div class="ms-box" onclick="toggleMS('hq')"><div class="ms-label" id="lbl-hq">Tất cả</div><div class="ms-dropdown" id="drop-hq"></div></div></div>
@@ -173,18 +147,17 @@
     </header>
 
     <div class="section-tag" data-i18n="secPulse">CHỈ SỐ SINH TỬ</div>
-    
-    <div class="pulse-container">
+    <div class="pulse-row">
         <div class="kpi-grid">
-            <div class="kpi-card md-focus">
+            <div class="kpi-card">
                 <div class="label" data-i18n="kpiSalesLbl">TỔNG SELL-OUT</div>
                 <div class="value" id="val-sales">0</div>
-                <div class="sub"><span data-i18n="kpiSalesSub1">VNĐ (Chưa VAT)</span> <span style="color:var(--text-muted)" data-i18n="kpiSalesSub2">Dòng tiền</span></div>
+                <div class="sub"><span data-i18n="kpiSalesSub1">VNĐ (Chưa VAT)</span> <span data-i18n="kpiSalesSub2">Volume Flow</span></div>
             </div>
             <div class="kpi-card">
                 <div class="label" data-i18n="kpiActiveLbl">ĐỘ PHỦ SỐNG</div>
                 <div class="value" id="val-strike">0</div>
-                <div class="sub"><span data-i18n="kpiActiveSub1">Cửa hàng đã lên đơn</span> <span style="color:var(--text-muted)">/ <span id="val-cust">0</span> <span data-i18n="kpiActiveSub2">Trên tuyến</span></span></div>
+                <div class="sub"><span id="val-cust">0</span> <span data-i18n="kpiActiveSub2">Trên tuyến</span></div>
             </div>
             <div class="kpi-card">
                 <div class="label" data-i18n="kpiStrikeLbl">STRIKE RATE</div>
@@ -192,56 +165,62 @@
                 <div class="sub"><span data-i18n="kpiStrikeSub">Tỷ lệ chốt đơn</span></div>
             </div>
             <div class="kpi-card">
-                <div class="label" data-i18n="kpiDropLbl">DROP SIZE</div>
+                <div class="label" data-i18n="kpiDropLbl">DROP SIZE & TẦN SUẤT</div>
                 <div class="value" id="val-drop-size">0</div>
-                <div class="sub"><span data-i18n="kpiDropSub1">VNĐ / Cửa hàng</span> <span style="color:var(--accent-warning)">LPPC: <span id="val-lppc">0</span> <span data-i18n="kpiDropSub2">Sản phẩm</span></span></div>
+                <div class="sub"><span>Freq: <b id="val-freq" style="color:var(--accent-success)">0</b></span> <span>LPPC: <b id="val-lppc" style="color:var(--accent-warning)">0</b> SKU</span></div>
             </div>
         </div>
-
         <div class="tree-box">
-            <h3 data-i18n="treeTitle">SƠ ĐỒ NHÂN SỰ & DOANH SỐ</h3>
+            <h3 style="margin:0 0 15px 0; font-size:11px; text-transform:uppercase; color:var(--primary)" data-i18n="treeTitle">SƠ ĐỒ NHÂN SỰ & DOANH SỐ</h3>
             <div class="tree-content" id="tree-container"></div>
         </div>
     </div>
 
-    <div class="section-tag" data-i18n="secP1">PHẦN 1: TỔNG QUAN CHIẾN LƯỢC RTM & SỨC MUA</div>
-    
+    <div class="section-tag" data-i18n="secP1">PHẦN 1: CHIẾN LƯỢC RTM & SỨC MUA</div>
     <div class="chart-box">
-        <div class="chart-title" data-i18n="cAreaTitle">HIỆU QUẢ SELL-OUT THEO KHU VỰC</div>
-        <div class="chart-subtitle" data-i18n="cAreaSub">Đánh giá Vùng nào đang đóng góp chính, Vùng nào có rủi ro sụt giảm cần cảnh báo</div>
-        <div style="height: 380px;"><canvas id="areaChart"></canvas></div>
+        <div class="chart-header">
+            <div class="chart-title" data-i18n="cAreaTitle">HIỆU QUẢ SELL-OUT THEO KHU VỰC</div>
+            <div class="chart-subtitle" data-i18n="cAreaSub">⚠️ Cảnh báo đỏ cho vùng có Strike Rate < 50%</div>
+        </div>
+        <div style="height: 350px;"><canvas id="areaChart"></canvas></div>
         <div class="table-wrap"><table class="data-table"><thead><tr id="areaHeaderRow"></tr></thead><tbody id="areaTableBody"></tbody></table></div>
     </div>
 
     <div class="chart-box">
         <div class="chart-title" data-i18n="cWeekTitle">TỐC ĐỘ LUÂN CHUYỂN HÀNG HÓA THEO TUẦN</div>
-        <div class="chart-subtitle" data-i18n="cWeekSub">Theo dõi chu kỳ biến động doanh số để đánh giá sức hấp thụ của thị trường</div>
-        <div style="height: 380px;"><canvas id="weekChart"></canvas></div>
+        <div style="height: 300px;"><canvas id="weekChart"></canvas></div>
         <div class="table-wrap"><table class="data-table"><thead><tr id="weekHeaderRow"></tr></thead><tbody id="weekTableBody"></tbody></table></div>
     </div>
 
-    <div class="section-tag" data-i18n="secP2">PHẦN 2: CHỈ SỐ THỰC THI THỊ TRƯỜNG & SFE</div>
-
-    <div class="chart-box">
-        <div class="chart-title" data-i18n="cKamTitle">TOP 10 NĂNG SUẤT QUẢN LÝ VÙNG</div>
-        <div class="chart-subtitle" data-i18n="cKamSub">Đánh giá năng lực điều phối tuyến và chất lượng đơn hàng của Quản lý</div>
-        <div style="height: 350px;"><canvas id="kamChart"></canvas></div>
-        <div class="table-wrap"><table class="data-table"><thead><tr id="kamHeaderRow"></tr></thead><tbody id="kamTableBody"></tbody></table></div>
-    </div>
-
-    <div class="chart-box">
-        <div class="chart-title" data-i18n="cKaeTitle">TOP 10 NĂNG SUẤT SALESMAN</div>
-        <div class="chart-subtitle" data-i18n="cKaeSub">Đã loại bỏ số của Quản lý. Tập trung soi Strike Rate & LPPC của đội ngũ Sales</div>
-        <div style="height: 350px;"><canvas id="dayChart"></canvas></div>
-        <div class="table-wrap"><table class="data-table"><thead><tr id="dayHeaderRow"></tr></thead><tbody id="dayTableBody"></tbody></table></div>
+    <div class="section-tag" data-i18n="secP2">PHẦN 2: THỰC THI THỊ TRƯỜNG & SFE</div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+        <div class="chart-box">
+            <div class="chart-title" data-i18n="cKamTitle">TOP 10 NĂNG SUẤT QUẢN LÝ VÙNG</div>
+            <div style="height: 400px;"><canvas id="kamChart"></canvas></div>
+            <div class="table-wrap"><table class="data-table"><thead><tr id="kamHeaderRow"></tr></thead><tbody id="kamTableBody"></tbody></table></div>
+        </div>
+        <div class="chart-box">
+            <div class="chart-title" data-i18n="cKaeTitle">TOP 10 NĂNG SUẤT SALESMAN</div>
+            <div style="height: 400px;"><canvas id="dayChart"></canvas></div>
+            <div class="table-wrap"><table class="data-table"><thead><tr id="dayHeaderRow"></tr></thead><tbody id="dayTableBody"></tbody></table></div>
+        </div>
     </div>
 
     <div class="section-tag" data-i18n="secP3">PHẦN 3: ĐỘ PHỦ & CHIẾN LƯỢC ĐIỂM BÁN</div>
-
-    <div class="chart-box">
-        <div class="chart-title" data-i18n="cSegTitle">PHÂN TÍCH SỨC MUA THEO PHÂN KHÚC TẠP HÓA</div>
-        <div class="chart-subtitle" data-i18n="cSegSub">Cơ cấu đóng góp của nhóm tạp hóa để ra quyết định phân bổ ngân sách</div>
-        <div class="table-wrap" id="segmentAreaTableContainer"></div>
+    <div class="segment-container">
+        <div class="segment-left">
+            <div class="chart-box" style="margin-bottom:0; height:100%;">
+                <div class="chart-title" data-i18n="cSegTitle">PHÂN TÍCH SỨC MUA THEO PHÂN KHÚC TẠP HÓA</div>
+                <div class="table-wrap" id="segmentAreaTableContainer"></div>
+            </div>
+        </div>
+        <div class="segment-right">
+            <div class="heatmap-box">
+                <div class="chart-title" data-i18n="hmTitle">TỶ TRỌNG DOANH SỐ PHÂN KHÚC</div>
+                <div class="chart-subtitle" data-i18n="hmSub">Phân bổ miếng bánh thị trường theo doanh thu</div>
+                <div class="hm-grid" id="heatmap-container"></div>
+            </div>
+        </div>
     </div>
 </main>
 
@@ -252,441 +231,311 @@
 <script src="dataM7.js"></script>
 
 <script>
-// CẤU HÌNH CHART.JS CHO DARK THEME
+// BIẾN TOÀN CỤC & TỪ ĐIỂN
 Chart.defaults.color = '#A0AAB5';
-Chart.defaults.borderColor = 'rgba(168, 200, 196, 0.1)';
-Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
+Chart.defaults.borderColor = 'rgba(255,255,255,0.05)';
 
-// TỪ ĐIỂN SONG NGỮ (ĐÃ LÀM SẠCH VÀ ĐỔI MCP/KẾ HOẠCH THÀNH TUYẾN)
 const dict = {
     vi: {
-        mainTitle: "RTM STRATEGIC DASHBOARD",
-        subTitle: "Đánh giá Hiệu quả Phân phối, Thực thi Tuyến & Phân khúc Sức mua",
+        mainTitle: "RTM STRATEGIC DASHBOARD", subTitle: "Đánh giá Hiệu quả Phân phối, Thực thi Tuyến & Phân khúc Sức mua",
         lblMonth: "Tháng", lblWeek: "Tuần", lblRegion: "Miền", lblArea: "Khu vực", lblAll: "Tất cả",
-        secPulse: "CHỈ SỐ SINH TỬ",
-        kpiSalesLbl: "TỔNG SELL-OUT", kpiSalesSub1: "VNĐ (Chưa VAT)", kpiSalesSub2: "Dòng tiền",
-        kpiActiveLbl: "ĐỘ PHỦ SỐNG", kpiActiveSub1: "Cửa hàng đã lên đơn", kpiActiveSub2: "Trên tuyến",
-        kpiStrikeLbl: "STRIKE RATE", kpiStrikeSub: "Tỷ lệ chốt đơn",
-        kpiDropLbl: "DROP SIZE", kpiDropSub1: "VNĐ / Cửa hàng", kpiDropSub2: "Sản phẩm",
-        treeTitle: "SƠ ĐỒ NHÂN SỰ & DOANH SỐ", treeKam: "Quản lý:", treeSales: "Sales:",
-        secP1: "PHẦN 1: TỔNG QUAN CHIẾN LƯỢC RTM & SỨC MUA",
-        cAreaTitle: "HIỆU QUẢ SELL-OUT THEO KHU VỰC", cAreaSub: "Đánh giá Vùng nào đang đóng góp chính, Vùng nào có rủi ro sụt giảm cần cảnh báo",
-        cWeekTitle: "TỐC ĐỘ LUÂN CHUYỂN HÀNG HÓA THEO TUẦN", cWeekSub: "Theo dõi chu kỳ biến động doanh số để đánh giá sức hấp thụ của thị trường",
-        secP2: "PHẦN 2: CHỈ SỐ THỰC THI THỊ TRƯỜNG & SFE",
-        cKamTitle: "TOP 10 NĂNG SUẤT QUẢN LÝ VÙNG", cKamSub: "Đánh giá năng lực điều phối tuyến và chất lượng đơn hàng của Quản lý",
-        cKaeTitle: "TOP 10 NĂNG SUẤT SALESMAN", cKaeSub: "Đã loại bỏ số của Quản lý. Tập trung soi Strike Rate & LPPC của đội ngũ Sales",
-        secP3: "PHẦN 3: ĐỘ PHỦ & CHIẾN LƯỢC ĐIỂM BÁN",
-        cSegTitle: "PHÂN TÍCH SỨC MUA THEO PHÂN KHÚC TẠP HÓA", cSegSub: "Cơ cấu đóng góp của nhóm tạp hóa để ra quyết định phân bổ ngân sách",
-        colArea: "KHU VỰC", colWeek: "TUẦN", colKam: "QUẢN LÝ VÙNG", colKae: "SALESMAN",
-        tbPlan: "Tuyến (Cửa hàng)", tbActive: "Cửa hàng Active", tbStrike: "Strike Rate", tbSales: "Tổng Sell-Out (VNĐ)", tbDrop: "Drop Size (VNĐ/Đơn)", tbLppc: "LPPC (SKU/Đơn)",
-        sysTotal: "TỔNG TOÀN QUỐC", sysTotalSys: "TỔNG HỆ THỐNG",
-        segColClass: "PHÂN KHÚC", segTblH1: "HIỆU SUẤT ĐIỂM BÁN THEO PHÂN KHÚC",
-        axisCust: "Đơn vị: Cửa hàng", axisVnd: "Đơn vị: VNĐ", legSales: "Sell-Out (VNĐ)", legTotal: "Cửa hàng Tuyến", legActive: "Active"
+        secPulse: "CHỈ SỐ SINH TỬ", kpiSalesLbl: "TỔNG SELL-OUT", kpiSalesSub1: "VNĐ (Chưa VAT)", kpiSalesSub2: "Volume Flow",
+        kpiActiveLbl: "ĐỘ PHỦ SỐNG", kpiActiveSub2: "Trên tuyến", kpiStrikeLbl: "STRIKE RATE", kpiStrikeSub: "Tỷ lệ chốt đơn",
+        kpiDropLbl: "DROP SIZE & TẦN SUẤT", treeTitle: "SƠ ĐỒ NHÂN SỰ & DOANH SỐ",
+        secP1: "PHẦN 1: CHIẾN LƯỢC RTM & SỨC MUA", cAreaTitle: "HIỆU QUẢ SELL-OUT THEO KHU VỰC", cAreaSub: "⚠️ Cảnh báo đỏ cho vùng có Strike Rate < 50%",
+        cWeekTitle: "TỐC ĐỘ LUÂN CHUYỂN HÀNG HÓA THEO TUẦN", secP2: "PHẦN 2: THỰC THI THỊ TRƯỜNG & SFE",
+        cKamTitle: "TOP 10 NĂNG SUẤT QUẢN LÝ VÙNG", cKaeTitle: "TOP 10 NĂNG SUẤT SALESMAN",
+        secP3: "PHẦN 3: ĐỘ PHỦ & CHIẾN LƯỢC ĐIỂM BÁN", cSegTitle: "PHÂN TÍCH SỨC MUA THEO PHÂN KHÚC TẠP HÓA",
+        hmTitle: "TỶ TRỌNG DOANH SỐ PHÂN KHÚC", hmSub: "Phân bổ miếng bánh thị trường theo doanh thu",
+        colArea: "KHU VỰC", colWeek: "TUẦN", colKam: "QUẢN LÝ", colKae: "SALESMAN",
+        tbPlan: "Tuyến", tbActive: "Active", tbStrike: "Strike Rate", tbSales: "Sell-Out", tbDrop: "Drop Size", tbLppc: "LPPC",
+        sysTotal: "TỔNG TOÀN QUỐC", segColClass: "PHÂN KHÚC", segTblH1: "HIỆU SUẤT ĐIỂM BÁN"
     },
     en: {
-        mainTitle: "RTM STRATEGIC DASHBOARD",
-        subTitle: "Evaluating Distribution Efficiency, Route Execution & Purchasing Power Segments",
+        mainTitle: "RTM STRATEGIC DASHBOARD", subTitle: "Distribution Efficiency, Route Execution & Purchasing Power",
         lblMonth: "Month", lblWeek: "Week", lblRegion: "Region", lblArea: "Area", lblAll: "All",
-        secPulse: "THE PULSE",
-        kpiSalesLbl: "TOTAL SELL-OUT", kpiSalesSub1: "VND (Excl. VAT)", kpiSalesSub2: "Volume Flow",
-        kpiActiveLbl: "ACTIVE OUTLETS", kpiActiveSub1: "Ordered outlets", kpiActiveSub2: "Route",
-        kpiStrikeLbl: "STRIKE RATE", kpiStrikeSub: "Conversion rate",
-        kpiDropLbl: "DROP SIZE", kpiDropSub1: "VND / Outlet", kpiDropSub2: "SKUs",
-        treeTitle: "PERSONNEL & SALES TREE", treeKam: "Manager:", treeSales: "Rep:",
-        secP1: "PART 1: RTM STRATEGY & PURCHASING POWER OVERVIEW",
-        cAreaTitle: "SELL-OUT EFFICIENCY BY AREA", cAreaSub: "Evaluate main contributing areas and identify decline risks",
-        cWeekTitle: "WEEKLY GOODS VELOCITY", cWeekSub: "Track sales fluctuation cycles to assess market absorption",
-        secP2: "PART 2: MARKET EXECUTION & SFE",
-        cKamTitle: "TOP 10 AREA MANAGER SFE", cKamSub: "Evaluate routing capacity and order quality (Drop Size & LPPC) of Managers",
-        cKaeTitle: "TOP 10 SALES REP PRODUCTIVITY", cKaeSub: "Excluded Manager's direct sales. Focus on Strike Rate & LPPC of Sales team",
-        secP3: "PART 3: COVERAGE & OUTLET STRATEGY",
-        cSegTitle: "PURCHASING POWER BY OUTLET SEGMENTATION", cSegSub: "Contribution structure of outlet groups for Trade Promos budget decisions",
-        colArea: "AREA", colWeek: "WEEK", colKam: "AREA MANAGER", colKae: "SALES REP",
-        tbPlan: "Route (Outlets)", tbActive: "Active Outlets", tbStrike: "Strike Rate", tbSales: "Total Sell-Out (VND)", tbDrop: "Drop Size (VND/Active)", tbLppc: "LPPC (Avg SKU)",
-        sysTotal: "NATIONWIDE TOTAL", sysTotalSys: "SYSTEM TOTAL",
-        segColClass: "CLASS SEGMENT", segTblH1: "OUTLET PERFORMANCE BY SEGMENT",
-        axisCust: "Unit: Outlets", axisVnd: "Unit: VND", legSales: "Sell-Out (VND)", legTotal: "Route Outlets", legActive: "Active Outlets"
+        secPulse: "THE PULSE", kpiSalesLbl: "TOTAL SELL-OUT", kpiSalesSub1: "VND (Excl. VAT)", kpiSalesSub2: "Volume Flow",
+        kpiActiveLbl: "ACTIVE OUTLETS", kpiActiveSub2: "On Route", kpiStrikeLbl: "STRIKE RATE", kpiStrikeSub: "Strike rate",
+        kpiDropLbl: "DROP SIZE & FREQ", treeTitle: "PERSONNEL & SALES TREE",
+        secP1: "PART 1: RTM STRATEGY & PURCHASING POWER", cAreaTitle: "SELL-OUT EFFICIENCY BY AREA", cAreaSub: "⚠️ Red flag for regions with Strike Rate < 50%",
+        cWeekTitle: "WEEKLY GOODS VELOCITY", secP2: "PART 2: MARKET EXECUTION & SFE",
+        cKamTitle: "TOP 10 MANAGER SFE", cKaeTitle: "TOP 10 SALES REP SFE",
+        secP3: "PART 3: COVERAGE & OUTLET STRATEGY", cSegTitle: "PURCHASING POWER BY OUTLET SEGMENTATION",
+        hmTitle: "SEGMENT REVENUE SHARE", hmSub: "Market share distribution by revenue",
+        colArea: "AREA", colWeek: "WEEK", colKam: "MANAGER", colKae: "REP",
+        tbPlan: "Route", tbActive: "Active", tbStrike: "Strike Rate", tbSales: "Sell-Out", tbDrop: "Drop Size", tbLppc: "LPPC",
+        sysTotal: "NATIONWIDE", segColClass: "CLASS", segTblH1: "OUTLET PERFORMANCE"
     }
 };
 
-const segNames = { 'A': 'Class A', 'B': 'Class B', 'C': 'Class C', 'D': 'Class D', 'N': 'Unclassified' };
-const segColors = { 'A': '#A8C8C4', 'B': '#6D8F8B', 'C': '#ea580c', 'D': '#dc2626', 'N': '#64748b' };
-const monthOrder = { "jan":1, "feb":2, "mar":3, "apr":4, "may":5, "jun":6, "jul":7, "aug":8, "sep":9, "oct":10, "nov":11, "dec":12 };
-
 let lang = 'vi';
-let filters = { month: [], week: [], hq: [], area: [] }; 
+let filters = { month: [], week: [], hq: [], area: [] };
 let charts = {};
 let dbMaster = []; let dbSales = [];
 
-const t = (key) => dict[lang][key] || key;
+const t = (k) => dict[lang][k] || k;
 const fmt = (n) => new Intl.NumberFormat('en-US').format(Math.round(n || 0));
-const getW = (d) => String(d.week || d.Week || "").toUpperCase().trim();
-const formatWM = (w, m) => { if (!m) return w; let mNum = monthOrder[m.toLowerCase()] || m; return lang === 'vi' ? `${w} T${mNum}` : `${w} M${mNum}`; };
 
-const cleanName = (name, isKamField = false, areaName = "") => {
-    let cleanStr = String(name || "").replace(/[✔️❌]/g, '').trim();
-    if (isKamField) {
-        cleanStr = cleanStr.toUpperCase(); 
-        if (typeof kamMap !== 'undefined') {
-            let areaKey = String(areaName || "").toUpperCase().trim() + "|" + cleanStr;
-            if (kamMap[areaKey]) return kamMap[areaKey];
-            if (kamMap[cleanStr]) return kamMap[cleanStr];
-        }
-    }
-    return cleanStr;
-};
-
-// ======================== TẦNG UI & BỘ LỌC ========================
-function setLang(newLang) {
-    lang = newLang; 
-    document.getElementById('btn-vi').className = lang === 'vi' ? 'active' : ''; 
-    document.getElementById('btn-en').className = lang === 'en' ? 'active' : '';
-    
-    document.querySelectorAll('[data-i18n]').forEach(el => { 
-        el.innerText = t(el.getAttribute('data-i18n')); 
-    });
-    
-    renderFilters(); 
-    render();
-}
-
-function toggleMS(id) {
-    let drop = document.getElementById('drop-'+id);
-    document.querySelectorAll('.ms-dropdown').forEach(d => { if(d !== drop) d.style.display = 'none'; });
-    drop.style.display = drop.style.display === 'block' ? 'none' : 'block';
-}
-
-document.addEventListener('click', e => { 
-    if(!e.target.closest('.ms-box')) document.querySelectorAll('.ms-dropdown').forEach(d => d.style.display = 'none'); 
-});
-
-function updateF(type, val) { 
+// ======================== ENGINE LỌC SIÊU TỐC ========================
+function updateF(type, val) {
     const loader = document.getElementById('loader-wrapper');
     loader.classList.remove('hidden');
-
     setTimeout(() => {
-        if (val === 'all') { 
-            filters[type] = []; 
-            if (type === 'month') filters.week = [];
-            if (type === 'hq') filters.area = []; 
-        } else {
+        if (val === 'all') filters[type] = [];
+        else {
             let idx = filters[type].indexOf(val);
-            if (idx > -1) filters[type].splice(idx, 1); 
-            else filters[type].push(val); 
+            if (idx > -1) filters[type].splice(idx, 1);
+            else filters[type].push(val);
         }
-        renderFilters(); 
-        render(); 
+        renderFilters(); render();
         loader.classList.add('hidden');
     }, 50);
 }
 
-function populateDropdown(id, type, optionsArr) {
-    let drop = document.getElementById('drop-' + id); let lbl = document.getElementById('lbl-' + id);
-    if (filters[type].length === 0) lbl.innerText = t('lblAll');
-    else if (filters[type].length === 1) lbl.innerText = filters[type][0];
-    else lbl.innerText = filters[type].length + ' selected';
-    let htmlStr = `<div class="ms-opt ${filters[type].length === 0 ? 'selected' : ''}" onclick="updateF('${type}', 'all')">${t('lblAll')}</div>`;
-    optionsArr.forEach(opt => { let isSel = filters[type].includes(opt) ? 'selected' : ''; htmlStr += `<div class="ms-opt ${isSel}" onclick="updateF('${type}', '${opt}')">${opt}</div>`; });
-    drop.innerHTML = htmlStr;
-}
-
 function renderFilters() {
-    let allData = [...dbMaster, ...dbSales];
-    populateDropdown('month', 'month', [...new Set(allData.map(d => d.month))].filter(Boolean).sort((a,b) => (monthOrder[a.toLowerCase()]||99) - (monthOrder[b.toLowerCase()]||99)));
-    populateDropdown('week', 'week', [...new Set(allData.map(d => d._w))].filter(Boolean).sort());
-    populateDropdown('hq', 'hq', [...new Set(allData.map(d=>d.hq))].filter(Boolean).sort());
-    populateDropdown('area', 'area', [...new Set(allData.filter(d => filters.hq.length === 0 || filters.hq.includes(d.hq)).map(d=>d.area))].filter(Boolean).sort());
+    let all = [...dbMaster, ...dbSales];
+    const populate = (id, type, arr) => {
+        let drop = document.getElementById('drop-' + id);
+        let lbl = document.getElementById('lbl-' + id);
+        lbl.innerText = filters[type].length === 0 ? t('lblAll') : (filters[type].length === 1 ? filters[type][0] : filters[type].length + ' selected');
+        let html = `<div class="ms-opt ${filters[type].length === 0 ? 'selected' : ''}" onclick="updateF('${type}', 'all')">${t('lblAll')}</div>`;
+        arr.forEach(v => { html += `<div class="ms-opt ${filters[type].includes(v) ? 'selected' : ''}" onclick="updateF('${type}', '${v}')">${v}</div>`; });
+        drop.innerHTML = html;
+    };
+    populate('month', 'month', [...new Set(all.map(d => d.month))].filter(Boolean).sort((a,b) => (monthOrder[a.toLowerCase()]||99) - (monthOrder[b.toLowerCase()]||99)));
+    populate('week', 'week', [...new Set(all.map(d => d._w))].filter(Boolean).sort());
+    populate('hq', 'hq', [...new Set(all.map(d=>d.hq))].filter(Boolean).sort());
+    populate('area', 'area', [...new Set(all.filter(d => filters.hq.length === 0 || filters.hq.includes(d.hq)).map(d=>d.area))].filter(Boolean).sort());
 }
 
-// ======================== ENGINE RENDER ========================
+// ======================== RENDER ENGINE CHÍNH ========================
 function render() {
-    if (dbMaster.length === 0 && dbSales.length === 0) return; 
-
-    const baseMaster = [];
-    for (let i = 0; i < dbMaster.length; i++) {
-        let d = dbMaster[i];
-        if ((filters.month.length === 0 || filters.month.includes(d.month)) && 
-            (filters.week.length === 0 || filters.week.includes(d._w)) && 
-            (filters.hq.length === 0 || filters.hq.includes(d.hq)) && 
-            (filters.area.length === 0 || filters.area.includes(d.area))) {
-            baseMaster.push(d);
-        }
-    }
-
-    const baseSales = [];
-    for (let i = 0; i < dbSales.length; i++) {
-        let d = dbSales[i];
-        if ((filters.month.length === 0 || filters.month.includes(d.month)) && 
-            (filters.week.length === 0 || filters.week.includes(d._w)) && 
-            (filters.hq.length === 0 || filters.hq.includes(d.hq)) && 
-            (filters.area.length === 0 || filters.area.includes(d.area))) {
-            baseSales.push(d);
-        }
-    }
-
+    const loader = document.getElementById('loader-wrapper');
+    
+    // Thuật toán quét 1 lần (Single-Pass)
     let sys = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
-    let areaMap = {};
-    let kamMap = {};
-    let kaeMap = {};
-    let weekMap = {};
-    let treeMap = {};
-    let cusSegmentMap = {}; 
-    let segMap = {};
+    let areaMap = {}, kamMap = {}, kaeMap = {}, weekMap = {}, treeMap = {}, segMap = {}, hmMap = { 'A':0, 'B':0, 'C':0, 'D':0, 'N':0 };
+    
+    const filterFn = (d) => (filters.month.length === 0 || filters.month.includes(d.month)) && (filters.week.length === 0 || filters.week.includes(d._w)) && (filters.hq.length === 0 || filters.hq.includes(d.hq)) && (filters.area.length === 0 || filters.area.includes(d.area));
 
-    for(let i=0; i<baseMaster.length; i++) {
-        let d = baseMaster[i];
-        let cus = d.cusCode;
-        if(!cus) continue;
-
-        sys.p.add(cus);
+    dbMaster.forEach(d => {
+        if (!filterFn(d) || !d.cusCode) return;
+        sys.p.add(d.cusCode);
+        const a = d.area;
+        if (!areaMap[a]) areaMap[a] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
+        areaMap[a].p.add(d.cusCode);
         
-        let a = d.area || "Unknown Area";
-        if(!areaMap[a]) areaMap[a] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
-        areaMap[a].p.add(cus);
+        const kam = d._kam;
+        if (!kamMap[kam]) kamMap[kam] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
+        kamMap[kam].p.add(d.cusCode);
 
-        let kam = d._kam;
-        if(kam) {
-            if(!kamMap[kam]) kamMap[kam] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
-            kamMap[kam].p.add(cus);
+        const kae = d._kae;
+        if (kae && !kae.toUpperCase().startsWith('KAM')) {
+            if (!kaeMap[kae]) kaeMap[kae] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
+            kaeMap[kae].p.add(d.cusCode);
         }
 
-        let kae = d._kae;
-        if(kae && !kae.toUpperCase().startsWith('KAM')) {
-            if(!kaeMap[kae]) kaeMap[kae] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
-            kaeMap[kae].p.add(cus);
-        }
+        const wk = d._w + '|' + d.month;
+        if (!weekMap[wk]) weekMap[wk] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0, w: d._w, m: d.month };
+        weekMap[wk].p.add(d.cusCode);
 
-        let w = d._w; let m = d.month;
-        if (w) {
-            let wk = w + '|' + m;
-            if (!weekMap[wk]) weekMap[wk] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0, w: w, m: m };
-            weekMap[wk].p.add(cus);
-        }
-
-        let seg = d.CusS ? String(d.CusS).toUpperCase().trim() : "N";
-        cusSegmentMap[cus] = seg;
-        let segKey = a + '|' + seg;
-        if(!segMap[segKey]) segMap[segKey] = { p: new Set(), a: new Set(), s: 0 };
-        segMap[segKey].p.add(cus);
-    }
-
-    for(let i=0; i<baseSales.length; i++) {
-        let d = baseSales[i];
-        let cus = d.cusCode;
-        let v = Number(d.sales) || 0;
-        let skus = Number(d.skuLines) || 0;
-        
-        sys.s += v;
-        if(v > 0 && cus) { sys.a.add(cus); sys.skus += skus; sys.invs++; }
-
-        let a = d.area || "Unknown Area";
-        if(!areaMap[a]) areaMap[a] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
-        areaMap[a].s += v;
-        if(v > 0 && cus) { areaMap[a].a.add(cus); areaMap[a].skus += skus; areaMap[a].invs++; }
-
-        let kam = d._kam;
-        if(kam) {
-            if(!kamMap[kam]) kamMap[kam] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
-            kamMap[kam].s += v;
-            if(v > 0 && cus) { kamMap[kam].a.add(cus); kamMap[kam].skus += skus; kamMap[kam].invs++; }
-        }
-
-        let kae = d._kae;
-        if(kae && !kae.toUpperCase().startsWith('KAM')) {
-            if(!kaeMap[kae]) kaeMap[kae] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
-            kaeMap[kae].s += v;
-            if(v > 0 && cus) { kaeMap[kae].a.add(cus); kaeMap[kae].skus += skus; kaeMap[kae].invs++; }
-        }
-
-        if(kam && kae) {
-            if (!treeMap[kam]) treeMap[kam] = { sales: 0, kaes: {} };
-            if (!treeMap[kam].kaes[kae]) treeMap[kam].kaes[kae] = { sales: 0 };
-            treeMap[kam].sales += v;
-            treeMap[kam].kaes[kae].sales += v;
-        }
-
-        let w = d._w; let m = d.month;
-        if (w) {
-            let wk = w + '|' + m;
-            if (!weekMap[wk]) weekMap[wk] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0, w: w, m: m };
-            weekMap[wk].s += v;
-            if (v > 0 && cus) { weekMap[wk].a.add(cus); weekMap[wk].skus += skus; weekMap[wk].invs++; }
-        }
-
-        let seg = cusSegmentMap[cus] || "N";
-        let segKey = a + '|' + seg;
-        if(!segMap[segKey]) segMap[segKey] = { p: new Set(), a: new Set(), s: 0 };
-        segMap[segKey].s += v;
-        if(v > 0 && cus) { segMap[segKey].a.add(cus); }
-    }
-
-    // 1. UPDATE THE PULSE KPIs
-    let sysAc = sys.a.size; let sysTc = sys.p.size;
-    let sysKpiObj = { tc: sysTc, ac: sysAc, s: sys.s, avgSku: sys.invs > 0 ? sys.skus/sys.invs : 0 };
-    document.getElementById("val-sales").innerText = fmt(sys.s);
-    document.getElementById("val-cust").innerText = fmt(sysTc);
-    document.getElementById("val-strike").innerText = fmt(sysAc);
-    document.getElementById("val-strike-rate").innerText = (sysTc > 0 ? (sysAc/sysTc*100).toFixed(1) : 0) + "%";
-    document.getElementById("val-drop-size").innerText = (sysAc > 0 ? fmt(sys.s / sysAc) : 0);
-    document.getElementById("val-lppc").innerText = sysKpiObj.avgSku.toFixed(1);
-
-    // 2. MD VIEW: AREA CHART
-    let areaData = Object.keys(areaMap).map(k => {
-        let st = areaMap[k];
-        return { label: k, tc: st.p.size, ac: st.a.size, s: st.s, avgSku: st.invs > 0 ? st.skus/st.invs : 0 };
-    }).sort((a,b) => b.s - a.s);
-    drawChart('areaChart', areaData, 'label');
-    drawTable('areaHeaderRow', 'areaTableBody', areaData, t('colArea'), 'label', true, { label: t('sysTotal'), ...sysKpiObj });
-
-    // 3. MD VIEW: TREND CHART 
-    let weekData = Object.keys(weekMap).map(k => {
-        let st = weekMap[k];
-        return { label: formatWM(st.w, st.m), tc: st.p.size, ac: st.a.size, s: st.s, avgSku: st.invs > 0 ? st.skus/st.invs : 0, wRaw: st.w, mRaw: st.m };
-    }).sort((a, b) => { 
-        let m1 = monthOrder[a.mRaw.toLowerCase()] || 99; let m2 = monthOrder[b.mRaw.toLowerCase()] || 99; 
-        return m1 !== m2 ? m1 - m2 : a.wRaw.localeCompare(b.wRaw); 
+        const seg = d.CusS ? String(d.CusS).toUpperCase().trim() : "N";
+        const segKey = a + '|' + seg;
+        if (!segMap[segKey]) segMap[segKey] = { p: new Set(), a: new Set(), s: 0 };
+        segMap[segKey].p.add(d.cusCode);
     });
-    drawChart('weekChart', weekData, 'label');
-    drawTable('weekHeaderRow', 'weekTableBody', weekData, t('colWeek'), 'label', true, { label: t('sysTotal'), ...sysKpiObj });
 
-    // 4. SD VIEW: TOP KAM / KAE SFE
-    let kamData = Object.keys(kamMap).map(k => {
-        let st = kamMap[k]; return { label: k, tc: st.p.size, ac: st.a.size, s: st.s, avgSku: st.invs > 0 ? st.skus/st.invs : 0 };
-    }).sort((a,b) => b.s - a.s).slice(0, 10);
-    drawChart('kamChart', kamData, 'label');
-    drawTable('kamHeaderRow', 'kamTableBody', kamData, t('colKam'), 'label', false); // Cột TỔNG bị xóa ở đây
+    dbSales.forEach(d => {
+        if (!filterFn(d)) return;
+        const v = d.sales || 0;
+        sys.s += v;
+        if (v > 0) { sys.a.add(d.cusCode); sys.skus += (d.skuLines || 0); sys.invs++; }
 
-    let kaeData = Object.keys(kaeMap).map(k => {
-        let st = kaeMap[k]; return { label: k, tc: st.p.size, ac: st.a.size, s: st.s, avgSku: st.invs > 0 ? st.skus/st.invs : 0 };
-    }).sort((a,b) => b.s - a.s).slice(0, 10);
-    drawChart('dayChart', kaeData, 'label');
-    drawTable('dayHeaderRow', 'dayTableBody', kaeData, t('colKae'), 'label', false); // Cột TỔNG bị xóa ở đây
+        const a = d.area;
+        if (!areaMap[a]) areaMap[a] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
+        areaMap[a].s += v;
+        if (v > 0) { areaMap[a].a.add(d.cusCode); areaMap[a].skus += (d.skuLines || 0); areaMap[a].invs++; }
 
-    // 5. TREE DIAGRAM
+        const kam = d._kam;
+        if (kam) {
+            if (!kamMap[kam]) kamMap[kam] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
+            kamMap[kam].s += v;
+            if (v > 0) { kamMap[kam].a.add(d.cusCode); kamMap[kam].skus += (d.skuLines || 0); kamMap[kam].invs++; }
+        }
+
+        const kae = d._kae;
+        if (kae && !kae.toUpperCase().startsWith('KAM')) {
+            if (!kaeMap[kae]) kaeMap[kae] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
+            kaeMap[kae].s += v;
+            if (v > 0) { kaeMap[kae].a.add(d.cusCode); kaeMap[kae].skus += (d.skuLines || 0); kaeMap[kae].invs++; }
+        }
+
+        if (kam && kae) {
+            if (!treeMap[kam]) treeMap[kam] = { s: 0, kaes: {} };
+            if (!treeMap[kam].kaes[kae]) treeMap[kam].kaes[kae] = 0;
+            treeMap[kam].s += v; treeMap[kam].kaes[kae] += v;
+        }
+
+        const wk = d._w + '|' + d.month;
+        if (!weekMap[wk]) weekMap[wk] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0, w: d._w, m: d.month };
+        weekMap[wk].s += v;
+        if (v > 0) { weekMap[wk].a.add(d.cusCode); weekMap[wk].skus += (d.skuLines || 0); weekMap[wk].invs++; }
+
+        const seg = d._segMap[d.cusCode] || "N";
+        const segKey = a + '|' + seg;
+        if (!segMap[segKey]) segMap[segKey] = { p: new Set(), a: new Set(), s: 0 };
+        segMap[segKey].s += v;
+        if (v > 0) { segMap[segKey].a.add(d.cusCode); hmMap[seg] += v; }
+    });
+
+    // 1. KPIs THE PULSE
+    const sysKpi = { tc: sys.p.size, ac: sys.a.size, s: sys.s, avgSku: sys.invs > 0 ? sys.skus/sys.invs : 0, freq: sys.a.size > 0 ? sys.invs/sys.a.size : 0 };
+    document.getElementById("val-sales").innerText = fmt(sys.s);
+    document.getElementById("val-cust").innerText = fmt(sys.p.size);
+    document.getElementById("val-strike").innerText = fmt(sys.a.size);
+    document.getElementById("val-strike-rate").innerText = (sys.p.size > 0 ? (sys.a.size/sys.p.size*100).toFixed(1) : 0) + "%";
+    document.getElementById("val-drop-size").innerText = (sys.a.size > 0 ? fmt(sys.s/sys.a.size) : 0);
+    document.getElementById("val-freq").innerText = sysKpi.freq.toFixed(1);
+    document.getElementById("val-lppc").innerText = sysKpi.avgSku.toFixed(1);
+
+    // 2. TREEPersonnel
     let treeHtml = '';
-    let sortedKams = Object.keys(treeMap).sort((a,b) => treeMap[b].sales - treeMap[a].sales);
-    sortedKams.forEach(kam => {
-        let kData = treeMap[kam];
-        treeHtml += `<details class="tree-node"><summary><span class="t-name">${t('treeKam')} ${kam}</span><span class="t-val">${fmt(kData.sales)}</span></summary><div class="t-children">`;
-        let sortedKaes = Object.keys(kData.kaes).sort((a,b) => kData.kaes[b].sales - kData.kaes[a].sales);
-        sortedKaes.forEach(kae => {
-            treeHtml += `<div class="t-leaf"><span class="t-name">${t('treeSales')} ${kae}</span><span class="t-val">${fmt(kData.kaes[kae].sales)}</span></div>`;
+    Object.keys(treeMap).sort((a,b) => treeMap[b].s - treeMap[a].s).forEach(k => {
+        treeHtml += `<details class="tree-node"><summary><span>${k}</span><span>${fmt(treeMap[k].s)}</span></summary><div class="t-children">`;
+        Object.keys(treeMap[k].kaes).sort((a,b) => treeMap[k].kaes[b] - treeMap[k].kaes[a]).forEach(ke => {
+            treeHtml += `<div class="t-leaf"><span>${ke}</span><span>${fmt(treeMap[k].kaes[ke])}</span></div>`;
         });
         treeHtml += `</div></details>`;
     });
-    document.getElementById('tree-container').innerHTML = treeHtml || '<div style="color:var(--text-muted); font-style:italic;">No data</div>';
+    document.getElementById('tree-container').innerHTML = treeHtml;
 
-    // 6. CDM VIEW: SEGMENTATION 
-    let segList = ['A', 'B', 'C', 'D', 'N'];
-    let htmlSeg = `<table class="segment-table"><thead><tr><th rowspan="2" style="width:20%;">${t('colArea')}</th><th rowspan="2" style="width:25%;">${t('segColClass')}</th><th colspan="5" style="padding:4px;">${t('segTblH1')}</th></tr><tr><th style="width:11%;">${t('tbPlan')}</th><th style="width:11%;">${t('tbActive')}</th><th style="width:11%;">${t('tbStrike')}</th><th style="width:11%;">${t('tbSales')}</th><th style="width:11%;">${t('tbDrop')}</th></tr></thead><tbody>`;
+    // 3. CHARTS (Top 10 Horizontal)
+    const drawH = (id, data, label) => drawChart(id, data, label, true);
+    let areaData = Object.keys(areaMap).map(k => ({ label: k, tc: areaMap[k].p.size, ac: areaMap[k].a.size, s: areaMap[k].s, avgSku: areaMap[k].invs > 0 ? areaMap[k].skus/areaMap[k].invs : 0 })).sort((a,b) => b.s - a.s);
+    drawChart('areaChart', areaData, 'label', false);
+    drawTable('areaHeaderRow', 'areaTableBody', areaData, t('colArea'), 'label', true, { label: t('sysTotal'), ...sysKpi }, true);
 
-    let sortedAreas = Object.keys(areaMap).sort();
-    sortedAreas.forEach(area => {
-        let isFirst = true; let areaPlanCount = 0; let areaActCount = 0; let areaSalesSum = 0;
-        
-        segList.forEach(seg => {
-            let key = area + '|' + seg;
-            let data = segMap[key] || { p: new Set(), a: new Set(), s: 0 };
-            areaPlanCount += data.p.size; areaActCount += data.a.size; areaSalesSum += data.s;
-        });
+    let weekData = Object.keys(weekMap).map(k => ({ label: formatWM(weekMap[k].w, weekMap[k].m), tc: weekMap[k].p.size, ac: weekMap[k].a.size, s: weekMap[k].s, avgSku: weekMap[k].invs > 0 ? weekMap[k].skus/weekMap[k].invs : 0, w: weekMap[k].w, m: weekMap[k].m })).sort((a,b) => { let m1 = monthOrder[a.m.toLowerCase()]||99; let m2 = monthOrder[b.m.toLowerCase()]||99; return m1!==m2 ? m1-m2 : a.w.localeCompare(b.w); });
+    drawChart('weekChart', weekData, 'label', false);
+    drawTable('weekHeaderRow', 'weekTableBody', weekData, t('colWeek'), 'label', true, { label: t('sysTotal'), ...sysKpi });
 
-        segList.forEach(seg => {
-            let key = area + '|' + seg;
-            let data = segMap[key] || { p: new Set(), a: new Set(), s: 0 };
-            let pSize = data.p.size; let aSize = data.a.size;
-            let sr = pSize > 0 ? ((aSize / pSize) * 100).toFixed(1) + '%' : '0.0%';
-            let avg = aSize > 0 ? Math.round(data.s / aSize) : 0;
-            htmlSeg += `<tr>`;
-            if (isFirst) { htmlSeg += `<td rowspan="6" class="seg-area-cell">${area}</td>`; isFirst = false; }
-            htmlSeg += `<td class="seg-name-cell">${segNames[seg]}</td><td>${fmt(pSize)}</td><td style="color:var(--primary); font-weight:bold;">${fmt(aSize)}</td><td style="font-weight:bold;">${sr}</td><td style="text-align:right;">${fmt(data.s)}</td><td style="text-align:right; color:var(--primary); font-weight:600;">${fmt(avg)}</td></tr>`;
-        });
+    let kamData = Object.keys(kamMap).map(k => ({ label: k, tc: kamMap[k].p.size, ac: kamMap[k].a.size, s: kamMap[k].s, avgSku: kamMap[k].invs > 0 ? kamMap[k].skus/kamMap[k].invs : 0 })).sort((a,b) => b.s - a.s).slice(0, 10);
+    drawH('kamChart', kamData, 'label');
+    drawTable('kamHeaderRow', 'kamTableBody', kamData, t('colKam'), 'label', false);
 
-        let areaSr = areaPlanCount > 0 ? ((areaActCount / areaPlanCount) * 100).toFixed(1) + '%' : '0.0%';
-        let areaAvg = areaActCount > 0 ? Math.round(areaSalesSum / areaActCount) : 0;
-        htmlSeg += `<tr style="background-color: var(--bg-card); font-weight: bold; border-top: 2px solid var(--secondary);"><td class="seg-name-cell" style="color: var(--text-main);">${t('sysTotal')}</td><td>${fmt(areaPlanCount)}</td><td style="color:var(--primary);">${fmt(areaActCount)}</td><td style="color:var(--text-main);">${areaSr}</td><td style="text-align:right; color:var(--text-main);">${fmt(areaSalesSum)}</td><td style="text-align:right; color:var(--primary);">${fmt(areaAvg)}</td></tr>`;
-    });
-    htmlSeg += `</tbody></table>`;
-    document.getElementById('segmentAreaTableContainer').innerHTML = htmlSeg;
+    let kaeData = Object.keys(kaeMap).map(k => ({ label: k, tc: kaeMap[k].p.size, ac: kaeMap[k].a.size, s: kaeMap[k].s, avgSku: kaeMap[k].invs > 0 ? kaeMap[k].skus/kaeMap[k].invs : 0 })).sort((a,b) => b.s - a.s).slice(0, 10);
+    drawH('dayChart', kaeData, 'label');
+    drawTable('dayHeaderRow', 'dayTableBody', kaeData, t('colKae'), 'label', false);
+
+    // 4. PART 3: SEGMENT & HEATMAP
+    renderPart3(areaMap, segMap, hmMap);
 }
 
-// CÁC HÀM VẼ 
-function drawChart(chartId, dataArray, labelKey) {
-    if(charts[chartId]) charts[chartId].destroy();
-    let shortLabels = dataArray.map(x => { let lbl = x[labelKey] || ""; return lbl.length > 20 ? lbl.substring(0, 18) + '...' : lbl; });
+function renderPart3(areaMap, segMap, hmMap) {
+    let segList = ['A', 'B', 'C', 'D', 'N'];
+    let html = `<table class="segment-table" style="width:100%; border-collapse:collapse; font-size:11px;"><thead><tr><th rowspan="2">${t('colArea')}</th><th rowspan="2">${t('segColClass')}</th><th colspan="4">${t('segTblH1')}</th></tr><tr><th>${t('tbPlan')}</th><th>${t('tbActive')}</th><th>${t('tbStrike')}</th><th>${t('tbSales')}</th></tr></thead><tbody>`;
 
-    charts[chartId] = new Chart(document.getElementById(chartId), {
+    // Nếu đang chọn 1 Area, chỉ hiện Area đó, nếu không chọn hoặc chọn Tất cả, hiện gộp.
+    let areaToRender = filters.area.length > 0 ? filters.area : Object.keys(areaMap).sort();
+    
+    areaToRender.forEach(area => {
+        let isF = true;
+        segList.forEach(seg => {
+            const data = segMap[area + '|' + seg] || { p: new Set(), a: new Set(), s: 0 };
+            let sr = data.p.size > 0 ? (data.a.size/data.p.size*100).toFixed(1) + '%' : '0%';
+            html += `<tr>`;
+            if(isF) { html += `<td rowspan="5" class="seg-area-cell" style="background:var(--bg-card); font-weight:800; border-right:1px solid var(--border-color); color:var(--primary); text-align:left; padding-left:10px;">${area}</td>`; isF = false; }
+            html += `<td style="text-align:left; padding-left:10px; color:var(--text-muted)">${segNames[seg]}</td><td>${fmt(data.p.size)}</td><td style="color:var(--primary)">${fmt(data.a.size)}</td><td>${sr}</td><td style="text-align:right; padding-right:10px; font-weight:600;">${fmt(data.s)}</td></tr>`;
+        });
+    });
+    html += `</tbody></table>`;
+    document.getElementById('segmentAreaTableContainer').innerHTML = html;
+
+    // HEATMAP PROPORTION
+    let hmHtml = '';
+    let totalHm = Object.values(hmMap).reduce((a,b)=>a+b,0);
+    segList.forEach(seg => {
+        let val = hmMap[seg];
+        let pct = totalHm > 0 ? (val/totalHm*100).toFixed(1) : 0;
+        hmHtml += `<div class="hm-item" style="background: ${segColors[seg]}22; border-bottom: 4px solid ${segColors[seg]}">
+            <div class="hm-label" style="color:${segColors[seg]}">${segNames[seg]}</div>
+            <div class="hm-val">${fmt(val)}</div>
+            <div class="hm-pct">${pct}% Contribution</div>
+        </div>`;
+    });
+    document.getElementById('heatmap-container').innerHTML = hmHtml;
+}
+
+// CÁC HÀM VẼ CƠ BẢN
+function drawChart(id, data, labelKey, isHorizontal) {
+    if(charts[id]) charts[id].destroy();
+    charts[id] = new Chart(document.getElementById(id), {
         data: {
-            labels: shortLabels,
+            labels: data.map(x => x[labelKey]),
             datasets: [
-                { type:'line', label: t('legSales'), data: dataArray.map(x => (x.s === "-" ? null : x.s)), borderColor:'#A8C8C4', backgroundColor:'#A8C8C4', yAxisID:'yS', order: 0, tension: 0.3, pointRadius: 5 },
-                { type:'bar', label: t('legTotal'), data: dataArray.map(x => (x.tc === "-" ? null : x.tc)), backgroundColor:'#6D8F8B', order: 1 },
-                { type:'bar', label: t('legActive'), data: dataArray.map(x => (x.ac === "-" ? null : x.ac)), backgroundColor:'rgba(168, 200, 196, 0.4)', order: 1 }
+                { type:'line', label: 'Sell-Out', data: data.map(x => x.s), borderColor:'#A8C8C4', yAxisID:'yS', tension:0.3 },
+                { type:'bar', label: 'Tuyến', data: data.map(x => x.tc), backgroundColor:'#6D8F8B', yAxisID:'y' },
+                { type:'bar', label: 'Active', data: data.map(x => x.ac), backgroundColor:'rgba(168,200,196,0.3)', yAxisID:'y' }
             ]
-        }, options: { 
-            responsive:true, maintainAspectRatio:false, layout: { padding: { top: 30 } }, 
-            scales: { 
-                y: { beginAtZero: true, title: { display:true, text: t('axisCust'), font:{weight:'bold', size:12}, align:'end', padding: { bottom: 10 } }, ticks:{ font:{size:10} }, grid: { color: 'rgba(168, 200, 196, 0.1)' } }, 
-                yS: { position:'right', grid:{drawOnChartArea:false}, beginAtZero: true, title: { display:true, text: t('axisVnd'), font:{weight:'bold', size:12}, align:'end', padding: { bottom: 10 } }, ticks:{ font:{size:10}, callback: (v) => fmt(v) } }, 
-                x: { grid: { display: false }, ticks: { font: { weight: 'bold' } } } 
-            }, 
-            plugins: { legend: { position: 'bottom', labels: { boxWidth: 15, font: { size: 11 } } } } 
+        },
+        options: {
+            indexAxis: isHorizontal ? 'y' : 'x',
+            responsive: true, maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true, grid: { display:false } },
+                yS: { position: 'right', beginAtZero: true, grid: { display:false }, ticks: { callback: v => fmt(v) } }
+            },
+            plugins: { legend: { position: 'bottom' } }
         }
     });
 }
 
-function drawTable(headerId, bodyId, dataArray, titleColName, labelKey, showTotal = false, explicitTotal = null) {
-    let renderData = [...dataArray];
-    if (showTotal && explicitTotal) renderData.push(explicitTotal);
-
-    document.getElementById(headerId).innerHTML = `<th class="label-cell">${titleColName}</th>` + renderData.map(x => {
-        let isTotalCol = showTotal && x === renderData[renderData.length - 1];
-        return `<th style="${isTotalCol ? 'background: var(--primary); color: var(--bg-main);' : ''}">${x[labelKey]}</th>`;
-    }).join("");
-    
+function drawTable(hid, bid, data, title, lKey, showTotal, exp, checkRisk) {
+    let rd = [...data]; if (showTotal) rd.push(exp);
+    document.getElementById(hid).innerHTML = `<th class="label-cell">${title}</th>` + rd.map(x => `<th style="${x === rd[rd.length-1] && showTotal ? 'background:var(--primary);color:var(--bg-main)' : ''}">${x[lKey]}</th>`).join("");
     let rows = [
-        { l: t('tbPlan'), k: "tc", f: v => v === "-" ? "-" : fmt(v) },
-        { l: t('tbActive'), k: "ac", f: v => v === "-" ? "-" : `<b style="color: var(--primary);">${fmt(v)}</b>` },
-        { l: t('tbStrike'), k: "r", f: (_, i) => (i.tc > 0 && i.tc !== "-" && i.ac !== "-") ? `<b style="color:var(--accent-success)">${(i.ac/i.tc*100).toFixed(1)}%</b>` : '-' },
-        { l: t('tbSales'), k: "s", f: v => v === "-" ? "-" : fmt(v) },
-        { l: t('tbDrop'), k: "ds", f: (_, i) => (i.ac > 0 && i.ac !== "-" && i.s !== "-") ? fmt(i.s/i.ac) : '-' },
-        { l: t('tbLppc'), k: "avgSku", f: v => v === "-" ? "-" : `<span style="color:var(--accent-warning); font-weight:700">${Number(v||0).toFixed(1)}</span>` }
+        { l: t('tbPlan'), k: "tc", f: v => fmt(v) },
+        { l: t('tbActive'), k: "ac", f: v => `<b style="color:var(--primary)">${fmt(v)}</b>` },
+        { l: t('tbStrike'), k: "sr", f: (_, i) => {
+            let sr = (i.tc > 0 ? (i.ac/i.tc*100) : 0);
+            let risk = (checkRisk && sr < 50) ? 'risk-flag' : '';
+            return `<b class="${risk}">${sr.toFixed(1)}% ${risk ? '⚠️' : ''}</b>`;
+        }},
+        { l: t('tbSales'), k: "s", f: v => fmt(v) },
+        { l: t('tbDrop'), k: "ds", f: (_, i) => fmt(i.ac > 0 ? i.s/i.ac : 0) },
+        { l: t('tbLppc'), k: "avgSku", f: v => `<span style="color:var(--accent-warning)">${v.toFixed(1)}</span>` }
     ];
-
-    document.getElementById(bodyId).innerHTML = rows.map(r => `<tr><td class="label-cell">${r.l}</td>${renderData.map(item => { let isTotalCol = showTotal && item === renderData[renderData.length - 1]; return `<td style="${isTotalCol ? 'background: var(--secondary); font-weight: bold; color: var(--text-main);' : ''}">${r.f(item[r.k], item)}</td>`; }).join("")}</tr>`).join("");
+    document.getElementById(bid).innerHTML = rows.map(r => `<tr><td class="label-cell">${r.l}</td>${rd.map(x => `<td style="${x === rd[rd.length-1] && showTotal ? 'background:rgba(168,200,196,0.1);font-weight:800' : ''}">${r.f(x[r.k], x)}</td>`).join("")}</tr>`).join("");
 }
 
-// ======================== KHỞI TẠO HỆ THỐNG ========================
+function toggleMS(id) {
+    let d = document.getElementById('drop-'+id);
+    document.querySelectorAll('.ms-dropdown').forEach(el => { if(el!==d) el.style.display='none'; });
+    d.style.display = d.style.display==='block' ? 'none' : 'block';
+}
+
 function init() {
     dbMaster = []; dbSales = [];
-    if (typeof dbMasterM5 !== 'undefined') dbMaster = dbMaster.concat(dbMasterM5);
-    if (typeof dbSalesM5 !== 'undefined')  dbSales  = dbSales.concat(dbSalesM5);
-    if (typeof dbMasterM6 !== 'undefined') dbMaster = dbMaster.concat(dbMasterM6);
-    if (typeof dbSalesM6 !== 'undefined')  dbSales  = dbSales.concat(dbSalesM6);
-    if (typeof dbMasterM7 !== 'undefined') dbMaster = dbMaster.concat(dbMasterM7);
-    if (typeof dbSalesM7 !== 'undefined')  dbSales  = dbSales.concat(dbSalesM7);
+    // Combine data...
+    if (typeof dbMasterM5 !== 'undefined') { dbMaster = dbMaster.concat(dbMasterM5); dbSales = dbSales.concat(dbSalesM5); }
+    if (typeof dbMasterM6 !== 'undefined') { dbMaster = dbMaster.concat(dbMasterM6); dbSales = dbSales.concat(dbSalesM6); }
+    if (typeof dbMasterM7 !== 'undefined') { dbMaster = dbMaster.concat(dbMasterM7); dbSales = dbSales.concat(dbSalesM7); }
 
-    const preComputeData = (arr) => { 
-        arr.forEach(d => { 
-            if (d.month) d.month = String(d.month).trim(); 
-            d._w = getW(d);
-            if (d.hq) d.hq = String(d.hq).trim(); 
-            if (d.area) d.area = String(d.area).trim(); 
-            d._kam = cleanName(d.kam, true, d.area);
-            d._kae = cleanName(d.kae, false, d.area);
-        }); 
-    };
-    preComputeData(dbMaster); 
-    preComputeData(dbSales);
+    const segMapPre = {};
+    dbMaster.forEach(d => { segMapPre[d.cusCode] = d.CusS ? String(d.CusS).toUpperCase().trim() : "N"; });
 
-    // Kích hoạt dịch thuật lần đầu
+    const pre = (arr) => arr.forEach(d => {
+        d.month = String(d.month||"").trim();
+        d._w = getW(d);
+        d._kam = cleanName(d.kam, true, d.area);
+        d._kae = cleanName(d.kae, false, d.area);
+        d._segMap = segMapPre;
+    });
+    pre(dbMaster); pre(dbSales);
+
     setLang('vi');
-    
-    setTimeout(() => { 
-        const loader = document.getElementById('loader-wrapper'); 
-        if (loader) loader.classList.add('hidden'); 
-    }, 100);
+    setTimeout(() => { document.getElementById('loader-wrapper').classList.add('hidden'); }, 300);
 }
-
 window.onload = init;
 </script>
 </body>
