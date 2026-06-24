@@ -26,7 +26,7 @@
         body { margin: 0; font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg-main); color: var(--text-main); font-size: 13px; overflow-x: hidden; }
 
         /* =========================================================
-           2. MÀN HÌNH LOADING SANG CHẢNH
+           2. MÀN HÌNH LOADING
            ========================================================= */
         #loader-wrapper {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-main); z-index: 99999;
@@ -43,7 +43,7 @@
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
         /* =========================================================
-           3. LAYOUT REPORT (FULL-WIDTH STRATEGIC)
+           3. LAYOUT REPORT
            ========================================================= */
         .main-content { padding: 30px; width: 100%; min-height: 100vh; max-width: 1600px; margin: 0 auto; }
         
@@ -85,31 +85,32 @@
         .t-children { border-left: 1px solid var(--secondary); margin-left: 15px; padding-left: 10px; margin-bottom: 10px; }
         .t-leaf { display: flex; justify-content: space-between; padding: 6px 10px; font-size: 11px; color: var(--text-muted); border-bottom: 1px solid rgba(255,255,255,0.02); }
 
-        /* CHARTS & TABLES */
+        /* CHARTS & TABLES (VERTICAL TABLES FOR X-Y TRANSPOSE) */
         .chart-box { background: var(--bg-card); border-radius: var(--border-radius); border: 1px solid var(--border-color); padding: 25px; margin-bottom: 30px; }
         .chart-header { margin-bottom: 20px; }
         .chart-title { font-size: 14px; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
         .chart-title::before { content: ""; width: 4px; height: 16px; background: var(--primary); border-radius: 2px; }
         .chart-subtitle { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 4px; }
         
-        .table-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border-color); margin-top: 15px; }
+        .table-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border-color); margin-top: 20px; }
         .data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        .data-table th { background: var(--secondary); color: var(--bg-main); padding: 12px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 10px; }
-        .data-table td { padding: 10px; border-bottom: 1px solid var(--border-color); text-align: center; }
+        .data-table th { background: var(--secondary); color: var(--bg-main); padding: 12px 10px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 10px; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+        .data-table td { padding: 10px 12px; border-bottom: 1px solid var(--border-color); text-align: center; color: var(--text-main); white-space: nowrap; }
+        .data-table tr:hover td { background: rgba(255,255,255,0.02); }
         .label-cell { background: var(--bg-card); color: var(--primary); font-weight: 800; text-align: left !important; width: 180px; position: sticky; left: 0; z-index: 2; border-right: 1px solid var(--border-color); }
         .risk-flag { color: var(--accent-danger) !important; font-weight: 800 !important; }
 
-        /* PART 3: 60/40 SPLIT WITH HEATMAP */
-        .segment-container { display: flex; gap: 20px; flex-wrap: wrap; }
-        .segment-left { flex: 0 0 calc(62% - 10px); }
-        .segment-right { flex: 0 0 calc(38% - 10px); }
+        .segment-table { width:100%; border-collapse: collapse; margin-top: 15px; font-size: 12px; background: var(--bg-main); min-width: 800px; border: 1px solid var(--border-color); }
+        .segment-table th { padding: 10px; border: 1px solid var(--border-color); white-space: nowrap; background: var(--secondary); color: var(--text-main); font-size: 11px; text-transform: uppercase;}
+        .segment-table td { padding: 8px 10px; border: 1px solid var(--border-color); text-align: center; white-space: nowrap; color: var(--text-main); }
+        .seg-area-cell { background-color: var(--bg-card); font-weight: bold; text-align: left !important; color: var(--primary); border-right: 2px solid var(--border-color) !important; position: sticky; left: 0; z-index: 2;}
+        .seg-name-cell { text-align: left !important; font-weight: 600; color: var(--text-muted); position: sticky; left: 0; background: var(--bg-main); z-index: 1; border-right: 1px solid var(--border-color); }
 
-        .heatmap-box { background: var(--bg-card); border-radius: var(--border-radius); border: 1px solid var(--border-color); padding: 20px; height: 100%; }
-        .hm-grid { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: minmax(100px, auto); gap: 10px; height: 350px; }
-        .hm-item { border-radius: 8px; padding: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
-        .hm-item .hm-label { font-size: 10px; font-weight: 800; text-transform: uppercase; opacity: 0.8; }
-        .hm-item .hm-val { font-size: 18px; font-weight: 800; margin: 5px 0; }
-        .hm-item .hm-pct { font-size: 10px; font-weight: 600; padding: 2px 6px; background: rgba(0,0,0,0.2); border-radius: 4px; }
+        /* MATRIX HEATMAP */
+        .hm-matrix { width: 100%; border-collapse: collapse; text-align: center; font-size: 12px; }
+        .hm-matrix th { background: var(--secondary); color: var(--bg-main); padding: 12px; font-weight: 800; border: 1px solid var(--border-color); text-transform: uppercase; font-size: 10px; }
+        .hm-matrix td { border: 1px solid var(--border-color); padding: 14px 10px; color: var(--text-main); transition: 0.3s; }
+        .hm-matrix td:hover { transform: scale(1.02); z-index: 10; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
 
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-main); }
@@ -119,7 +120,7 @@
         @media (max-width: 1200px) {
             .top-header { flex-direction: column; align-items: flex-start; }
             .pulse-row { grid-template-columns: 1fr; }
-            .segment-left, .segment-right { flex: 0 0 100%; }
+            .side-by-side { grid-template-columns: 1fr !important; }
         }
     </style>
 </head>
@@ -138,7 +139,7 @@
                 <h1 data-i18n="mainTitle">RTM STRATEGIC DASHBOARD</h1>
                 <p data-i18n="subTitle">Đánh giá Hiệu quả Phân phối, Thực thi Tuyến & Phân khúc Sức mua</p>
             </div>
-            <div class="lang-toggle">
+            <div class="lang-toggle" style="margin-top:15px;">
                 <button id="btn-vi" onclick="setLang('vi')" class="active">VI</button>
                 <button id="btn-en" onclick="setLang('en')">EN</button>
             </div>
@@ -188,45 +189,42 @@
             <div class="chart-title" data-i18n="cAreaTitle">HIỆU QUẢ SELL-OUT THEO KHU VỰC</div>
             <div class="chart-subtitle" data-i18n="cAreaSub">⚠️ Cảnh báo đỏ cho vùng có Strike Rate < 50%</div>
         </div>
-        <div style="height: 350px;"><canvas id="areaChart"></canvas></div>
-        <div class="table-wrap"><table class="data-table"><thead><tr id="areaHeaderRow"></tr></thead><tbody id="areaTableBody"></tbody></table></div>
+        <div style="height: 450px;"><canvas id="areaChart"></canvas></div>
+        <div class="table-wrap"><table class="data-table"><thead id="areaHeaderRow"></thead><tbody id="areaTableBody"></tbody></table></div>
     </div>
 
     <div class="chart-box">
         <div class="chart-title" data-i18n="cWeekTitle">TỐC ĐỘ LUÂN CHUYỂN HÀNG HÓA THEO TUẦN</div>
-        <div style="height: 300px;"><canvas id="weekChart"></canvas></div>
-        <div class="table-wrap"><table class="data-table"><thead><tr id="weekHeaderRow"></tr></thead><tbody id="weekTableBody"></tbody></table></div>
+        <div style="height: 400px;"><canvas id="weekChart"></canvas></div>
+        <div class="table-wrap"><table class="data-table"><thead id="weekHeaderRow"></thead><tbody id="weekTableBody"></tbody></table></div>
     </div>
 
     <div class="section-tag" data-i18n="secP2">PHẦN 2: THỰC THI THỊ TRƯỜNG & SFE</div>
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; flex-wrap: wrap;">
-        <div class="chart-box">
+    <div class="side-by-side" style="display:grid; grid-template-columns: 1fr 1fr; gap:25px;">
+        <div class="chart-box" style="margin-bottom: 0;">
             <div class="chart-title" data-i18n="cKamTitle">TOP 10 NĂNG SUẤT QUẢN LÝ VÙNG</div>
-            <div style="height: 380px;"><canvas id="kamChart"></canvas></div>
-            <div class="table-wrap"><table class="data-table"><thead><tr id="kamHeaderRow"></tr></thead><tbody id="kamTableBody"></tbody></table></div>
+            <div style="height: 450px;"><canvas id="kamChart"></canvas></div>
+            <div class="table-wrap"><table class="data-table"><thead id="kamHeaderRow"></thead><tbody id="kamTableBody"></tbody></table></div>
         </div>
-        <div class="chart-box">
+        <div class="chart-box" style="margin-bottom: 0;">
             <div class="chart-title" data-i18n="cKaeTitle">TOP 10 NĂNG SUẤT SALESMAN</div>
-            <div style="height: 380px;"><canvas id="dayChart"></canvas></div>
-            <div class="table-wrap"><table class="data-table"><thead><tr id="dayHeaderRow"></tr></thead><tbody id="dayTableBody"></tbody></table></div>
+            <div style="height: 450px;"><canvas id="dayChart"></canvas></div>
+            <div class="table-wrap"><table class="data-table"><thead id="dayHeaderRow"></thead><tbody id="dayTableBody"></tbody></table></div>
         </div>
     </div>
+    <div style="height: 30px;"></div> 
 
     <div class="section-tag" data-i18n="secP3">PHẦN 3: ĐỘ PHỦ & CHIẾN LƯỢC ĐIỂM BÁN</div>
-    <div class="segment-container">
-        <div class="segment-left">
-            <div class="chart-box" style="margin-bottom:0; height:100%;">
-                <div class="chart-title" data-i18n="cSegTitle">PHÂN TÍCH SỨC MUA THEO PHÂN KHÚC TẠP HÓA</div>
-                <div class="table-wrap" id="segmentAreaTableContainer"></div>
-            </div>
-        </div>
-        <div class="segment-right">
-            <div class="heatmap-box">
-                <div class="chart-title" data-i18n="hmTitle">TỶ TRỌNG DOANH SỐ PHÂN KHÚC</div>
-                <div class="chart-subtitle" data-i18n="hmSub">Phân bổ miếng bánh thị trường theo doanh thu</div>
-                <div class="hm-grid" id="heatmap-container"></div>
-            </div>
-        </div>
+    
+    <div class="chart-box">
+        <div class="chart-title" data-i18n="cSegTitle">PHÂN TÍCH SỨC MUA THEO PHÂN KHÚC TẠP HÓA</div>
+        <div class="table-wrap" id="segmentAreaTableContainer" style="border:none;"></div>
+    </div>
+
+    <div class="chart-box">
+        <div class="chart-title" data-i18n="hmTitle">HEAT MAP TỶ TRỌNG DOANH SỐ PHÂN KHÚC</div>
+        <div class="chart-subtitle" data-i18n="hmSub">Ma trận doanh số theo Khu vực (Trục Y) và Phân khúc (Trục X). Ô màu càng sáng -> Doanh số càng cao.</div>
+        <div class="table-wrap" id="heatmapMatrixContainer"></div>
     </div>
 </main>
 
@@ -237,7 +235,11 @@
 <script src="dataM7.js"></script>
 
 <script>
-// BIẾN TOÀN CỤC & TỪ ĐIỂN SONG NGỮ CHUẨN HOÁ
+// CẤU HÌNH CHART.JS CHO DARK THEME
+Chart.defaults.color = '#A0AAB5';
+Chart.defaults.borderColor = 'rgba(255,255,255,0.05)';
+Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
+
 const dict = {
     vi: {
         mainTitle: "RTM STRATEGIC DASHBOARD", subTitle: "Đánh giá Hiệu quả Phân phối, Thực thi Tuyến & Phân khúc Sức mua",
@@ -249,12 +251,10 @@ const dict = {
         cWeekTitle: "TỐC ĐỘ LUÂN CHUYỂN HÀNG HÓA THEO TUẦN", secP2: "PHẦN 2: THỰC THI THỊ TRƯỜNG & SFE",
         cKamTitle: "TOP 10 NĂNG SUẤT QUẢN LÝ VÙNG", cKaeTitle: "TOP 10 NĂNG SUẤT SALESMAN",
         secP3: "PHẦN 3: ĐỘ PHỦ & CHIẾN LƯỢC ĐIỂM BÁN", cSegTitle: "PHÂN TÍCH SỨC MUA THEO PHÂN KHÚC TẠP HÓA",
-        hmTitle: "TỶ TRỌNG DOANH SỐ PHÂN KHÚC", hmSub: "Phân bổ miếng bánh thị trường theo doanh thu",
+        hmTitle: "HEAT MAP: TỶ TRỌNG DOANH SỐ PHÂN KHÚC", hmSub: "Ma trận doanh số theo Khu vực (Trục Y) và Phân khúc (Trục X). Màu càng sáng -> Doanh số càng cao",
         colArea: "KHU VỰC", colWeek: "TUẦN", colKam: "QUẢN LÝ", colKae: "SALESMAN",
         tbPlan: "Tuyến", tbActive: "Active", tbStrike: "Strike Rate", tbSales: "Sell-Out", tbDrop: "Drop Size", tbLppc: "LPPC",
-        sysTotal: "TỔNG TOÀN QUỐC", sysTotalSys: "TỔNG HỆ THỐNG",
-        segColClass: "PHÂN KHÚC", segTblH1: "HIỆU SUẤT ĐIỂM BÁN",
-        axisCust: "Đơn vị: Cửa hàng", axisVnd: "Đơn vị: VNĐ", legSales: "Doanh số", legTotal: "Tuyến", legActive: "Active"
+        sysTotal: "TỔNG TOÀN QUỐC", segColClass: "PHÂN KHÚC", segTblH1: "HIỆU SUẤT ĐIỂM BÁN"
     },
     en: {
         mainTitle: "RTM STRATEGIC DASHBOARD", subTitle: "Distribution Efficiency, Route Execution & Purchasing Power",
@@ -266,17 +266,15 @@ const dict = {
         cWeekTitle: "WEEKLY GOODS VELOCITY", secP2: "PART 2: MARKET EXECUTION & SFE",
         cKamTitle: "TOP 10 MANAGER SFE", cKaeTitle: "TOP 10 SALES REP SFE",
         secP3: "PART 3: COVERAGE & OUTLET STRATEGY", cSegTitle: "PURCHASING POWER BY OUTLET SEGMENTATION",
-        hmTitle: "SEGMENT REVENUE SHARE", hmSub: "Market share distribution by revenue",
+        hmTitle: "HEAT MAP: SEGMENT REVENUE MATRIX", hmSub: "Sales matrix by Area (Y-axis) and Segment (X-axis). Lighter color -> Higher sales",
         colArea: "AREA", colWeek: "WEEK", colKam: "MANAGER", colKae: "REP",
         tbPlan: "Route", tbActive: "Active", tbStrike: "Strike Rate", tbSales: "Sell-Out", tbDrop: "Drop Size", tbLppc: "LPPC",
-        sysTotal: "NATIONWIDE", sysTotalSys: "SYSTEM TOTAL",
-        segColClass: "CLASS", segTblH1: "OUTLET PERFORMANCE",
-        axisCust: "Unit: Outlets", axisVnd: "Unit: VND", legSales: "Sales", legTotal: "Route", legActive: "Active"
+        sysTotal: "NATIONWIDE", segColClass: "CLASS", segTblH1: "OUTLET PERFORMANCE"
     }
 };
 
 const segNames = { 'A': 'Class A', 'B': 'Class B', 'C': 'Class C', 'D': 'Class D', 'N': 'Unclassified' };
-const segColors = { 'A': '#A8C8C4', 'B': '#6D8F8B', 'C': '#ea580c', 'D': '#dc2626', 'N': '#64748b' };
+const segColorsRGB = { 'A': '168,200,196', 'B': '109,143,139', 'C': '234,88,12', 'D': '220,38,38', 'N': '100,116,139' };
 const monthOrder = { "jan":1, "feb":2, "mar":3, "apr":4, "may":5, "jun":6, "jul":7, "aug":8, "sep":9, "oct":10, "nov":11, "dec":12 };
 
 let lang = 'vi';
@@ -356,7 +354,7 @@ function render() {
     if (dbMaster.length === 0 && dbSales.length === 0) return; 
 
     let sys = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
-    let areaMap = {}, kamMap = {}, kaeMap = {}, weekMap = {}, treeMap = {}, segMap = {}, hmMap = { 'A':0, 'B':0, 'C':0, 'D':0, 'N':0 };
+    let areaMap = {}, kamMap = {}, kaeMap = {}, weekMap = {}, treeMap = {}, segMap = {};
     
     const filterFn = (d) => (filters.month.length === 0 || filters.month.includes(d.month)) && (filters.week.length === 0 || filters.week.includes(d._w)) && (filters.hq.length === 0 || filters.hq.includes(d.hq)) && (filters.area.length === 0 || filters.area.includes(d.area));
 
@@ -427,7 +425,7 @@ function render() {
         const segKey = a + '|' + seg;
         if (!segMap[segKey]) segMap[segKey] = { p: new Set(), a: new Set(), s: 0 };
         segMap[segKey].s += v;
-        if (v > 0) { segMap[segKey].a.add(d.cusCode); hmMap[seg] += v; }
+        if (v > 0) { segMap[segKey].a.add(d.cusCode); }
     });
 
     // 1. UPDATE KPIs
@@ -452,66 +450,143 @@ function render() {
     });
     document.getElementById('tree-container').innerHTML = treeHtml || '<div style="color:var(--text-muted); font-style:italic;">No Personnel Data</div>';
 
-    // 3. CHARTS AND DATA TABLES
+    // 3. CHARTS AND TRANSPOSED VERTICAL DATA TABLES
     let areaData = Object.keys(areaMap).map(k => ({ label: k, tc: areaMap[k].p.size, ac: areaMap[k].a.size, s: areaMap[k].s, avgSku: areaMap[k].invs > 0 ? areaMap[k].skus/areaMap[k].invs : 0 })).sort((a,b) => b.s - a.s);
-    drawChart('areaChart', areaData, 'label', false);
-    drawTable('areaHeaderRow', 'areaTableBody', areaData, t('colArea'), 'label', true, { label: t('sysTotal'), ...sysKpiObj }, true);
+    drawChart('areaChart', areaData, 'label', true); // Chuyển sang cột ngang
+    drawVerticalTable('areaHeaderRow', 'areaTableBody', areaData, t('colArea'), true, { label: t('sysTotal'), ...sysKpiObj }, true);
 
     let weekData = Object.keys(weekMap).map(k => ({ label: formatWM(weekMap[k].w, weekMap[k].m), tc: weekMap[k].p.size, ac: weekMap[k].a.size, s: weekMap[k].s, avgSku: weekMap[k].invs > 0 ? weekMap[k].skus/weekMap[k].invs : 0, w: weekMap[k].w, m: weekMap[k].m })).sort((a,b) => { let m1 = monthOrder[a.m.toLowerCase()]||99; let m2 = monthOrder[b.m.toLowerCase()]||99; return m1!==m2 ? m1-m2 : a.w.localeCompare(b.w); });
-    drawChart('weekChart', weekData, 'label', false);
-    drawTable('weekHeaderRow', 'weekTableBody', weekData, t('colWeek'), 'label', true, { label: t('sysTotal'), ...sysKpiObj });
+    drawChart('weekChart', weekData, 'label', false); // Cột dọc cho thời gian
+    drawVerticalTable('weekHeaderRow', 'weekTableBody', weekData, t('colWeek'), true, { label: t('sysTotal'), ...sysKpiObj }, false);
 
     let kamData = Object.keys(kamMap).map(k => ({ label: k, tc: kamMap[k].p.size, ac: kamMap[k].a.size, s: kamMap[k].s, avgSku: kamMap[k].invs > 0 ? kamMap[k].skus/kamMap[k].invs : 0 })).sort((a,b) => b.s - a.s).slice(0, 10);
-    drawChart('kamChart', kamData, 'label', true); // Top 10 Ép cột ngang
-    drawTable('kamHeaderRow', 'kamTableBody', kamData, t('colKam'), 'label', false);
+    drawChart('kamChart', kamData, 'label', true); // Ép cột ngang
+    drawVerticalTable('kamHeaderRow', 'kamTableBody', kamData, t('colKam'), false); // Xóa cột Tổng
 
     let kaeData = Object.keys(kaeMap).map(k => ({ label: k, tc: kaeMap[k].p.size, ac: kaeMap[k].a.size, s: kaeMap[k].s, avgSku: kaeMap[k].invs > 0 ? kaeMap[k].skus/kaeMap[k].invs : 0 })).sort((a,b) => b.s - a.s).slice(0, 10);
-    drawChart('dayChart', kaeData, 'label', true); // Top 10 Ép cột ngang
-    drawTable('dayHeaderRow', 'dayTableBody', kaeData, t('colKae'), 'label', false);
+    drawChart('dayChart', kaeData, 'label', true); // Ép cột ngang
+    drawVerticalTable('dayHeaderRow', 'dayTableBody', kaeData, t('colKae'), false); // Xóa cột Tổng
 
-    // 4. PART 3: SEGMENTATION & SQUARE MATRIX HEATMAP
-    renderPart3(areaMap, segMap, hmMap);
+    // 4. PART 3: SEGMENTATION & 2D MATRIX HEATMAP
+    renderPart3(areaMap, segMap);
 }
 
-function renderPart3(areaMap, segMap, hmMap) {
+function renderPart3(areaMap, segMap) {
     let segList = ['A', 'B', 'C', 'D', 'N'];
+    
+    // 4.1 BẢNG SEGMENT TRUYỀN THỐNG (FULL WIDTH)
     let html = `<table class="segment-table"><thead><tr><th rowspan="2">${t('colArea')}</th><th rowspan="2">${t('segColClass')}</th><th colspan="4">${t('segTblH1')}</th></tr><tr><th>${t('tbPlan')}</th><th>${t('tbActive')}</th><th>${t('tbStrike')}</th><th>${t('tbSales')}</th></tr></thead><tbody>`;
 
     let areaToRender = filters.area.length > 0 ? filters.area : Object.keys(areaMap).sort();
+    let sysPlanCount = 0; let sysActCount = 0; let sysSalesSum = 0;
+
     areaToRender.forEach(area => {
-        let isF = true;
+        let isF = true; let areaPlanCount = 0; let areaActCount = 0; let areaSalesSum = 0;
+        
+        segList.forEach(seg => {
+            const data = segMap[area + '|' + seg] || { p: new Set(), a: new Set(), s: 0 };
+            areaPlanCount += data.p.size; areaActCount += data.a.size; areaSalesSum += data.s;
+        });
+        sysPlanCount += areaPlanCount; sysActCount += areaActCount; sysSalesSum += areaSalesSum;
+
         segList.forEach(seg => {
             const data = segMap[area + '|' + seg] || { p: new Set(), a: new Set(), s: 0 };
             let sr = data.p.size > 0 ? (data.a.size/data.p.size*100).toFixed(1) + '%' : '0.0%';
             html += `<tr>`;
-            if(isF) { html += `<td rowspan="5" class="seg-area-cell">${area}</td>`; isF = false; }
+            if(isF) { html += `<td rowspan="6" class="seg-area-cell">${area}</td>`; isF = false; }
             html += `<td class="seg-name-cell">${segNames[seg]}</td><td>${fmt(data.p.size)}</td><td style="color:var(--primary); font-weight:bold;">${fmt(data.a.size)}</td><td style="font-weight:bold;">${sr}</td><td style="text-align:right; font-weight:600; color:var(--primary);">${fmt(data.s)}</td></tr>`;
         });
+        
+        let areaSr = areaPlanCount > 0 ? ((areaActCount / areaPlanCount) * 100).toFixed(1) + '%' : '0.0%';
+        html += `<tr style="background-color: var(--bg-card); font-weight: bold; border-top: 1px solid var(--secondary);"><td class="seg-name-cell" style="color: var(--text-main);">TỔNG VÙNG</td><td>${fmt(areaPlanCount)}</td><td style="color:var(--primary);">${fmt(areaActCount)}</td><td style="color:var(--text-main);">${areaSr}</td><td style="text-align:right; color:var(--text-main);">${fmt(areaSalesSum)}</td></tr>`;
     });
+    
+    let finalSr = sysPlanCount > 0 ? ((sysActCount / sysPlanCount) * 100).toFixed(1) + '%' : '0.0%';
+    html += `<tr style="background-color: rgba(168,200,196,0.1); font-weight: 900;"><td colspan="2" class="seg-name-cell" style="color: var(--text-main); font-size:14px; text-transform:uppercase;">${t('sysTotal')}</td><td>${fmt(sysPlanCount)}</td><td style="color:var(--primary);">${fmt(sysActCount)}</td><td style="color:var(--text-main);">${finalSr}</td><td style="text-align:right; color:var(--text-main);">${fmt(sysSalesSum)}</td></tr>`;
     html += `</tbody></table>`;
     document.getElementById('segmentAreaTableContainer').innerHTML = html;
 
-    // RENDER SQUARE MATRIX HEATMAP
-    let hmHtml = '';
-    let totalHm = Object.values(hmMap).reduce((a,b)=>a+b,0);
-    segList.forEach(seg => {
-        let val = hmMap[seg];
-        let pct = totalHm > 0 ? (val/totalHm*100).toFixed(1) : 0;
-        hmHtml += `<div class="hm-item" style="background: ${segColors[seg]}18; border-bottom: 4px solid ${segColors[seg]}">
-            <div class="hm-label" style="color:${segColors[seg]}">${segNames[seg]}</div>
-            <div class="hm-val">${fmt(val)}</div>
-            <div class="hm-pct">${pct}% Contribution</div>
-        </div>`;
+    // 4.2 MATRIX 2D HEATMAP (TRỤC Y: AREA, TRỤC X: SEGMENT)
+    let maxVal = 0;
+    areaToRender.forEach(area => {
+        segList.forEach(seg => {
+            let s = segMap[area + '|' + seg] ? segMap[area + '|' + seg].s : 0;
+            if(s > maxVal) maxVal = s;
+        });
     });
-    document.getElementById('heatmap-container').innerHTML = hmHtml;
+
+    let hmHtml = `<table class="hm-matrix"><thead><tr><th>${t('colArea')}</th>`;
+    segList.forEach(seg => hmHtml += `<th>${segNames[seg]}</th>`);
+    hmHtml += `</tr></thead><tbody>`;
+
+    areaToRender.forEach(area => {
+        hmHtml += `<tr><td class="label-cell" style="font-size:11px; text-transform:uppercase;">${area}</td>`;
+        segList.forEach(seg => {
+            let s = segMap[area + '|' + seg] ? segMap[area + '|' + seg].s : 0;
+            let intensity = maxVal > 0 ? (s / maxVal) : 0;
+            // Áp dụng cường độ sáng dựa theo màu gốc của Segment
+            let rgb = segColorsRGB[seg];
+            let bg = s > 0 ? `rgba(${rgb}, ${0.1 + intensity * 0.8})` : 'transparent';
+            hmHtml += `<td style="background:${bg}; font-weight:800; color: ${intensity > 0.5 ? '#fff' : 'var(--text-main)'}">${fmt(s)}</td>`;
+        });
+        hmHtml += `</tr>`;
+    });
+    hmHtml += `</tbody></table>`;
+    document.getElementById('heatmapMatrixContainer').innerHTML = hmHtml;
 }
 
-// ======================== CHART & TABLE CORE DRAWER ========================
+// ======================== HÀM DRAW X-Y TRANSPOSED (CỘT DỌC ĐẢO CHIỀU) ========================
+function drawVerticalTable(hid, bid, data, titleNameLabel, showTotal, exp, checkRisk) {
+    // HEADER: [Tiêu đề cột] [Tuyến] [Active] [Strike Rate] [Doanh Số] [Drop Size] [LPPC]
+    document.getElementById(hid).innerHTML = `
+        <th class="label-cell">${titleNameLabel}</th>
+        <th>${t('tbPlan')}</th>
+        <th>${t('tbActive')}</th>
+        <th>${t('tbStrike')}</th>
+        <th>${t('tbSales')}</th>
+        <th>${t('tbDrop')}</th>
+        <th>${t('tbLppc')}</th>
+    `;
+    
+    // BODY: Dòng dữ liệu tương ứng từng Nhãn (Name)
+    let bodyHtml = data.map(d => {
+        let sr = d.tc > 0 ? (d.ac/d.tc*100) : 0;
+        let ds = d.ac > 0 ? d.s/d.ac : 0;
+        let risk = (checkRisk && sr < 50) ? 'risk-flag' : '';
+        return `<tr>
+            <td class="label-cell" style="font-size:11px; text-transform:uppercase;">${d.label}</td>
+            <td>${fmt(d.tc)}</td>
+            <td><b style="color:var(--primary)">${fmt(d.ac)}</b></td>
+            <td class="${risk}"><b style="${risk ? '' : 'color:var(--accent-success)'}">${sr.toFixed(1)}% ${risk ? '⚠️' : ''}</b></td>
+            <td style="text-align:right">${fmt(d.s)}</td>
+            <td style="text-align:right">${fmt(ds)}</td>
+            <td><span style="color:var(--accent-warning); font-weight:bold">${d.avgSku.toFixed(1)}</span></td>
+        </tr>`;
+    }).join("");
+
+    // TOTAL ROW
+    if (showTotal && exp) {
+        let sr = exp.tc > 0 ? (exp.ac/exp.tc*100) : 0;
+        let ds = exp.ac > 0 ? exp.s/exp.ac : 0;
+        bodyHtml += `<tr style="background:rgba(168,200,196,0.1);">
+            <td class="label-cell" style="color:var(--text-main); font-weight:900">${exp.label}</td>
+            <td style="font-weight:bold">${fmt(exp.tc)}</td>
+            <td><b style="color:var(--primary)">${fmt(exp.ac)}</b></td>
+            <td><b style="color:var(--accent-success)">${sr.toFixed(1)}%</b></td>
+            <td style="text-align:right; font-weight:bold">${fmt(exp.s)}</td>
+            <td style="text-align:right; font-weight:bold">${fmt(ds)}</td>
+            <td><span style="color:var(--accent-warning); font-weight:bold">${exp.avgSku.toFixed(1)}</span></td>
+        </tr>`;
+    }
+    
+    document.getElementById(bid).innerHTML = bodyHtml;
+}
+
 function drawChart(id, data, labelKey, isHorizontal) {
     if(charts[id]) charts[id].destroy();
 
-    // Đồng bộ Trục dựa trên định dạng Ngang/Dọc để tránh Chart.js bị vỡ luồng chạy
     let scalesConfig = {};
+    // Cấu hình linh hoạt cho Cột Ngang và Dọc
     if (isHorizontal) {
         scalesConfig = {
             y: { grid: { display: false } },
@@ -531,8 +606,8 @@ function drawChart(id, data, labelKey, isHorizontal) {
             labels: data.map(x => x[labelKey]),
             datasets: [
                 { type:'line', label: t('legSales'), data: data.map(x => x.s), borderColor:'#A8C8C4', backgroundColor:'#A8C8C4', xAxisID: isHorizontal ? 'xS' : undefined, yAxisID: isHorizontal ? undefined : 'yS', tension:0.3, pointRadius: 4 },
-                { type:'bar', label: t('legTotal'), data: data.map(x => x.tc), backgroundColor:'#6D8F8B', xAxisID: isHorizontal ? 'x' : undefined, yAxisID: isHorizontal ? undefined : 'y' },
-                { type:'bar', label: t('legActive'), data: data.map(x => x.ac), backgroundColor:'rgba(168,200,196,0.3)', xAxisID: isHorizontal ? 'x' : undefined, yAxisID: isHorizontal ? undefined : 'y' }
+                { type:'bar', label: t('legTotal'), data: data.map(x => x.tc), backgroundColor:'#6D8F8B', xAxisID: isHorizontal ? 'x' : undefined, yAxisID: isHorizontal ? undefined : 'y', barPercentage: 0.85, categoryPercentage: 0.85 },
+                { type:'bar', label: t('legActive'), data: data.map(x => x.ac), backgroundColor:'rgba(168,200,196,0.3)', xAxisID: isHorizontal ? 'x' : undefined, yAxisID: isHorizontal ? undefined : 'y', barPercentage: 0.85, categoryPercentage: 0.85 }
             ]
         },
         options: {
@@ -544,25 +619,6 @@ function drawChart(id, data, labelKey, isHorizontal) {
     });
 }
 
-function drawTable(hid, bid, data, title, lKey, showTotal, exp, checkRisk) {
-    let rd = [...data]; if (showTotal) rd.push(exp);
-    document.getElementById(hid).innerHTML = `<th class="label-cell">${title}</th>` + rd.map(x => `<th style="${x === rd[rd.length-1] && showTotal ? 'background:var(--primary);color:var(--bg-main)' : ''}">${x[lKey] || ""}</th>`).join("");
-    
-    let rows = [
-        { l: t('tbPlan'), k: "tc", f: v => fmt(v) },
-        { l: t('tbActive'), k: "ac", f: v => `<b style="color:var(--primary)">${fmt(v)}</b>` },
-        { l: t('tbStrike'), k: "sr", f: (_, i) => {
-            let sr = (i.tc > 0 ? (i.ac/i.tc*100) : 0);
-            let risk = (checkRisk && sr < 50) ? 'risk-flag' : '';
-            return `<b class="${risk}">${sr.toFixed(1)}% ${risk ? '⚠️' : ''}</b>`;
-        }},
-        { l: t('tbSales'), k: "s", f: v => fmt(v) },
-        { l: t('tbDrop'), k: "ds", f: (_, i) => fmt(i.ac > 0 ? i.s/i.ac : 0) },
-        { l: t('tbLppc'), k: "avgSku", f: v => `<span style="color:var(--accent-warning)">${v.toFixed(1)}</span>` }
-    ];
-    document.getElementById(bid).innerHTML = rows.map(r => `<tr><td class="label-cell">${r.l}</td>${rd.map(x => `<td style="${x === rd[rd.length-1] && showTotal ? 'background:rgba(168,200,196,0.1);font-weight:800' : ''}">${r.f(x[r.k], x)}</td>`).join("")}</tr>`).join("");
-}
-
 // ======================== PHẦN KHỞI TẠO HỆ THỐNG ========================
 function init() {
     dbMaster = []; dbSales = [];
@@ -570,7 +626,6 @@ function init() {
     if (typeof dbMasterM6 !== 'undefined') { dbMaster = dbMaster.concat(dbMasterM6); dbSales = dbSales.concat(dbSalesM6); }
     if (typeof dbMasterM7 !== 'undefined') { dbMaster = dbMaster.concat(dbMasterM7); dbSales = dbSales.concat(dbSalesM7); }
 
-    // Xây dựng ma trận phân khúc bảo vệ dữ liệu chống Null-safety
     const segMapPre = {};
     dbMaster.forEach(d => { if(d.cusCode) segMapPre[d.cusCode] = d.CusS ? String(d.CusS).toUpperCase().trim() : "N"; });
 
@@ -585,7 +640,6 @@ function init() {
     });
     pre(dbMaster); pre(dbSales);
 
-    // Kích hoạt dịch thuật và kết xuất đồ họa
     setLang('vi');
     setTimeout(() => { document.getElementById('loader-wrapper').classList.add('hidden'); }, 300);
 }
