@@ -184,7 +184,7 @@
             <div class="kpi-card">
                 <div class="label" data-i18n="kpiActiveLbl">ĐỘ PHỦ SỐNG</div>
                 <div class="value" id="val-strike">0</div>
-                <div class="sub"><span data-i18n="kpiActiveSub1">Cửa hàng đã lên đơn</span> <span style="color:var(--text-muted)">/ <span id="val-cust">0</span> <span data-i18n="kpiActiveSub2">Kế hoạch</span></span></div>
+                <div class="sub"><span data-i18n="kpiActiveSub1">Cửa hàng đã lên đơn</span> <span style="color:var(--text-muted)">/ <span id="val-cust">0</span> <span data-i18n="kpiActiveSub2">Trên tuyến</span></span></div>
             </div>
             <div class="kpi-card">
                 <div class="label" data-i18n="kpiStrikeLbl">STRIKE RATE</div>
@@ -224,14 +224,14 @@
 
     <div class="chart-box">
         <div class="chart-title" data-i18n="cKamTitle">TOP 10 NĂNG SUẤT QUẢN LÝ VÙNG</div>
-        <div class="chart-subtitle" data-i18n="cKamSub">Đánh giá năng lực điều phối tuyến và chất lượng đơn hàng (Drop Size & LPPC) của Quản lý</div>
+        <div class="chart-subtitle" data-i18n="cKamSub">Đánh giá năng lực điều phối tuyến và chất lượng đơn hàng của Quản lý</div>
         <div style="height: 350px;"><canvas id="kamChart"></canvas></div>
         <div class="table-wrap"><table class="data-table"><thead><tr id="kamHeaderRow"></tr></thead><tbody id="kamTableBody"></tbody></table></div>
     </div>
 
     <div class="chart-box">
         <div class="chart-title" data-i18n="cKaeTitle">TOP 10 NĂNG SUẤT SALESMAN</div>
-        <div class="chart-subtitle" data-i18n="cKaeSub">Đã loại bỏ các số liệu do Quản lý trực tiếp bán. Tập trung soi Strike Rate & LPPC của đội ngũ Salesman</div>
+        <div class="chart-subtitle" data-i18n="cKaeSub">Đã loại bỏ số của Quản lý. Tập trung soi Strike Rate & LPPC của đội ngũ Sales</div>
         <div style="height: 350px;"><canvas id="dayChart"></canvas></div>
         <div class="table-wrap"><table class="data-table"><thead><tr id="dayHeaderRow"></tr></thead><tbody id="dayTableBody"></tbody></table></div>
     </div>
@@ -240,7 +240,7 @@
 
     <div class="chart-box">
         <div class="chart-title" data-i18n="cSegTitle">PHÂN TÍCH SỨC MUA THEO PHÂN KHÚC TẠP HÓA</div>
-        <div class="chart-subtitle" data-i18n="cSegSub">Cơ cấu đóng góp của nhóm Tạp hóa Lớn, Vừa, Nhỏ để ra quyết định phân bổ ngân sách khuyến mãi</div>
+        <div class="chart-subtitle" data-i18n="cSegSub">Cơ cấu đóng góp của nhóm tạp hóa để ra quyết định phân bổ ngân sách</div>
         <div class="table-wrap" id="segmentAreaTableContainer"></div>
     </div>
 </main>
@@ -257,7 +257,7 @@ Chart.defaults.color = '#A0AAB5';
 Chart.defaults.borderColor = 'rgba(168, 200, 196, 0.1)';
 Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
 
-// TỪ ĐIỂN SONG NGỮ (ĐÃ LÀM SẠCH TIẾNG ANH TRONG BẢN VIỆT)
+// TỪ ĐIỂN SONG NGỮ (ĐÃ LÀM SẠCH VÀ ĐỔI MCP/KẾ HOẠCH THÀNH TUYẾN)
 const dict = {
     vi: {
         mainTitle: "RTM STRATEGIC DASHBOARD",
@@ -265,7 +265,7 @@ const dict = {
         lblMonth: "Tháng", lblWeek: "Tuần", lblRegion: "Miền", lblArea: "Khu vực", lblAll: "Tất cả",
         secPulse: "CHỈ SỐ SINH TỬ",
         kpiSalesLbl: "TỔNG SELL-OUT", kpiSalesSub1: "VNĐ (Chưa VAT)", kpiSalesSub2: "Dòng tiền",
-        kpiActiveLbl: "ĐỘ PHỦ SỐNG", kpiActiveSub1: "Cửa hàng đã lên đơn", kpiActiveSub2: "Kế hoạch",
+        kpiActiveLbl: "ĐỘ PHỦ SỐNG", kpiActiveSub1: "Cửa hàng đã lên đơn", kpiActiveSub2: "Trên tuyến",
         kpiStrikeLbl: "STRIKE RATE", kpiStrikeSub: "Tỷ lệ chốt đơn",
         kpiDropLbl: "DROP SIZE", kpiDropSub1: "VNĐ / Cửa hàng", kpiDropSub2: "Sản phẩm",
         treeTitle: "SƠ ĐỒ NHÂN SỰ & DOANH SỐ", treeKam: "Quản lý:", treeSales: "Sales:",
@@ -278,10 +278,10 @@ const dict = {
         secP3: "PHẦN 3: ĐỘ PHỦ & CHIẾN LƯỢC ĐIỂM BÁN",
         cSegTitle: "PHÂN TÍCH SỨC MUA THEO PHÂN KHÚC TẠP HÓA", cSegSub: "Cơ cấu đóng góp của nhóm tạp hóa để ra quyết định phân bổ ngân sách",
         colArea: "KHU VỰC", colWeek: "TUẦN", colKam: "QUẢN LÝ VÙNG", colKae: "SALESMAN",
-        tbPlan: "Kế Hoạch (Cửa hàng)", tbActive: "Cửa hàng Active", tbStrike: "Strike Rate", tbSales: "Tổng Sell-Out (VNĐ)", tbDrop: "Drop Size (VNĐ/Đơn)", tbLppc: "LPPC (SKU/Đơn)",
+        tbPlan: "Tuyến (Cửa hàng)", tbActive: "Cửa hàng Active", tbStrike: "Strike Rate", tbSales: "Tổng Sell-Out (VNĐ)", tbDrop: "Drop Size (VNĐ/Đơn)", tbLppc: "LPPC (SKU/Đơn)",
         sysTotal: "TỔNG TOÀN QUỐC", sysTotalSys: "TỔNG HỆ THỐNG",
         segColClass: "PHÂN KHÚC", segTblH1: "HIỆU SUẤT ĐIỂM BÁN THEO PHÂN KHÚC",
-        axisCust: "Đơn vị: Cửa hàng", axisVnd: "Đơn vị: VNĐ", legSales: "Sell-Out (VNĐ)", legTotal: "Kế hoạch", legActive: "Active"
+        axisCust: "Đơn vị: Cửa hàng", axisVnd: "Đơn vị: VNĐ", legSales: "Sell-Out (VNĐ)", legTotal: "Cửa hàng Tuyến", legActive: "Active"
     },
     en: {
         mainTitle: "RTM STRATEGIC DASHBOARD",
@@ -289,7 +289,7 @@ const dict = {
         lblMonth: "Month", lblWeek: "Week", lblRegion: "Region", lblArea: "Area", lblAll: "All",
         secPulse: "THE PULSE",
         kpiSalesLbl: "TOTAL SELL-OUT", kpiSalesSub1: "VND (Excl. VAT)", kpiSalesSub2: "Volume Flow",
-        kpiActiveLbl: "ACTIVE OUTLETS", kpiActiveSub1: "Ordered outlets", kpiActiveSub2: "MCP Plan",
+        kpiActiveLbl: "ACTIVE OUTLETS", kpiActiveSub1: "Ordered outlets", kpiActiveSub2: "Route",
         kpiStrikeLbl: "STRIKE RATE", kpiStrikeSub: "Conversion rate",
         kpiDropLbl: "DROP SIZE", kpiDropSub1: "VND / Outlet", kpiDropSub2: "SKUs",
         treeTitle: "PERSONNEL & SALES TREE", treeKam: "Manager:", treeSales: "Rep:",
@@ -302,10 +302,10 @@ const dict = {
         secP3: "PART 3: COVERAGE & OUTLET STRATEGY",
         cSegTitle: "PURCHASING POWER BY OUTLET SEGMENTATION", cSegSub: "Contribution structure of outlet groups for Trade Promos budget decisions",
         colArea: "AREA", colWeek: "WEEK", colKam: "AREA MANAGER", colKae: "SALES REP",
-        tbPlan: "MCP Plan (Outlets)", tbActive: "Active Outlets", tbStrike: "Strike Rate", tbSales: "Total Sell-Out (VND)", tbDrop: "Drop Size (VND/Active)", tbLppc: "LPPC (Avg SKU)",
+        tbPlan: "Route (Outlets)", tbActive: "Active Outlets", tbStrike: "Strike Rate", tbSales: "Total Sell-Out (VND)", tbDrop: "Drop Size (VND/Active)", tbLppc: "LPPC (Avg SKU)",
         sysTotal: "NATIONWIDE TOTAL", sysTotalSys: "SYSTEM TOTAL",
         segColClass: "CLASS SEGMENT", segTblH1: "OUTLET PERFORMANCE BY SEGMENT",
-        axisCust: "Unit: Outlets", axisVnd: "Unit: VND", legSales: "Sell-Out (VND)", legTotal: "MCP Plan", legActive: "Active Outlets"
+        axisCust: "Unit: Outlets", axisVnd: "Unit: VND", legSales: "Sell-Out (VND)", legTotal: "Route Outlets", legActive: "Active Outlets"
     }
 };
 
@@ -342,7 +342,6 @@ function setLang(newLang) {
     document.getElementById('btn-vi').className = lang === 'vi' ? 'active' : ''; 
     document.getElementById('btn-en').className = lang === 'en' ? 'active' : '';
     
-    // Quét toàn bộ thẻ có data-i18n và thay text
     document.querySelectorAll('[data-i18n]').forEach(el => { 
         el.innerText = t(el.getAttribute('data-i18n')); 
     });
@@ -539,7 +538,7 @@ function render() {
     drawChart('areaChart', areaData, 'label');
     drawTable('areaHeaderRow', 'areaTableBody', areaData, t('colArea'), 'label', true, { label: t('sysTotal'), ...sysKpiObj });
 
-    // 3. MD VIEW: TREND CHART (Kèm bảng số liệu tuần theo yêu cầu)
+    // 3. MD VIEW: TREND CHART 
     let weekData = Object.keys(weekMap).map(k => {
         let st = weekMap[k];
         return { label: formatWM(st.w, st.m), tc: st.p.size, ac: st.a.size, s: st.s, avgSku: st.invs > 0 ? st.skus/st.invs : 0, wRaw: st.w, mRaw: st.m };
@@ -555,13 +554,13 @@ function render() {
         let st = kamMap[k]; return { label: k, tc: st.p.size, ac: st.a.size, s: st.s, avgSku: st.invs > 0 ? st.skus/st.invs : 0 };
     }).sort((a,b) => b.s - a.s).slice(0, 10);
     drawChart('kamChart', kamData, 'label');
-    drawTable('kamHeaderRow', 'kamTableBody', kamData, t('colKam'), 'label', true, { 'label': t('sysTotalSys'), ...sysKpiObj }); 
+    drawTable('kamHeaderRow', 'kamTableBody', kamData, t('colKam'), 'label', false); // Cột TỔNG bị xóa ở đây
 
     let kaeData = Object.keys(kaeMap).map(k => {
         let st = kaeMap[k]; return { label: k, tc: st.p.size, ac: st.a.size, s: st.s, avgSku: st.invs > 0 ? st.skus/st.invs : 0 };
     }).sort((a,b) => b.s - a.s).slice(0, 10);
     drawChart('dayChart', kaeData, 'label');
-    drawTable('dayHeaderRow', 'dayTableBody', kaeData, t('colKae'), 'label', true, { 'label': t('sysTotalSys'), ...sysKpiObj }); 
+    drawTable('dayHeaderRow', 'dayTableBody', kaeData, t('colKae'), 'label', false); // Cột TỔNG bị xóa ở đây
 
     // 5. TREE DIAGRAM
     let treeHtml = '';
@@ -577,7 +576,7 @@ function render() {
     });
     document.getElementById('tree-container').innerHTML = treeHtml || '<div style="color:var(--text-muted); font-style:italic;">No data</div>';
 
-    // 6. CDM VIEW: SEGMENTATION
+    // 6. CDM VIEW: SEGMENTATION 
     let segList = ['A', 'B', 'C', 'D', 'N'];
     let htmlSeg = `<table class="segment-table"><thead><tr><th rowspan="2" style="width:20%;">${t('colArea')}</th><th rowspan="2" style="width:25%;">${t('segColClass')}</th><th colspan="5" style="padding:4px;">${t('segTblH1')}</th></tr><tr><th style="width:11%;">${t('tbPlan')}</th><th style="width:11%;">${t('tbActive')}</th><th style="width:11%;">${t('tbStrike')}</th><th style="width:11%;">${t('tbSales')}</th><th style="width:11%;">${t('tbDrop')}</th></tr></thead><tbody>`;
 
@@ -665,10 +664,7 @@ function init() {
     if (typeof dbSalesM6 !== 'undefined')  dbSales  = dbSales.concat(dbSalesM6);
     if (typeof dbMasterM7 !== 'undefined') dbMaster = dbMaster.concat(dbMasterM7);
     if (typeof dbSalesM7 !== 'undefined')  dbSales  = dbSales.concat(dbSalesM7);
-    if (typeof dbMasterM8 !== 'undefined') dbMaster = dbMaster.concat(dbMasterM8);
-    if (typeof dbSalesM8 !== 'undefined')  dbSales  = dbSales.concat(dbSalesM8);
-    if (typeof dbMasterM9 !== 'undefined') dbMaster = dbMaster.concat(dbMasterM9);
-    if (typeof dbSalesM9 !== 'undefined')  dbSales  = dbSales.concat(dbSalesM9);
+
     const preComputeData = (arr) => { 
         arr.forEach(d => { 
             if (d.month) d.month = String(d.month).trim(); 
