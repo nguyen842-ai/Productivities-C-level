@@ -79,15 +79,16 @@
 
         /* THE PULSE BLOCK */
         .section-tag { display: inline-block; padding: 5px 12px; background: rgba(121, 189, 154, 0.08); border-left: 4px solid var(--primary); color: var(--primary); font-size: 11px; font-weight: 800; margin-bottom: 18px; border-radius: 0 6px 6px 0; letter-spacing: 0.5px; }
-        .pulse-row { display: grid; grid-template-columns: 1.8fr 1fr; gap: 20px; margin-bottom: 35px; }
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
-        .kpi-card { background: var(--bg-card); border-radius: var(--border-radius); padding: 22px; border: 1px solid var(--border-color); box-shadow: var(--ios-shadow); transition: transform 0.25s, border-color 0.25s; }
-        .kpi-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+        .pulse-row { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 35px; }
         
-        /* Cấu hình wrap text cho Label của KPI */
+        /* Chuyển thành 4 cột -> Tự động rớt thành 2 hàng khi có 8 ô */
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        
+        .kpi-card { background: var(--bg-card); border-radius: var(--border-radius); padding: 22px; border: 1px solid var(--border-color); box-shadow: var(--ios-shadow); transition: transform 0.25s, border-color 0.25s; display: flex; flex-direction: column; justify-content: space-between; }
+        .kpi-card:hover { border-color: var(--primary); transform: translateY(-2px); }
         .kpi-card .label { font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.3px; white-space: normal; line-height: 1.4; }
-        .kpi-card .value { font-size: 28px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; }
-        .kpi-card .sub { font-size: 11px; color: var(--primary); margin-top: 8px; font-weight: 600; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px;}
+        .kpi-card .value { font-size: 26px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; margin-bottom: 8px; }
+        .kpi-card .sub { font-size: 11px; color: var(--primary); font-weight: 600; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px; margin-top: auto; }
         
         .tree-box { background: var(--bg-card); border-radius: var(--border-radius); padding: 22px; border: 1px solid var(--border-color); box-shadow: var(--ios-shadow); height: 100%; display: flex; flex-direction: column; min-height: 250px;}
         .tree-content { flex-grow: 1; overflow-y: auto; max-height: 300px; }
@@ -108,14 +109,10 @@
         
         .table-wrap { overflow-x: auto; border-radius: var(--border-radius-sm); border: 1px solid var(--border-color); margin-top: 20px; width: 100%; }
         .data-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 500px; }
-        
-        /* Cấu hình Wrap Text cho các Header Bảng */
         .data-table th { background: var(--secondary); color: var(--text-main); padding: 12px 10px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 10px; border-bottom: 1px solid var(--border-color); white-space: normal; line-height: 1.4; word-wrap: break-word; }
         .data-table td { padding: 11px 12px; border-bottom: 1px solid var(--border-color); text-align: center; color: var(--text-main); white-space: nowrap; }
         .data-table tr:last-child td { border-bottom: none; }
         .data-table tr:hover td { background: rgba(255,255,255,0.02); }
-        
-        /* Cấu hình Wrap Text cho Cột dán nhãn ngang */
         .label-cell { background: var(--bg-card); color: var(--primary); font-weight: 800; text-align: left !important; width: 160px; position: sticky; left: 0; z-index: 2; border-right: 1px solid var(--border-color); white-space: normal !important; line-height: 1.4; }
         
         .risk-flag { color: var(--accent-danger) !important; font-weight: 800 !important; }
@@ -124,8 +121,6 @@
         .pct-badge.active-badge { background: rgba(207, 240, 158, 0.15); color: var(--accent-success); }
 
         .segment-table { width:100%; border-collapse: collapse; margin-top: 15px; font-size: 12px; background: var(--bg-main); min-width: 600px; border: 1px solid var(--border-color); border-radius: var(--border-radius-sm); overflow: hidden; }
-        
-        /* Cấu hình Wrap Text cho Bảng Segment */
         .segment-table th { padding: 11px 10px; border: 1px solid var(--border-color); background: var(--secondary); color: var(--text-main); font-size: 11px; text-transform: uppercase; white-space: normal; line-height: 1.4; word-wrap: break-word; }
         .segment-table td { padding: 11px 10px; border: 1px solid var(--border-color); text-align: center; white-space: nowrap; color: var(--text-main); }
         .seg-area-cell { background-color: var(--bg-card); font-weight: bold; text-align: left !important; color: var(--primary); border-right: 2px solid var(--border-color) !important; position: sticky; left: 0; z-index: 2;}
@@ -136,13 +131,19 @@
         ::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-        @media (max-width: 1024px) {
+        @media (max-width: 1400px) {
             .pulse-row { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 1024px) {
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
             .ms-box { width: 130px; }
         }
         @media (max-width: 768px) {
             .top-header { flex-direction: column; align-items: flex-start; }
             .label-cell, .seg-area-cell, .seg-name-cell { position: relative; left: auto !important; z-index: 1; border-right: none !important; }
+        }
+        @media (max-width: 500px) {
+            .kpi-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -200,6 +201,27 @@
                     <span><span data-i18n="lblFreq">Tần suất lên đơn</span>: <b id="val-freq" style="color:var(--accent-success)">0</b></span> 
                     <span><span data-i18n="lblLppc">SKU TB/Đơn</span>: <b id="val-lppc" style="color:var(--accent-warning)">0</b></span>
                 </div>
+            </div>
+            
+            <div class="kpi-card">
+                <div class="label" data-i18n="kpiNewHireLbl">NHÂN SỰ TUYỂN MỚI</div>
+                <div class="value" id="val-new-hire" style="color: var(--accent-success);">0</div>
+                <div class="sub"><span data-i18n="kpiNewHireSub">KAE/DSR mang dấu ✔️</span></div>
+            </div>
+            <div class="kpi-card">
+                <div class="label" data-i18n="kpiResignedLbl">NHÂN SỰ THÔI VIỆC</div>
+                <div class="value" id="val-resigned" style="color: var(--accent-danger);">0</div>
+                <div class="sub"><span data-i18n="kpiResignedSub">KAE/DSR mang dấu ❌</span></div>
+            </div>
+            <div class="kpi-card">
+                <div class="label" data-i18n="kpiHeadcountLbl">KAE/DSR ĐANG HOẠT ĐỘNG</div>
+                <div class="value" id="val-headcount">0</div>
+                <div class="sub"><span data-i18n="kpiHeadcountSub">Tổng nhân sự Active</span></div>
+            </div>
+            <div class="kpi-card">
+                <div class="label" data-i18n="kpiAvgSalesLbl">NĂNG SUẤT BÌNH QUÂN/KAE</div>
+                <div class="value" id="val-avg-sales" style="color: var(--primary);">0</div>
+                <div class="sub"><span data-i18n="kpiAvgSalesSub">VNĐ / KAE đang hoạt động</span></div>
             </div>
         </div>
         <div class="tree-box">
@@ -267,6 +289,10 @@ const dict = {
         kpiActiveLbl: "ĐỘ PHỦ", kpiActiveSub2: "KH trên tuyến", kpiStrikeLbl: "TỶ LỆ CHỐT ĐƠN", kpiStrikeSub: "Tỷ lệ chốt đơn",
         kpiDropLbl: "DOANH SỐ TRUNG BÌNH/ĐIỂM BÁN", treeTitle: "DANH MỤC NHÂN SỰ",
         lblFreq: "Tần suất lên đơn", lblLppc: "SKU TB/Đơn",
+        kpiNewHireLbl: "NHÂN SỰ TUYỂN MỚI", kpiNewHireSub: "KAE/DSR mang dấu ✔️",
+        kpiResignedLbl: "NHÂN SỰ THÔI VIỆC", kpiResignedSub: "KAE/DSR mang dấu ❌",
+        kpiHeadcountLbl: "KAE/DSR ĐANG HOẠT ĐỘNG", kpiHeadcountSub: "Tổng nhân sự Active",
+        kpiAvgSalesLbl: "NĂNG SUẤT BÌNH QUÂN/KAE", kpiAvgSalesSub: "VNĐ / KAE đang hoạt động",
         secP1: "PHẦN 1: TỔNG QUAN THEO KHU VỰC", cAreaTitle: "HIỆU QUẢ SELL-OUT THEO KHU VỰC", cAreaSub: "⚠️ Cảnh báo đỏ cho vùng có Tỷ lệ chốt đơn < 50% (Không bị ảnh hưởng bởi bộ lọc Khu vực)",
         cWeekTitle: "TỐC ĐỘ LUÂN CHUYỂN HÀNG HÓA THEO TUẦN", secP2: "PHẦN 2: THỰC THI THỊ TRƯỜNG & SFE",
         cKamTitle: "TOP 10 NĂNG SUẤT KAM", cKaeTitle: "TOP 10 NĂNG SUẤT KAE/DSR",
@@ -285,6 +311,10 @@ const dict = {
         kpiActiveLbl: "ACTIVE OUTLETS", kpiActiveSub2: "On Route", kpiStrikeLbl: "STRIKE RATE", kpiStrikeSub: "Strike rate",
         kpiDropLbl: "DROP SIZE & FREQ", treeTitle: "HEADCOUNT",
         lblFreq: "Freq", lblLppc: "LPPC",
+        kpiNewHireLbl: "NEW HIRES", kpiNewHireSub: "KAE/DSR marked with ✔️",
+        kpiResignedLbl: "RESIGNED", kpiResignedSub: "KAE/DSR marked with ❌",
+        kpiHeadcountLbl: "ACTIVE KAE/DSR", kpiHeadcountSub: "Total active staff",
+        kpiAvgSalesLbl: "AVG SALES PER KAE", kpiAvgSalesSub: "VND / Active KAE",
         secP1: "PART 1: MACRO OVERVIEW (NATIONWIDE)", cAreaTitle: "SELL-OUT EFFICIENCY BY AREA", cAreaSub: "⚠️ Red flag for regions with Strike Rate < 50% (Unaffected by Area filter)",
         cWeekTitle: "WEEKLY GOODS VELOCITY", secP2: "PART 2: MARKET EXECUTION & SFE",
         cKamTitle: "TOP 10 KAM SFE", cKaeTitle: "TOP 10 KAE/DSR SFE",
@@ -380,6 +410,11 @@ function render() {
     let sys = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
     let areaMapP1 = {}, weekMapP1 = {}; 
     let kamMap = {}, kaeMap = {}, treeMap = {}, segMap = {}; 
+    
+    // Các Set dùng để đếm nhân sự KAE/DSR
+    let uniqueNewHires = new Set();
+    let uniqueResigned = new Set();
+    let uniqueActiveKae = new Set();
 
     dbMaster.forEach(d => {
         if(!d.cusCode) return;
@@ -411,6 +446,12 @@ function render() {
                 if (!kaeMap[kae]) kaeMap[kae] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0, areas: new Set() };
                 kaeMap[kae].p.add(d.cusCode);
                 kaeMap[kae].areas.add(d.area);
+                
+                // Logic đếm nhân sự dựa trên dấu ✔️/❌
+                let rawKae = String(d.kae).trim();
+                if (rawKae.includes('✔️')) uniqueNewHires.add(kae);
+                if (rawKae.includes('❌')) uniqueResigned.add(kae);
+                if (!rawKae.includes('❌')) uniqueActiveKae.add(kae);
             }
 
             const seg = d.CusS ? String(d.CusS).toUpperCase().trim() : "N";
@@ -456,9 +497,13 @@ function render() {
                 kaeMap[kae].s += v;
                 kaeMap[kae].areas.add(d.area);
                 if (v > 0) { kaeMap[kae].a.add(d.cusCode); kaeMap[kae].skus += skus; kaeMap[kae].invs++; }
+                
+                let rawKae = String(d.kae).trim();
+                if (rawKae.includes('✔️')) uniqueNewHires.add(kae);
+                if (rawKae.includes('❌')) uniqueResigned.add(kae);
+                if (!rawKae.includes('❌')) uniqueActiveKae.add(kae);
             }
 
-            // Xử lý giữ lại ✔️/❌ cho Headcount Tree
             if (kam && kae) {
                 let kamDisplay = d._kam_display;
                 let kaeDisplay = d._kae_display;
@@ -479,7 +524,7 @@ function render() {
         }
     });
 
-    // 1. UPDATE KPIs
+    // 1. UPDATE KPIs GỐC
     let sysAc = sys.a.size; let sysTc = sys.p.size;
     let sysKpiObj = { tc: sysTc, ac: sysAc, s: sys.s, avgSku: sys.invs > 0 ? sys.skus/sys.invs : 0, freq: sysAc > 0 ? sys.invs/sysAc : 0 };
     document.getElementById("val-sales").innerText = fmt(sys.s);
@@ -489,6 +534,13 @@ function render() {
     document.getElementById("val-drop-size").innerText = (sysAc > 0 ? fmt(sys.s/sysAc) : 0);
     document.getElementById("val-freq").innerText = (sysAc > 0 ? (sys.invs/sysAc).toFixed(1) : "0.0");
     document.getElementById("val-lppc").innerText = sysKpiObj.avgSku.toFixed(1);
+
+    // CẬP NHẬT 4 KPI NHÂN SỰ
+    document.getElementById("val-new-hire").innerText = fmt(uniqueNewHires.size);
+    document.getElementById("val-resigned").innerText = fmt(uniqueResigned.size);
+    document.getElementById("val-headcount").innerText = fmt(uniqueActiveKae.size);
+    let avgSales = uniqueActiveKae.size > 0 ? (sys.s / uniqueActiveKae.size) : 0;
+    document.getElementById("val-avg-sales").innerText = fmt(avgSales);
 
     // 2. TREE PERSONNEL
     let treeHtml = '';
