@@ -12,7 +12,6 @@
             --bg-main: #16181D;
             --bg-card: #21232A;
             
-            /* Bảng 5 màu thực tế từ hình ảnh minh họa */
             --color-1: #0B486B;
             --color-2: #3B8686;
             --color-3: #79BD9A;
@@ -25,11 +24,8 @@
             --text-muted: #A0AAB5;
             --border-color: rgba(121, 189, 154, 0.12);
             
-            /* Cấu hình bo góc bo tròn mạnh kiểu iPhone */
             --border-radius: 22px; 
             --border-radius-sm: 12px;
-            
-            /* Đổ bóng Card kiểu iOS */
             --ios-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
 
             --accent-warning: #ea580c;
@@ -62,7 +58,6 @@
            ========================================================= */
         .main-content { padding: 30px; width: 100%; min-height: 100vh; }
         
-        /* HEADER SECTION */
         .top-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; margin-bottom: 30px; gap: 20px; flex-wrap: wrap;}
         .header-left { display: flex; align-items: flex-start; gap: 25px; flex-wrap: wrap; }
         .exec-title h1 { margin: 0; font-size: 24px; font-weight: 800; color: var(--primary); letter-spacing: -0.5px; }
@@ -109,7 +104,6 @@
         
         .side-by-side { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 25px; }
         
-        /* Bo tròn bảng dữ liệu mượt mà */
         .table-wrap { overflow-x: auto; border-radius: var(--border-radius-sm); border: 1px solid var(--border-color); margin-top: 20px; width: 100%; }
         .data-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 500px; }
         .data-table th { background: var(--secondary); color: var(--text-main); padding: 12px 10px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 10px; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
@@ -139,7 +133,7 @@
         }
         @media (max-width: 768px) {
             .top-header { flex-direction: column; align-items: flex-start; }
-            .label-cell, .seg-area-cell, .seg-name-cell { position: relative; left: auto; z-index: 1; border-right: none !important; }
+            .label-cell, .seg-area-cell, .seg-name-cell { position: relative; left: auto !important; z-index: 1; border-right: none !important; }
         }
     </style>
 </head>
@@ -197,7 +191,7 @@
             </div>
         </div>
         <div class="tree-box">
-            <h3 style="margin:0 0 15px 0; font-size:11px; text-transform:uppercase; color:var(--primary)" data-i18n="treeTitle">SƠ ĐỒ NHÂN SỰ & DOANH SỐ</h3>
+            <h3 style="margin:0 0 15px 0; font-size:11px; text-transform:uppercase; color:var(--primary)" data-i18n="treeTitle">DANH MỤC NHÂN SỰ</h3>
             <div class="tree-content" id="tree-container"></div>
         </div>
     </div>
@@ -221,12 +215,12 @@
     <div class="section-tag" data-i18n="secP2">PHẦN 2: THỰC THI THỊ TRƯỜNG & SFE</div>
     <div class="side-by-side">
         <div class="chart-box" style="margin-bottom: 0;">
-            <div class="chart-title" data-i18n="cKamTitle">TOP 10 NĂNG SUẤT QUẢN LÝ VÙNG</div>
+            <div class="chart-title" data-i18n="cKamTitle">TOP 10 NĂNG SUẤT KAM</div>
             <div style="height: 450px;"><canvas id="kamChart"></canvas></div>
             <div class="table-wrap"><table class="data-table"><thead id="kamHeaderRow"></thead><tbody id="kamTableBody"></tbody></table></div>
         </div>
         <div class="chart-box" style="margin-bottom: 0;">
-            <div class="chart-title" data-i18n="cKaeTitle">TOP 10 NĂNG SUẤT SALESMAN</div>
+            <div class="chart-title" data-i18n="cKaeTitle">TOP 10 NĂNG SUẤT KAE/DSR</div>
             <div style="height: 450px;"><canvas id="dayChart"></canvas></div>
             <div class="table-wrap"><table class="data-table"><thead id="dayHeaderRow"></thead><tbody id="dayTableBody"></tbody></table></div>
         </div>
@@ -259,13 +253,13 @@ const dict = {
         lblMonth: "Tháng", lblWeek: "Tuần", lblRegion: "Miền", lblArea: "Khu vực", lblAll: "Tất cả",
         secPulse: "CHỈ SỐ SINH TỬ", kpiSalesLbl: "TỔNG SELL-OUT", kpiSalesSub1: "VNĐ (Chưa VAT)", kpiSalesSub2: "Dòng tiền",
         kpiActiveLbl: "ĐỘ PHỦ SỐNG", kpiActiveSub2: "Trên tuyến", kpiStrikeLbl: "STRIKE RATE", kpiStrikeSub: "Tỷ lệ chốt đơn",
-        kpiDropLbl: "DROP SIZE & TẦN SUẤT", treeTitle: "SƠ ĐỒ NHÂN SỰ & DOANH SỐ",
+        kpiDropLbl: "DROP SIZE & TẦN SUẤT", treeTitle: "DANH MỤC NHÂN SỰ",
         secP1: "PHẦN 1: TỔNG QUAN VĨ MÔ (TOÀN QUỐC)", cAreaTitle: "HIỆU QUẢ SELL-OUT THEO KHU VỰC", cAreaSub: "⚠️ Cảnh báo đỏ cho vùng có Strike Rate < 50% (Không bị ảnh hưởng bởi bộ lọc Khu vực)",
         cWeekTitle: "TỐC ĐỘ LUÂN CHUYỂN HÀNG HÓA THEO TUẦN", secP2: "PHẦN 2: THỰC THI THỊ TRƯỜNG & SFE",
-        cKamTitle: "TOP 10 NĂNG SUẤT QUẢN LÝ VÙNG", cKaeTitle: "TOP 10 NĂNG SUẤT SALESMAN",
+        cKamTitle: "TOP 10 NĂNG SUẤT KAM", cKaeTitle: "TOP 10 NĂNG SUẤT KAE/DSR",
         secP3: "PHẦN 3: ĐỘ PHỦ & CHIẾN LƯỢC ĐIỂM BÁN", cSegTitle: "PHÂN TÍCH SỨC MUA THEO PHÂN KHÚC TẠP HÓA",
         cSegSub: "Kèm Box tỷ trọng (%) cơ cấu khách hàng. Bảng tự động gộp Toàn Quốc khi chọn 'Tất cả Khu vực'.",
-        colArea: "KHU VỰC", colWeek: "TUẦN", colKam: "QUẢN LÝ", colKae: "SALESMAN",
+        colArea: "KHU VỰC", colWeek: "TUẦN", colKam: "KAM", colKae: "KAE/DSR",
         tbPlan: "Tuyến", tbActive: "Active", tbStrike: "Strike Rate", tbSales: "Sell-Out", tbDrop: "Drop Size", tbFreq: "Tần Suất", tbLppc: "LPPC",
         sysTotal: "TỔNG TOÀN QUỐC", sysTotalSys: "TỔNG HỆ THỐNG",
         segColClass: "PHÂN KHÚC", segTblH1: "HIỆU SUẤT ĐIỂM BÁN",
@@ -276,13 +270,13 @@ const dict = {
         lblMonth: "Month", lblWeek: "Week", lblRegion: "Region", lblArea: "Area", lblAll: "All",
         secPulse: "THE PULSE", kpiSalesLbl: "TOTAL SELL-OUT", kpiSalesSub1: "VND (Excl. VAT)", kpiSalesSub2: "Volume Flow",
         kpiActiveLbl: "ACTIVE OUTLETS", kpiActiveSub2: "On Route", kpiStrikeLbl: "STRIKE RATE", kpiStrikeSub: "Strike rate",
-        kpiDropLbl: "DROP SIZE & FREQ", treeTitle: "PERSONNEL & SALES TREE",
+        kpiDropLbl: "DROP SIZE & FREQ", treeTitle: "HEADCOUNT",
         secP1: "PART 1: MACRO OVERVIEW (NATIONWIDE)", cAreaTitle: "SELL-OUT EFFICIENCY BY AREA", cAreaSub: "⚠️ Red flag for regions with Strike Rate < 50% (Unaffected by Area filter)",
         cWeekTitle: "WEEKLY GOODS VELOCITY", secP2: "PART 2: MARKET EXECUTION & SFE",
-        cKamTitle: "TOP 10 MANAGER SFE", cKaeTitle: "TOP 10 SALES REP SFE",
+        cKamTitle: "TOP 10 KAM SFE", cKaeTitle: "TOP 10 KAE/DSR SFE",
         secP3: "PART 3: COVERAGE & OUTLET STRATEGY", cSegTitle: "PURCHASING POWER BY OUTLET SEGMENTATION",
         cSegSub: "Includes (%) Proportion Boxes. Auto-groups to Nationwide when 'All Areas' is selected.",
-        colArea: "AREA", colWeek: "WEEK", colKam: "MANAGER", colKae: "REP",
+        colArea: "AREA", colWeek: "WEEK", colKam: "KAM", colKae: "KAE/DSR",
         tbPlan: "Route", tbActive: "Active", tbStrike: "Strike Rate", tbSales: "Sell-Out", tbDrop: "Drop Size", tbFreq: "Freq", tbLppc: "LPPC",
         sysTotal: "NATIONWIDE TOTAL", sysTotalSys: "SYSTEM TOTAL",
         segColClass: "CLASS", segTblH1: "OUTLET PERFORMANCE",
@@ -392,13 +386,17 @@ function render() {
             sys.p.add(d.cusCode);
             
             const kam = d._kam;
-            if (!kamMap[kam]) kamMap[kam] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
-            kamMap[kam].p.add(d.cusCode);
+            if (kam) {
+                if (!kamMap[kam]) kamMap[kam] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0, areas: new Set() };
+                kamMap[kam].p.add(d.cusCode);
+                kamMap[kam].areas.add(d.area);
+            }
 
             const kae = d._kae;
             if (kae && !kae.toUpperCase().startsWith('KAM')) {
-                if (!kaeMap[kae]) kaeMap[kae] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
+                if (!kaeMap[kae]) kaeMap[kae] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0, areas: new Set() };
                 kaeMap[kae].p.add(d.cusCode);
+                kaeMap[kae].areas.add(d.area);
             }
 
             const seg = d.CusS ? String(d.CusS).toUpperCase().trim() : "N";
@@ -432,22 +430,32 @@ function render() {
 
             const kam = d._kam;
             if (kam) {
-                if (!kamMap[kam]) kamMap[kam] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
+                if (!kamMap[kam]) kamMap[kam] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0, areas: new Set() };
                 kamMap[kam].s += v;
+                kamMap[kam].areas.add(d.area);
                 if (v > 0) { kamMap[kam].a.add(d.cusCode); kamMap[kam].skus += skus; kamMap[kam].invs++; }
             }
 
             const kae = d._kae;
             if (kae && !kae.toUpperCase().startsWith('KAM')) {
-                if (!kaeMap[kae]) kaeMap[kae] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
+                if (!kaeMap[kae]) kaeMap[kae] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0, areas: new Set() };
                 kaeMap[kae].s += v;
+                kaeMap[kae].areas.add(d.area);
                 if (v > 0) { kaeMap[kae].a.add(d.cusCode); kaeMap[kae].skus += skus; kaeMap[kae].invs++; }
             }
 
+            // Xử lý giữ lại ✔️/❌ cho Headcount Tree
             if (kam && kae) {
-                if (!treeMap[kam]) treeMap[kam] = { s: 0, kaes: {} };
-                if (!treeMap[kam].kaes[kae]) treeMap[kam].kaes[kae] = 0;
-                treeMap[kam].s += v; treeMap[kam].kaes[kae] += v;
+                let kamDisplay = d._kam_display;
+                let kaeDisplay = d._kae_display;
+                if (!treeMap[kam]) treeMap[kam] = { s: 0, kaes: {}, display: kamDisplay };
+                if (!treeMap[kam].kaes[kae]) treeMap[kam].kaes[kae] = { s: 0, display: kaeDisplay };
+                
+                treeMap[kam].s += v; treeMap[kam].kaes[kae].s += v;
+                
+                // Ưu tiên hiển thị tên gốc (có ký hiệu)
+                if (kamDisplay.match(/[✔️❌]/)) treeMap[kam].display = kamDisplay;
+                if (kaeDisplay.match(/[✔️❌]/)) treeMap[kam].kaes[kae].display = kaeDisplay;
             }
 
             const seg = d._segMap[d.cusCode] || "N";
@@ -469,12 +477,12 @@ function render() {
     document.getElementById("val-freq").innerText = (sysAc > 0 ? (sys.invs/sysAc).toFixed(1) : "0.0");
     document.getElementById("val-lppc").innerText = sysKpiObj.avgSku.toFixed(1);
 
-    // 2. TREE PERSONNEL
+    // 2. TREE PERSONNEL (Hiển thị ký hiệu)
     let treeHtml = '';
     Object.keys(treeMap).sort((a,b) => treeMap[b].s - treeMap[a].s).forEach(k => {
-        treeHtml += `<details class="tree-node"><summary><span>${k}</span><span>${fmt(treeMap[k].s)}</span></summary><div class="t-children">`;
-        Object.keys(treeMap[k].kaes).sort((a,b) => treeMap[k].kaes[b] - treeMap[k].kaes[a]).forEach(ke => {
-            treeHtml += `<div class="t-leaf"><span>${ke}</span><span>${fmt(treeMap[k].kaes[ke])}</span></div>`;
+        treeHtml += `<details class="tree-node"><summary><span>${treeMap[k].display}</span><span>${fmt(treeMap[k].s)}</span></summary><div class="t-children">`;
+        Object.keys(treeMap[k].kaes).sort((a,b) => treeMap[k].kaes[b].s - treeMap[k].kaes[a].s).forEach(ke => {
+            treeHtml += `<div class="t-leaf"><span>${treeMap[k].kaes[ke].display}</span><span>${fmt(treeMap[k].kaes[ke].s)}</span></div>`;
         });
         treeHtml += `</div></details>`;
     });
@@ -487,22 +495,28 @@ function render() {
 
     let areaData = Object.keys(areaMapP1).map(k => ({ label: k, tc: areaMapP1[k].p.size, ac: areaMapP1[k].a.size, s: areaMapP1[k].s, avgSku: areaMapP1[k].invs > 0 ? areaMapP1[k].skus/areaMapP1[k].invs : 0, freq: areaMapP1[k].a.size > 0 ? areaMapP1[k].invs/areaMapP1[k].a.size : 0 })).sort((a,b) => b.s - a.s);
     drawChart('areaChart', areaData, 'label', false); // Cột đứng
-    // Bảng ngang, HIỆN Freq (mặc định)
     drawHorizontalTable('areaHeaderRow', 'areaTableBody', areaData, t('colArea'), true, { label: t('sysTotal'), ...p1Kpi }, true); 
 
     let weekData = Object.keys(weekMapP1).map(k => ({ label: formatWM(weekMapP1[k].w, weekMapP1[k].m), tc: weekMapP1[k].p.size, ac: weekMapP1[k].a.size, s: weekMapP1[k].s, avgSku: weekMapP1[k].invs > 0 ? weekMapP1[k].skus/weekMapP1[k].invs : 0, freq: weekMapP1[k].a.size > 0 ? weekMapP1[k].invs/weekMapP1[k].a.size : 0, w: weekMapP1[k].w, m: weekMapP1[k].m })).sort((a,b) => { let m1 = monthOrder[a.m.toLowerCase()]||99; let m2 = monthOrder[b.m.toLowerCase()]||99; return m1!==m2 ? m1-m2 : a.w.localeCompare(b.w); });
     drawChart('weekChart', weekData, 'label', false); // Cột đứng
-    // Bảng ngang, ẨN Freq (thêm tham số true cuối cùng)
+    // Tham số cuối là hideFreq = true
     drawHorizontalTable('weekHeaderRow', 'weekTableBody', weekData, t('colWeek'), true, { label: t('sysTotal'), ...p1Kpi }, false, true); 
 
-    // 4. CHARTS P2 (FIXED TYPO KAE, BIỂU ĐỒ NGANG SFE)
-    let kamData = Object.keys(kamMap).map(k => ({ label: k, tc: kamMap[k].p.size, ac: kamMap[k].a.size, s: kamMap[k].s, avgSku: kamMap[k].invs > 0 ? kamMap[k].skus/kamMap[k].invs : 0, freq: kamMap[k].a.size > 0 ? kamMap[k].invs/kamMap[k].a.size : 0 })).sort((a,b) => b.s - a.s).slice(0, 10);
+    // 4. CHARTS P2 (BIỂU ĐỒ DỌC + THÊM CỘT KHU VỰC)
+    let kamData = Object.keys(kamMap).map(k => ({
+        label: k, areaStr: Array.from(kamMap[k].areas).join(', '),
+        tc: kamMap[k].p.size, ac: kamMap[k].a.size, s: kamMap[k].s, avgSku: kamMap[k].invs > 0 ? kamMap[k].skus/kamMap[k].invs : 0, freq: kamMap[k].a.size > 0 ? kamMap[k].invs/kamMap[k].a.size : 0
+    })).sort((a,b) => b.s - a.s).slice(0, 10);
     drawChart('kamChart', kamData, 'label', true); 
-    drawVerticalTable('kamHeaderRow', 'kamTableBody', kamData, t('colKam'), false); 
+    // Thêm tham số cuối showAreaCol = true
+    drawVerticalTable('kamHeaderRow', 'kamTableBody', kamData, t('colKam'), false, null, false, false, true); 
 
-    let kaeData = Object.keys(kaeMap).map(k => ({ label: k, tc: kaeMap[k].p.size, ac: kaeMap[k].a.size, s: kaeMap[k].s, avgSku: kaeMap[k].invs > 0 ? kaeMap[k].skus/kaeMap[k].invs : 0, freq: kaeMap[k].a.size > 0 ? kaeMap[k].invs/kaeMap[k].a.size : 0 })).sort((a,b) => b.s - a.s).slice(0, 10);
+    let kaeData = Object.keys(kaeMap).map(k => ({
+        label: k, areaStr: Array.from(kaeMap[k].areas).join(', '),
+        tc: kaeMap[k].p.size, ac: kaeMap[k].a.size, s: kaeMap[k].s, avgSku: kaeMap[k].invs > 0 ? kaeMap[k].skus/kaeMap[k].invs : 0, freq: kaeMap[k].a.size > 0 ? kaeMap[k].invs/kaeMap[k].a.size : 0
+    })).sort((a,b) => b.s - a.s).slice(0, 10);
     drawChart('dayChart', kaeData, 'label', true); 
-    drawVerticalTable('dayHeaderRow', 'dayTableBody', kaeData, t('colKae'), false); 
+    drawVerticalTable('dayHeaderRow', 'dayTableBody', kaeData, t('colKae'), false, null, false, false, true); 
 
     // 5. PART 3: SEGMENTATION & BOX %
     renderPart3(segMap, sysKpiObj);
@@ -584,7 +598,7 @@ function renderPart3(segMap, sysKpiObj) {
     document.getElementById('segmentAreaTableContainer').innerHTML = html;
 }
 
-// Cập nhật hàm Horizontal Table thêm tham số hideFreq
+// Thêm tham số hideFreq
 function drawHorizontalTable(hid, bid, data, titleNameLabel, showTotal, exp, checkRisk, hideFreq = false) {
     let rd = [...data]; if (showTotal && exp) rd.push(exp);
     
@@ -611,15 +625,20 @@ function drawHorizontalTable(hid, bid, data, titleNameLabel, showTotal, exp, che
     document.getElementById(bid).innerHTML = rows.map(r => `<tr><td class="label-cell">${r.l}</td>${rd.map(x => `<td style="${x === rd[rd.length-1] && showTotal ? 'background:rgba(121, 189, 154, 0.1);font-weight:800' : ''}">${r.f(x[r.k], x)}</td>`).join("")}</tr>`).join("");
 }
 
-function drawVerticalTable(hid, bid, data, titleNameLabel, showTotal, exp, checkRisk) {
+// Thêm tham số showAreaCol cho bảng P2 để hiển thị cột Khu vực mà không hỏng bố cục Sticky
+function drawVerticalTable(hid, bid, data, titleNameLabel, showTotal, exp, checkRisk, hideFreq = false, showAreaCol = false) {
+    let areaTh = showAreaCol ? `<th class="label-cell" style="width:100px; min-width:100px; max-width:100px; z-index:3;">${t('colArea')}</th>` : '';
+    let nameThStyle = showAreaCol ? `style="left: 100px; border-left: 1px solid var(--border-color); z-index:3;"` : '';
+
     document.getElementById(hid).innerHTML = `
-        <th class="label-cell">${titleNameLabel}</th>
+        ${areaTh}
+        <th class="label-cell" ${nameThStyle}>${titleNameLabel}</th>
         <th>${t('tbPlan')}</th>
         <th>${t('tbActive')}</th>
         <th>${t('tbStrike')}</th>
         <th>${t('tbSales')}</th>
         <th>${t('tbDrop')}</th>
-        <th>${t('tbFreq')}</th>
+        ${hideFreq ? '' : `<th>${t('tbFreq')}</th>`}
         <th>${t('tbLppc')}</th>
     `;
     
@@ -627,14 +646,19 @@ function drawVerticalTable(hid, bid, data, titleNameLabel, showTotal, exp, check
         let sr = d.tc > 0 ? (d.ac/d.tc*100) : 0;
         let ds = d.ac > 0 ? d.s/d.ac : 0;
         let risk = (checkRisk && sr < 50) ? 'risk-flag' : '';
+        
+        let areaTd = showAreaCol ? `<td class="label-cell" style="width:100px; min-width:100px; max-width:100px; white-space:normal; font-size:10px; color:var(--text-muted); z-index:2;">${d.areaStr || ''}</td>` : '';
+        let nameTdStyle = showAreaCol ? `style="left: 100px; border-left: 1px solid var(--border-color); font-size:11px; text-transform:uppercase; z-index:2;"` : `style="font-size:11px; text-transform:uppercase;"`;
+
         return `<tr>
-            <td class="label-cell" style="font-size:11px; text-transform:uppercase;">${d.label}</td>
+            ${areaTd}
+            <td class="label-cell" ${nameTdStyle}>${d.label}</td>
             <td>${fmt(d.tc)}</td>
             <td><b style="color:var(--primary)">${fmt(d.ac)}</b></td>
             <td class="${risk}"><b style="${risk ? '' : 'color:var(--accent-success)'}">${sr.toFixed(1)}% ${risk ? '⚠️' : ''}</b></td>
             <td style="text-align:right">${fmt(d.s)}</td>
             <td style="text-align:right">${fmt(ds)}</td>
-            <td><span style="color:var(--accent-success); font-weight:bold">${(d.freq || 0).toFixed(1)}</span></td>
+            ${hideFreq ? '' : `<td><span style="color:var(--accent-success); font-weight:bold">${(d.freq || 0).toFixed(1)}</span></td>`}
             <td><span style="color:var(--accent-warning); font-weight:bold">${d.avgSku.toFixed(1)}</span></td>
         </tr>`;
     }).join("");
@@ -649,7 +673,7 @@ function drawVerticalTable(hid, bid, data, titleNameLabel, showTotal, exp, check
             <td><b style="color:var(--accent-success)">${sr.toFixed(1)}%</b></td>
             <td style="text-align:right; font-weight:bold">${fmt(exp.s)}</td>
             <td style="text-align:right; font-weight:bold">${fmt(ds)}</td>
-            <td><span style="color:var(--accent-success); font-weight:bold">${(exp.freq || 0).toFixed(1)}</span></td>
+            ${hideFreq ? '' : `<td><span style="color:var(--accent-success); font-weight:bold">${(exp.freq || 0).toFixed(1)}</span></td>`}
             <td><span style="color:var(--accent-warning); font-weight:bold">${exp.avgSku.toFixed(1)}</span></td>
         </tr>`;
     }
@@ -712,8 +736,14 @@ function init() {
         d._w = getW(d);
         d.hq = d.hq ? String(d.hq).trim() : "";
         d.area = d.area ? String(d.area).trim() : "Unknown Area";
+        
         d._kam = cleanName(d.kam, true, d.area);
         d._kae = cleanName(d.kae, false, d.area);
+        
+        // Giữ lại tên gốc nguyên bản để hiển thị ✔️/❌ trong Headcount Tree
+        d._kam_display = d.kam ? String(d.kam).trim() : "";
+        d._kae_display = d.kae ? String(d.kae).trim() : "";
+        
         d._segMap = segMapPre;
     });
     pre(dbMaster); pre(dbSales);
