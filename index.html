@@ -83,7 +83,9 @@
         .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
         .kpi-card { background: var(--bg-card); border-radius: var(--border-radius); padding: 22px; border: 1px solid var(--border-color); box-shadow: var(--ios-shadow); transition: transform 0.25s, border-color 0.25s; }
         .kpi-card:hover { border-color: var(--primary); transform: translateY(-2px); }
-        .kpi-card .label { font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.3px; }
+        
+        /* Cấu hình wrap text cho Label của KPI */
+        .kpi-card .label { font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.3px; white-space: normal; line-height: 1.4; }
         .kpi-card .value { font-size: 28px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; }
         .kpi-card .sub { font-size: 11px; color: var(--primary); margin-top: 8px; font-weight: 600; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px;}
         
@@ -98,26 +100,33 @@
         /* CHARTS & TABLES */
         .chart-box { background: var(--bg-card); border-radius: var(--border-radius); border: 1px solid var(--border-color); box-shadow: var(--ios-shadow); padding: 25px; margin-bottom: 35px; width: 100%; overflow: hidden;}
         .chart-header { margin-bottom: 20px; }
-        .chart-title { font-size: 14px; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
+        .chart-title { font-size: 14px; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 10px; line-height: 1.4; }
         .chart-title::before { content: ""; width: 4px; height: 16px; background: var(--primary); border-radius: 2px; }
-        .chart-subtitle { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 4px; }
+        .chart-subtitle { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 4px; line-height: 1.4; }
         
         .side-by-side { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 25px; }
         
         .table-wrap { overflow-x: auto; border-radius: var(--border-radius-sm); border: 1px solid var(--border-color); margin-top: 20px; width: 100%; }
         .data-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 500px; }
-        .data-table th { background: var(--secondary); color: var(--text-main); padding: 12px 10px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 10px; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+        
+        /* Cấu hình Wrap Text cho các Header Bảng */
+        .data-table th { background: var(--secondary); color: var(--text-main); padding: 12px 10px; text-align: center; font-weight: 800; text-transform: uppercase; font-size: 10px; border-bottom: 1px solid var(--border-color); white-space: normal; line-height: 1.4; word-wrap: break-word; }
         .data-table td { padding: 11px 12px; border-bottom: 1px solid var(--border-color); text-align: center; color: var(--text-main); white-space: nowrap; }
         .data-table tr:last-child td { border-bottom: none; }
         .data-table tr:hover td { background: rgba(255,255,255,0.02); }
-        .label-cell { background: var(--bg-card); color: var(--primary); font-weight: 800; text-align: left !important; width: 160px; position: sticky; left: 0; z-index: 2; border-right: 1px solid var(--border-color); }
+        
+        /* Cấu hình Wrap Text cho Cột dán nhãn ngang */
+        .label-cell { background: var(--bg-card); color: var(--primary); font-weight: 800; text-align: left !important; width: 160px; position: sticky; left: 0; z-index: 2; border-right: 1px solid var(--border-color); white-space: normal !important; line-height: 1.4; }
+        
         .risk-flag { color: var(--accent-danger) !important; font-weight: 800 !important; }
 
         .pct-badge { background: rgba(121, 189, 154, 0.15); color: var(--primary); padding: 3px 6px; border-radius: 5px; font-size: 9px; margin-left: 8px; font-weight: 800; display: inline-block;}
         .pct-badge.active-badge { background: rgba(207, 240, 158, 0.15); color: var(--accent-success); }
 
         .segment-table { width:100%; border-collapse: collapse; margin-top: 15px; font-size: 12px; background: var(--bg-main); min-width: 600px; border: 1px solid var(--border-color); border-radius: var(--border-radius-sm); overflow: hidden; }
-        .segment-table th { padding: 11px 10px; border: 1px solid var(--border-color); white-space: nowrap; background: var(--secondary); color: var(--text-main); font-size: 11px; text-transform: uppercase;}
+        
+        /* Cấu hình Wrap Text cho Bảng Segment */
+        .segment-table th { padding: 11px 10px; border: 1px solid var(--border-color); background: var(--secondary); color: var(--text-main); font-size: 11px; text-transform: uppercase; white-space: normal; line-height: 1.4; word-wrap: break-word; }
         .segment-table td { padding: 11px 10px; border: 1px solid var(--border-color); text-align: center; white-space: nowrap; color: var(--text-main); }
         .seg-area-cell { background-color: var(--bg-card); font-weight: bold; text-align: left !important; color: var(--primary); border-right: 2px solid var(--border-color) !important; position: sticky; left: 0; z-index: 2;}
         .seg-name-cell { text-align: left !important; font-weight: 600; color: var(--text-muted); position: sticky; left: 0; background: var(--bg-main); z-index: 1; border-right: 1px solid var(--border-color); }
@@ -166,7 +175,7 @@
         </div>
     </header>
 
-    <div class="section-tag" data-i18n="secPulse">CHỈ SỐ SINH TỬ</div>
+    <div class="section-tag" data-i18n="secPulse">TỔNG QUAN CHUNG</div>
     <div class="pulse-row">
         <div class="kpi-grid">
             <div class="kpi-card md-focus">
@@ -175,19 +184,22 @@
                 <div class="sub"><span data-i18n="kpiSalesSub1">VNĐ (Chưa VAT)</span> <span data-i18n="kpiSalesSub2">Dòng tiền</span></div>
             </div>
             <div class="kpi-card">
-                <div class="label" data-i18n="kpiActiveLbl">ĐỘ PHỦ SỐNG</div>
+                <div class="label" data-i18n="kpiActiveLbl">ĐỘ PHỦ</div>
                 <div class="value" id="val-strike">0</div>
-                <div class="sub"><span id="val-cust">0</span> <span data-i18n="kpiActiveSub2">Trên tuyến</span></div>
+                <div class="sub"><span id="val-cust">0</span> <span data-i18n="kpiActiveSub2">KH trên tuyến</span></div>
             </div>
             <div class="kpi-card">
-                <div class="label" data-i18n="kpiStrikeLbl">STRIKE RATE</div>
+                <div class="label" data-i18n="kpiStrikeLbl">TỶ LỆ CHỐT ĐƠN</div>
                 <div class="value" id="val-strike-rate">0%</div>
                 <div class="sub"><span data-i18n="kpiStrikeSub">Tỷ lệ chốt đơn</span></div>
             </div>
             <div class="kpi-card">
-                <div class="label" data-i18n="kpiDropLbl">DROP SIZE & TẦN SUẤT LÊN ĐƠN</div>
+                <div class="label" data-i18n="kpiDropLbl">DOANH SỐ TRUNG BÌNH/ĐIỂM BÁN</div>
                 <div class="value" id="val-drop-size">0</div>
-                <div class="sub"><span>Freq: <b id="val-freq" style="color:var(--accent-success)">0</b></span> <span>LPPC: <b id="val-lppc" style="color:var(--accent-warning)">0</b> SKU</span></div>
+                <div class="sub">
+                    <span><span data-i18n="lblFreq">Tần suất lên đơn</span>: <b id="val-freq" style="color:var(--accent-success)">0</b></span> 
+                    <span><span data-i18n="lblLppc">SKU TB/Đơn</span>: <b id="val-lppc" style="color:var(--accent-warning)">0</b></span>
+                </div>
             </div>
         </div>
         <div class="tree-box">
@@ -196,11 +208,11 @@
         </div>
     </div>
 
-    <div class="section-tag" data-i18n="secP1">PHẦN 1: TỔNG QUAN VĨ MÔ (TOÀN QUỐC)</div>
+    <div class="section-tag" data-i18n="secP1">PHẦN 1: TỔNG QUAN THEO KHU VỰC</div>
     <div class="chart-box">
         <div class="chart-header">
             <div class="chart-title" data-i18n="cAreaTitle">HIỆU QUẢ SELL-OUT THEO KHU VỰC</div>
-            <div class="chart-subtitle" data-i18n="cAreaSub">⚠️ Cảnh báo đỏ cho vùng có Strike Rate < 50% (Không bị ảnh hưởng bởi bộ lọc Khu vực)</div>
+            <div class="chart-subtitle" data-i18n="cAreaSub">⚠️ Cảnh báo đỏ cho vùng có Tỷ lệ chốt đơn < 50% (Không bị ảnh hưởng bởi bộ lọc Khu vực)</div>
         </div>
         <div style="height: 450px;"><canvas id="areaChart"></canvas></div>
         <div class="table-wrap"><table class="data-table"><thead id="areaHeaderRow"></thead><tbody id="areaTableBody"></tbody></table></div>
@@ -251,19 +263,20 @@ const dict = {
     vi: {
         mainTitle: "RTM STRATEGIC DASHBOARD", subTitle: "Đánh giá Hiệu quả Phân phối, Thực thi Tuyến & Phân khúc Sức mua",
         lblMonth: "Tháng", lblWeek: "Tuần", lblRegion: "Miền", lblArea: "Khu vực", lblAll: "Tất cả",
-        secPulse: "CHỈ SỐ SINH TỬ", kpiSalesLbl: "TỔNG SELL-OUT", kpiSalesSub1: "VNĐ (Chưa VAT)", kpiSalesSub2: "Dòng tiền",
-        kpiActiveLbl: "ĐỘ PHỦ SỐNG", kpiActiveSub2: "Trên tuyến", kpiStrikeLbl: "STRIKE RATE", kpiStrikeSub: "Tỷ lệ chốt đơn",
-        kpiDropLbl: "DROP SIZE & TẦN SUẤT LÊN ĐƠN", treeTitle: "DANH MỤC NHÂN SỰ",
-        secP1: "PHẦN 1: TỔNG QUAN VĨ MÔ (TOÀN QUỐC)", cAreaTitle: "HIỆU QUẢ SELL-OUT THEO KHU VỰC", cAreaSub: "⚠️ Cảnh báo đỏ cho vùng có Strike Rate < 50% (Không bị ảnh hưởng bởi bộ lọc Khu vực)",
+        secPulse: "TỔNG QUAN CHUNG", kpiSalesLbl: "TỔNG SELL-OUT", kpiSalesSub1: "VNĐ (Chưa VAT)", kpiSalesSub2: "Dòng tiền",
+        kpiActiveLbl: "ĐỘ PHỦ", kpiActiveSub2: "KH trên tuyến", kpiStrikeLbl: "TỶ LỆ CHỐT ĐƠN", kpiStrikeSub: "Tỷ lệ chốt đơn",
+        kpiDropLbl: "DOANH SỐ TRUNG BÌNH/ĐIỂM BÁN", treeTitle: "DANH MỤC NHÂN SỰ",
+        lblFreq: "Tần suất lên đơn", lblLppc: "SKU TB/Đơn",
+        secP1: "PHẦN 1: TỔNG QUAN THEO KHU VỰC", cAreaTitle: "HIỆU QUẢ SELL-OUT THEO KHU VỰC", cAreaSub: "⚠️ Cảnh báo đỏ cho vùng có Tỷ lệ chốt đơn < 50% (Không bị ảnh hưởng bởi bộ lọc Khu vực)",
         cWeekTitle: "TỐC ĐỘ LUÂN CHUYỂN HÀNG HÓA THEO TUẦN", secP2: "PHẦN 2: THỰC THI THỊ TRƯỜNG & SFE",
         cKamTitle: "TOP 10 NĂNG SUẤT KAM", cKaeTitle: "TOP 10 NĂNG SUẤT KAE/DSR",
         secP3: "PHẦN 3: ĐỘ PHỦ & CHIẾN LƯỢC ĐIỂM BÁN", cSegTitle: "PHÂN TÍCH SỨC MUA THEO PHÂN KHÚC TẠP HÓA",
         cSegSub: "Kèm Box tỷ trọng (%) cơ cấu khách hàng. Bảng tự động gộp Toàn Quốc khi chọn 'Tất cả Khu vực'.",
         colArea: "KHU VỰC", colWeek: "TUẦN", colKam: "KAM", colKae: "KAE/DSR",
-        tbPlan: "Tuyến", tbActive: "Active", tbStrike: "Strike Rate", tbSales: "Sell-Out", tbDrop: "Drop Size", tbFreq: "TẦN SUẤT LÊN ĐƠN", tbLppc: "LPPC",
+        tbPlan: "KH trên tuyến", tbActive: "KH lên đơn", tbStrike: "Tỷ lệ chốt đơn", tbSales: "Sell-Out", tbDrop: "Doanh số trung bình/điểm bán", tbFreq: "Tần suất lên đơn", tbLppc: "SKU TB/Đơn",
         sysTotal: "TỔNG TOÀN QUỐC", sysTotalSys: "TỔNG HỆ THỐNG",
         segColClass: "PHÂN KHÚC", segTblH1: "HIỆU SUẤT ĐIỂM BÁN",
-        axisCust: "Đơn vị: Cửa hàng", axisVnd: "Đơn vị: VNĐ", legSales: "Doanh số", legTotal: "Tuyến", legActive: "Active"
+        axisCust: "Đơn vị: Cửa hàng", axisVnd: "Đơn vị: VNĐ", legSales: "Doanh số", legTotal: "KH trên tuyến", legActive: "KH lên đơn"
     },
     en: {
         mainTitle: "RTM STRATEGIC DASHBOARD", subTitle: "Distribution Efficiency, Route Execution & Purchasing Power",
@@ -271,6 +284,7 @@ const dict = {
         secPulse: "THE PULSE", kpiSalesLbl: "TOTAL SELL-OUT", kpiSalesSub1: "VND (Excl. VAT)", kpiSalesSub2: "Volume Flow",
         kpiActiveLbl: "ACTIVE OUTLETS", kpiActiveSub2: "On Route", kpiStrikeLbl: "STRIKE RATE", kpiStrikeSub: "Strike rate",
         kpiDropLbl: "DROP SIZE & FREQ", treeTitle: "HEADCOUNT",
+        lblFreq: "Freq", lblLppc: "LPPC",
         secP1: "PART 1: MACRO OVERVIEW (NATIONWIDE)", cAreaTitle: "SELL-OUT EFFICIENCY BY AREA", cAreaSub: "⚠️ Red flag for regions with Strike Rate < 50% (Unaffected by Area filter)",
         cWeekTitle: "WEEKLY GOODS VELOCITY", secP2: "PART 2: MARKET EXECUTION & SFE",
         cKamTitle: "TOP 10 KAM SFE", cKaeTitle: "TOP 10 KAE/DSR SFE",
@@ -453,7 +467,6 @@ function render() {
                 
                 treeMap[kam].s += v; treeMap[kam].kaes[kae].s += v;
                 
-                // Ưu tiên hiển thị tên gốc (có ký hiệu)
                 if (kamDisplay.match(/[✔️❌]/)) treeMap[kam].display = kamDisplay;
                 if (kaeDisplay.match(/[✔️❌]/)) treeMap[kam].kaes[kae].display = kaeDisplay;
             }
@@ -477,7 +490,7 @@ function render() {
     document.getElementById("val-freq").innerText = (sysAc > 0 ? (sys.invs/sysAc).toFixed(1) : "0.0");
     document.getElementById("val-lppc").innerText = sysKpiObj.avgSku.toFixed(1);
 
-    // 2. TREE PERSONNEL (Hiển thị ký hiệu)
+    // 2. TREE PERSONNEL
     let treeHtml = '';
     Object.keys(treeMap).sort((a,b) => treeMap[b].s - treeMap[a].s).forEach(k => {
         treeHtml += `<details class="tree-node"><summary><span>${treeMap[k].display}</span><span>${fmt(treeMap[k].s)}</span></summary><div class="t-children">`;
@@ -499,7 +512,6 @@ function render() {
 
     let weekData = Object.keys(weekMapP1).map(k => ({ label: formatWM(weekMapP1[k].w, weekMapP1[k].m), tc: weekMapP1[k].p.size, ac: weekMapP1[k].a.size, s: weekMapP1[k].s, avgSku: weekMapP1[k].invs > 0 ? weekMapP1[k].skus/weekMapP1[k].invs : 0, freq: weekMapP1[k].a.size > 0 ? weekMapP1[k].invs/weekMapP1[k].a.size : 0, w: weekMapP1[k].w, m: weekMapP1[k].m })).sort((a,b) => { let m1 = monthOrder[a.m.toLowerCase()]||99; let m2 = monthOrder[b.m.toLowerCase()]||99; return m1!==m2 ? m1-m2 : a.w.localeCompare(b.w); });
     drawChart('weekChart', weekData, 'label', false); // Cột đứng
-    // Tham số cuối là hideFreq = true
     drawHorizontalTable('weekHeaderRow', 'weekTableBody', weekData, t('colWeek'), true, { label: t('sysTotal'), ...p1Kpi }, false, true); 
 
     // 4. CHARTS P2 (BIỂU ĐỒ DỌC + THÊM CỘT KHU VỰC)
@@ -508,7 +520,6 @@ function render() {
         tc: kamMap[k].p.size, ac: kamMap[k].a.size, s: kamMap[k].s, avgSku: kamMap[k].invs > 0 ? kamMap[k].skus/kamMap[k].invs : 0, freq: kamMap[k].a.size > 0 ? kamMap[k].invs/kamMap[k].a.size : 0
     })).sort((a,b) => b.s - a.s).slice(0, 10);
     drawChart('kamChart', kamData, 'label', true); 
-    // Thêm tham số cuối showAreaCol = true
     drawVerticalTable('kamHeaderRow', 'kamTableBody', kamData, t('colKam'), false, null, false, false, true); 
 
     let kaeData = Object.keys(kaeMap).map(k => ({
@@ -740,7 +751,6 @@ function init() {
         d._kam = cleanName(d.kam, true, d.area);
         d._kae = cleanName(d.kae, false, d.area);
         
-        // Giữ lại tên gốc nguyên bản để hiển thị ✔️/❌ trong Headcount Tree
         d._kam_display = d.kam ? String(d.kam).trim() : "";
         d._kae_display = d.kae ? String(d.kae).trim() : "";
         
