@@ -250,7 +250,7 @@ const dict = {
         secP3: "PHẦN 3: ĐỘ PHỦ & CHIẾN LƯỢC ĐIỂM BÁN", cSegTitle: "PHÂN TÍCH SỨC MUA THEO PHÂN KHÚC TẠP HÓA",
         cSegSub: "Kèm Box tỷ trọng (%) cơ cấu khách hàng. Bảng tự động gộp Toàn Quốc khi chọn 'Tất cả Khu vực'.",
         colArea: "KHU VỰC", colWeek: "TUẦN", colKam: "QUẢN LÝ", colKae: "SALESMAN",
-        tbPlan: "Tuyến", tbActive: "Active", tbStrike: "Strike Rate", tbSales: "Sell-Out", tbDrop: "Drop Size", tbLppc: "LPPC",
+        tbPlan: "Tuyến", tbActive: "Active", tbStrike: "Strike Rate", tbSales: "Sell-Out", tbDrop: "Drop Size", tbFreq: "Tần Suất", tbLppc: "LPPC",
         sysTotal: "TỔNG TOÀN QUỐC", segColClass: "PHÂN KHÚC", segTblH1: "HIỆU SUẤT ĐIỂM BÁN",
         axisCust: "Đơn vị: Cửa hàng", axisVnd: "Đơn vị: VNĐ", legSales: "Doanh số", legTotal: "Tuyến", legActive: "Active"
     },
@@ -266,7 +266,7 @@ const dict = {
         secP3: "PART 3: COVERAGE & OUTLET STRATEGY", cSegTitle: "PURCHASING POWER BY OUTLET SEGMENTATION",
         cSegSub: "Includes (%) Proportion Boxes. Auto-groups to Nationwide when 'All Areas' is selected.",
         colArea: "AREA", colWeek: "WEEK", colKam: "MANAGER", colKae: "REP",
-        tbPlan: "Route", tbActive: "Active", tbStrike: "Strike Rate", tbSales: "Sell-Out", tbDrop: "Drop Size", tbLppc: "LPPC",
+        tbPlan: "Route", tbActive: "Active", tbStrike: "Strike Rate", tbSales: "Sell-Out", tbDrop: "Drop Size", tbFreq: "Freq", tbLppc: "LPPC",
         sysTotal: "NATIONWIDE TOTAL", segColClass: "CLASS", segTblH1: "OUTLET PERFORMANCE",
         axisCust: "Unit: Outlets", axisVnd: "Unit: VND", legSales: "Sales", legTotal: "Route", legActive: "Active"
     }
@@ -348,10 +348,7 @@ function renderFilters() {
 function render() {
     if (dbMaster.length === 0 && dbSales.length === 0) return; 
 
-    // Filter cho PHẦN 1: Chỉ chịu ảnh hưởng bởi Month, Week
     const filterP1 = (d) => (filters.month.length === 0 || filters.month.includes(d.month)) && (filters.week.length === 0 || filters.week.includes(d._w));
-    
-    // Filter cho PHẦN 2 & 3: Chịu ảnh hưởng bởi TẤT CẢ bộ lọc
     const filterMain = (d) => filterP1(d) && (filters.hq.length === 0 || filters.hq.includes(d.hq)) && (filters.area.length === 0 || filters.area.includes(d.area));
 
     let sys = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
@@ -445,13 +442,13 @@ function render() {
 
     // 1. UPDATE KPIs
     let sysAc = sys.a.size; let sysTc = sys.p.size;
-    let sysKpiObj = { tc: sysTc, ac: sysAc, s: sys.s, avgSku: sys.invs > 0 ? sys.skus/sys.invs : 0 };
+    let sysKpiObj = { tc: sysTc, ac: sysAc, s: sys.s, avgSku: sys.invs > 0 ? sys.skus/sys.invs : 0, freq: sysAc > 0 ? sys.invs/sysAc : 0 };
     document.getElementById("val-sales").innerText = fmt(sys.s);
     document.getElementById("val-cust").innerText = fmt(sysTc);
     document.getElementById("val-strike").innerText = fmt(sysAc);
     document.getElementById("val-strike-rate").innerText = (sysTc > 0 ? (sysAc/sysTc*100).toFixed(1) : 0) + "%";
     document.getElementById("val-drop-size").innerText = (sysAc > 0 ? fmt(sys.s/sysAc) : 0);
-    document.getElementById("val-freq").innerText = (sysAc > 0 ? (sys.invs/sysAc).toFixed(1) : "0.0");
+    document.getElementById("val-freq").innerText = sysKpiObj.freq.toFixed(1);
     document.getElementById("val-lppc").innerText = sysKpiObj.avgSku.toFixed(1);
 
     // 2. TREE PERSONNEL
@@ -468,22 +465,22 @@ function render() {
     // 3. CHARTS P1 (BIỂU ĐỒ NGANG, BẢNG DÀN NGANG)
     let p1Total = { tc: 0, ac: 0, s: 0, skus: 0, invs: 0 };
     Object.values(areaMapP1).forEach(m => { p1Total.tc+=m.p.size; p1Total.ac+=m.a.size; p1Total.s+=m.s; p1Total.skus+=m.skus; p1Total.invs+=m.invs; });
-    let p1Kpi = { tc: p1Total.tc, ac: p1Total.ac, s: p1Total.s, avgSku: p1Total.invs > 0 ? p1Total.skus/p1Total.invs : 0 };
+    let p1Kpi = { tc: p1Total.tc, ac: p1Total.ac, s: p1Total.s, avgSku: p1Total.invs > 0 ? p1Total.skus/p1Total.invs : 0, freq: p1Total.ac > 0 ? p1Total.invs/p1Total.ac : 0 };
 
-    let areaData = Object.keys(areaMapP1).map(k => ({ label: k, tc: areaMapP1[k].p.size, ac: areaMapP1[k].a.size, s: areaMapP1[k].s, avgSku: areaMapP1[k].invs > 0 ? areaMapP1[k].skus/areaMapP1[k].invs : 0 })).sort((a,b) => b.s - a.s);
-    drawChart('areaChart', areaData, 'label', true); // isHorizontal = true
+    let areaData = Object.keys(areaMapP1).map(k => ({ label: k, tc: areaMapP1[k].p.size, ac: areaMapP1[k].a.size, s: areaMapP1[k].s, avgSku: areaMapP1[k].invs > 0 ? areaMapP1[k].skus/areaMapP1[k].invs : 0, freq: areaMapP1[k].a.size > 0 ? areaMapP1[k].invs/areaMapP1[k].a.size : 0 })).sort((a,b) => b.s - a.s);
+    drawChart('areaChart', areaData, 'label', true); // Horizontal Chart
     drawHorizontalTable('areaHeaderRow', 'areaTableBody', areaData, t('colArea'), true, { label: t('sysTotal'), ...p1Kpi }, true); 
 
-    let weekData = Object.keys(weekMapP1).map(k => ({ label: formatWM(weekMapP1[k].w, weekMapP1[k].m), tc: weekMapP1[k].p.size, ac: weekMapP1[k].a.size, s: weekMapP1[k].s, avgSku: weekMapP1[k].invs > 0 ? weekMapP1[k].skus/weekMapP1[k].invs : 0, w: weekMapP1[k].w, m: weekMapP1[k].m })).sort((a,b) => { let m1 = monthOrder[a.m.toLowerCase()]||99; let m2 = monthOrder[b.m.toLowerCase()]||99; return m1!==m2 ? m1-m2 : a.w.localeCompare(b.w); });
-    drawChart('weekChart', weekData, 'label', true); // isHorizontal = true
+    let weekData = Object.keys(weekMapP1).map(k => ({ label: formatWM(weekMapP1[k].w, weekMapP1[k].m), tc: weekMapP1[k].p.size, ac: weekMapP1[k].a.size, s: weekMapP1[k].s, avgSku: weekMapP1[k].invs > 0 ? weekMapP1[k].skus/weekMapP1[k].invs : 0, freq: weekMapP1[k].a.size > 0 ? weekMapP1[k].invs/weekMapP1[k].a.size : 0, w: weekMapP1[k].w, m: weekMapP1[k].m })).sort((a,b) => { let m1 = monthOrder[a.m.toLowerCase()]||99; let m2 = monthOrder[b.m.toLowerCase()]||99; return m1!==m2 ? m1-m2 : a.w.localeCompare(b.w); });
+    drawChart('weekChart', weekData, 'label', true); // Horizontal Chart
     drawHorizontalTable('weekHeaderRow', 'weekTableBody', weekData, t('colWeek'), true, { label: t('sysTotal'), ...p1Kpi }, false); 
 
     // 4. CHARTS P2 (BIỂU ĐỒ NGANG, BẢNG DỌC)
-    let kamData = Object.keys(kamMap).map(k => ({ label: k, tc: kamMap[k].p.size, ac: kamMap[k].a.size, s: kamMap[k].s, avgSku: kamMap[k].invs > 0 ? kamMap[k].skus/kamMap[k].invs : 0 })).sort((a,b) => b.s - a.s).slice(0, 10);
+    let kamData = Object.keys(kamMap).map(k => ({ label: k, tc: kamMap[k].p.size, ac: kamMap[k].a.size, s: kamMap[k].s, avgSku: kamMap[k].invs > 0 ? kamMap[k].skus/kamMap[k].invs : 0, freq: kamMap[k].a.size > 0 ? kamMap[k].invs/kamMap[k].a.size : 0 })).sort((a,b) => b.s - a.s).slice(0, 10);
     drawChart('kamChart', kamData, 'label', true); 
     drawVerticalTable('kamHeaderRow', 'kamTableBody', kamData, t('colKam'), false); 
 
-    let kaeData = Object.keys(kaeMap).map(k => ({ label: k, tc: kaeMap[k].p.size, ac: kaeMap[k].a.size, s: kaeMap[k].s, avgSku: kaeMap[k].invs > 0 ? kaeMap[k].skus/kaeMap[k].invs : 0 })).sort((a,b) => b.s - a.s).slice(0, 10);
+    let kaeData = Object.keys(kaeMap).map(k => ({ label: k, tc: kaeMap[k].p.size, ac: kaeMap[k].a.size, s: kaeMap[k].s, avgSku: kaeMap[k].invs > 0 ? kaeMap[k].skus/kaeMap[k].invs : 0, freq: kaeMap[k].a.size > 0 ? kaeMap[k].invs/kaeMap[k].a.size : 0 })).sort((a,b) => b.s - a.s).slice(0, 10);
     drawChart('dayChart', kaeData, 'label', true); 
     drawVerticalTable('dayHeaderRow', 'dayTableBody', kaeData, t('colKae'), false); 
 
@@ -496,6 +493,7 @@ function renderPart3(segMap, sysKpiObj) {
     let html = `<table class="segment-table"><thead><tr><th rowspan="2">${t('colArea')}</th><th rowspan="2">${t('segColClass')}</th><th colspan="4">${t('segTblH1')}</th></tr><tr><th>${t('tbPlan')}</th><th>${t('tbActive')}</th><th>${t('tbStrike')}</th><th>${t('tbSales')}</th></tr></thead><tbody>`;
 
     if(filters.area.length === 0) {
+        // GỘP THÀNH BẢNG TỔNG TOÀN QUỐC
         let aggSeg = { 'A':{p:0,a:0,s:0}, 'B':{p:0,a:0,s:0}, 'C':{p:0,a:0,s:0}, 'D':{p:0,a:0,s:0}, 'N':{p:0,a:0,s:0} };
         Object.keys(segMap).forEach(key => {
             let seg = key.split('|')[1];
@@ -524,6 +522,7 @@ function renderPart3(segMap, sysKpiObj) {
                  <td style="color:var(--text-main);">${sysKpiObj.tc > 0 ? (sysKpiObj.ac/sysKpiObj.tc*100).toFixed(1) : 0}%</td>
                  <td style="text-align:right; color:var(--text-main);">${fmt(sysKpiObj.s)}</td></tr>`;
     } else {
+        // TÁCH BẢNG THEO KHU VỰC
         let sysPlanCount = 0; let sysActCount = 0; let sysSalesSum = 0;
         filters.area.forEach(area => {
             let isF = true; let areaPlanCount = 0; let areaActCount = 0; let areaSalesSum = 0;
@@ -567,7 +566,7 @@ function renderPart3(segMap, sysKpiObj) {
     document.getElementById('segmentAreaTableContainer').innerHTML = html;
 }
 
-// ======================== DRAW X-Y TABLES & CHARTS ========================
+// ======================== DRAW X-Y TABLES ========================
 function drawHorizontalTable(hid, bid, data, titleNameLabel, showTotal, exp, checkRisk) {
     let rd = [...data]; if (showTotal && exp) rd.push(exp);
     
@@ -583,6 +582,7 @@ function drawHorizontalTable(hid, bid, data, titleNameLabel, showTotal, exp, che
         }},
         { l: t('tbSales'), k: "s", f: v => fmt(v) },
         { l: t('tbDrop'), k: "ds", f: (_, i) => fmt(i.ac > 0 ? i.s/i.ac : 0) },
+        { l: t('tbFreq'), k: "freq", f: v => `<span style="color:var(--accent-success); font-weight:800">${(Number(v)||0).toFixed(1)}</span>` },
         { l: t('tbLppc'), k: "avgSku", f: v => `<span style="color:var(--accent-warning); font-weight:800">${(Number(v)||0).toFixed(1)}</span>` }
     ];
 
@@ -597,6 +597,7 @@ function drawVerticalTable(hid, bid, data, titleNameLabel, showTotal, exp, check
         <th>${t('tbStrike')}</th>
         <th>${t('tbSales')}</th>
         <th>${t('tbDrop')}</th>
+        <th>${t('tbFreq')}</th>
         <th>${t('tbLppc')}</th>
     `;
     
@@ -611,9 +612,25 @@ function drawVerticalTable(hid, bid, data, titleNameLabel, showTotal, exp, check
             <td class="${risk}"><b style="${risk ? '' : 'color:var(--accent-success)'}">${sr.toFixed(1)}% ${risk ? '⚠️' : ''}</b></td>
             <td style="text-align:right">${fmt(d.s)}</td>
             <td style="text-align:right">${fmt(ds)}</td>
+            <td><span style="color:var(--accent-success); font-weight:bold">${(d.freq || 0).toFixed(1)}</span></td>
             <td><span style="color:var(--accent-warning); font-weight:bold">${d.avgSku.toFixed(1)}</span></td>
         </tr>`;
     }).join("");
+
+    if (showTotal && exp) {
+        let sr = exp.tc > 0 ? (exp.ac/exp.tc*100) : 0;
+        let ds = exp.ac > 0 ? exp.s/exp.ac : 0;
+        bodyHtml += `<tr style="background:rgba(168,200,196,0.1);">
+            <td class="label-cell" style="color:var(--text-main); font-weight:900">${exp.label}</td>
+            <td style="font-weight:bold">${fmt(exp.tc)}</td>
+            <td><b style="color:var(--primary)">${fmt(exp.ac)}</b></td>
+            <td><b style="color:var(--accent-success)">${sr.toFixed(1)}%</b></td>
+            <td style="text-align:right; font-weight:bold">${fmt(exp.s)}</td>
+            <td style="text-align:right; font-weight:bold">${fmt(ds)}</td>
+            <td><span style="color:var(--accent-success); font-weight:bold">${(exp.freq || 0).toFixed(1)}</span></td>
+            <td><span style="color:var(--accent-warning); font-weight:bold">${exp.avgSku.toFixed(1)}</span></td>
+        </tr>`;
+    }
     
     document.getElementById(bid).innerHTML = bodyHtml;
 }
@@ -654,6 +671,7 @@ function drawChart(id, data, labelKey, isHorizontal) {
     });
 }
 
+// ======================== PHẦN KHỞI TẠO HỆ THỐNG ========================
 function init() {
     dbMaster = []; dbSales = [];
     if (typeof dbMasterM5 !== 'undefined') { dbMaster = dbMaster.concat(dbMasterM5); dbSales = dbSales.concat(dbSalesM5); }
