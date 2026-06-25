@@ -79,12 +79,9 @@
 
         /* THE PULSE BLOCK */
         .section-tag { display: inline-block; padding: 5px 12px; background: rgba(121, 189, 154, 0.08); border-left: 4px solid var(--primary); color: var(--primary); font-size: 11px; font-weight: 800; margin-bottom: 18px; border-radius: 0 6px 6px 0; letter-spacing: 0.5px; }
+        .pulse-row { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 35px; }
         
-        /* CẬP NHẬT: 50% CHIỀU NGANG CHO 2 KHỐI */
-        .pulse-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 35px; }
-        
-        /* CẬP NHẬT: Gói 8 KPI vào 2 cột x 4 hàng để vừa vặn với 50% chiều ngang */
-        .kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
         
         .kpi-card { background: var(--bg-card); border-radius: var(--border-radius); padding: 22px; border: 1px solid var(--border-color); box-shadow: var(--ios-shadow); transition: transform 0.25s, border-color 0.25s; display: flex; flex-direction: column; justify-content: space-between; }
         .kpi-card:hover { border-color: var(--primary); transform: translateY(-2px); }
@@ -93,7 +90,7 @@
         .kpi-card .sub { font-size: 11px; color: var(--primary); font-weight: 600; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px; margin-top: auto; }
         
         .tree-box { background: var(--bg-card); border-radius: var(--border-radius); padding: 22px; border: 1px solid var(--border-color); box-shadow: var(--ios-shadow); height: 100%; display: flex; flex-direction: column; min-height: 250px;}
-        .tree-content { flex-grow: 1; overflow-y: auto; overflow-x: auto; max-height: 600px; }
+        .tree-content { flex-grow: 1; overflow-y: auto; overflow-x: auto; max-height: 300px; }
         .tree-node summary { padding: 10px 14px; background: rgba(255,255,255,0.03); border-radius: var(--border-radius-sm); cursor: pointer; font-weight: 800; font-size: 11px; list-style: none; margin-bottom: 6px; }
         .tree-node summary::-webkit-details-marker { display: none; }
         .t-name { display: flex; align-items: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; color: var(--text-main);}
@@ -137,8 +134,11 @@
         ::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-        @media (max-width: 1024px) {
+        @media (max-width: 1400px) {
             .pulse-row { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 1024px) {
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
             .ms-box { width: 130px; }
         }
         @media (max-width: 768px) {
@@ -183,26 +183,31 @@
     <div class="pulse-row">
         <div class="kpi-grid">
             <div class="kpi-card md-focus">
-                <div class="label" data-i18n="kpiSalesLbl">TỔNG SELL-OUT</div>
+                <div class="label" data-i18n="kpiSalesLbl">TỔNG SELL-OUT & KH LÊN ĐƠN</div>
                 <div class="value" id="val-sales">0</div>
-                <div class="sub"><span data-i18n="kpiSalesSub1">VNĐ (Chưa VAT)</span> <span data-i18n="kpiSalesSub2">Dòng tiền</span></div>
+                <div class="sub"><span>KH lên đơn: <b id="val-active-cust" style="color:var(--text-main)">0</b></span></div>
             </div>
             <div class="kpi-card">
-                <div class="label" data-i18n="kpiActiveLbl">ĐỘ PHỦ</div>
-                <div class="value" id="val-strike">0</div>
-                <div class="sub"><span id="val-cust">0</span> <span data-i18n="kpiActiveSub2">KH trên tuyến</span></div>
-            </div>
-            <div class="kpi-card">
-                <div class="label" data-i18n="kpiStrikeLbl">TỶ LỆ CHỐT ĐƠN</div>
-                <div class="value" id="val-strike-rate">0%</div>
-                <div class="sub"><span data-i18n="kpiStrikeSub">Tỷ lệ chốt đơn</span></div>
-            </div>
-            <div class="kpi-card">
-                <div class="label" data-i18n="kpiDropLbl">DOANH SỐ TRUNG BÌNH/ĐIỂM BÁN</div>
-                <div class="value" id="val-drop-size">0</div>
+                <div class="label" data-i18n="kpiStrikeLbl">TỶ LỆ CHỐT ĐƠN (TRUE STRIKE RATE)</div>
+                <div class="value" id="val-true-strike">0%</div>
                 <div class="sub">
-                    <span><span data-i18n="lblFreq">Tần suất lên đơn</span>: <b id="val-freq" style="color:var(--accent-success)">0</b></span> 
-                    <span><span data-i18n="lblLppc">SKU TB/Đơn</span>: <b id="val-lppc" style="color:var(--accent-warning)">0</b></span>
+                    <span>Tỷ lệ độ phủ: <b id="val-penetration" style="color:var(--text-main)">0%</b></span>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="label" data-i18n="kpiDropF4Lbl">DOANH SỐ TRUNG BÌNH/ĐIỂM BÁN (F4)</div>
+                <div class="value" id="val-drop-f4">0</div>
+                <div class="sub">
+                    <span><span data-i18n="lblFreq">Tần suất lên đơn</span>: <b id="val-freq-f4" style="color:var(--accent-success)">0</b></span> 
+                    <span><span data-i18n="lblLppc">SKU TB/Đơn</span>: <b id="val-lppc-f4" style="color:var(--accent-warning)">0</b></span>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="label" data-i18n="kpiDropF2Lbl">DOANH SỐ TRUNG BÌNH/ĐIỂM BÁN (F2)</div>
+                <div class="value" id="val-drop-f2">0</div>
+                <div class="sub">
+                    <span><span data-i18n="lblFreq">Tần suất lên đơn</span>: <b id="val-freq-f2" style="color:var(--accent-success)">0</b></span> 
+                    <span><span data-i18n="lblLppc">SKU TB/Đơn</span>: <b id="val-lppc-f2" style="color:var(--accent-warning)">0</b></span>
                 </div>
             </div>
             
@@ -291,9 +296,10 @@ const dict = {
     vi: {
         mainTitle: "RTM STRATEGIC DASHBOARD", subTitle: "Đánh giá Hiệu quả Phân phối, Thực thi Tuyến & Phân khúc Sức mua",
         lblMonth: "Tháng", lblWeek: "Tuần", lblRegion: "Miền", lblArea: "Khu vực", lblAll: "Tất cả",
-        secPulse: "TỔNG QUAN CHUNG", kpiSalesLbl: "TỔNG SELL-OUT", kpiSalesSub1: "VNĐ (Chưa VAT)", kpiSalesSub2: "Dòng tiền",
-        kpiActiveLbl: "ĐỘ PHỦ", kpiActiveSub2: "KH trên tuyến", kpiStrikeLbl: "TỶ LỆ CHỐT ĐƠN", kpiStrikeSub: "Tỷ lệ chốt đơn",
-        kpiDropLbl: "DOANH SỐ TRUNG BÌNH/ĐIỂM BÁN", treeTitle: "DANH MỤC NHÂN SỰ",
+        secPulse: "TỔNG QUAN CHUNG", kpiSalesLbl: "TỔNG SELL-OUT & KH LÊN ĐƠN", kpiSalesSub1: "VNĐ (Chưa VAT)", kpiSalesSub2: "Dòng tiền",
+        kpiStrikeLbl: "TỶ LỆ CHỐT ĐƠN (TRUE STRIKE RATE)", kpiStrikeSub: "Tỷ lệ chốt đơn",
+        kpiDropF4Lbl: "DOANH SỐ TRUNG BÌNH/ĐIỂM BÁN (F4)", kpiDropF2Lbl: "DOANH SỐ TRUNG BÌNH/ĐIỂM BÁN (F2)",
+        treeTitle: "DANH MỤC NHÂN SỰ",
         lblFreq: "Tần suất lên đơn", lblLppc: "SKU TB/Đơn",
         kpiKaeLbl: "KAE ĐANG HOẠT ĐỘNG", kpiDsrLbl: "DSR ĐANG HOẠT ĐỘNG",
         kpiAvgKaeLbl: "NĂNG SUẤT BÌNH QUÂN/KAE", kpiAvgDsrLbl: "NĂNG SUẤT BÌNH QUÂN/DSR",
@@ -311,9 +317,10 @@ const dict = {
     en: {
         mainTitle: "RTM STRATEGIC DASHBOARD", subTitle: "Distribution Efficiency, Route Execution & Purchasing Power",
         lblMonth: "Month", lblWeek: "Week", lblRegion: "Region", lblArea: "Area", lblAll: "All",
-        secPulse: "THE PULSE", kpiSalesLbl: "TOTAL SELL-OUT", kpiSalesSub1: "VND (Excl. VAT)", kpiSalesSub2: "Volume Flow",
-        kpiActiveLbl: "ACTIVE OUTLETS", kpiActiveSub2: "On Route", kpiStrikeLbl: "STRIKE RATE", kpiStrikeSub: "Strike rate",
-        kpiDropLbl: "DROP SIZE & FREQ", treeTitle: "HEADCOUNT",
+        secPulse: "THE PULSE", kpiSalesLbl: "TOTAL SELL-OUT & ACTIVE OUTLETS", kpiSalesSub1: "VND (Excl. VAT)", kpiSalesSub2: "Volume Flow",
+        kpiStrikeLbl: "TRUE STRIKE RATE", kpiStrikeSub: "Strike rate",
+        kpiDropF4Lbl: "DROP SIZE PER OUTLET (F4)", kpiDropF2Lbl: "DROP SIZE PER OUTLET (F2)", 
+        treeTitle: "HEADCOUNT",
         lblFreq: "Freq", lblLppc: "LPPC",
         kpiKaeLbl: "ACTIVE KAE", kpiDsrLbl: "ACTIVE DSR",
         kpiAvgKaeLbl: "AVG SALES / KAE", kpiAvgDsrLbl: "AVG SALES / DSR",
@@ -421,12 +428,10 @@ function render() {
     const filterP1 = (d) => (filters.month.length === 0 || filters.month.includes(d.month)) && (filters.week.length === 0 || filters.week.includes(d._w));
     const filterMain = (d) => filterP1(d) && (filters.hq.length === 0 || filters.hq.includes(d.hq)) && (filters.area.length === 0 || filters.area.includes(d.area));
 
-    // Lấy toàn bộ các tháng có trong dữ liệu Master
     let allMonths = new Set();
     dbMaster.forEach(d => { if(d.month) allMonths.add(d.month.toLowerCase()); });
     let sortedAvailable = Array.from(allMonths).sort((a,b) => monthOrder[a] - monthOrder[b]);
 
-    // Thuật toán Snapshot cho HR KPIs
     let targetM = null;
     if (filters.month.length === 0) {
         targetM = sortedAvailable.length > 0 ? sortedAvailable[sortedAvailable.length - 1] : null;
@@ -438,13 +443,15 @@ function render() {
     let targetMNum = targetM ? monthOrder[targetM] : null;
     let prevMNum = targetMNum ? targetMNum - 1 : null;
     let prevM = Object.keys(monthOrder).find(k => monthOrder[k] === prevMNum);
-    
-    // Kiểm tra xem tháng liền trước có thực sự tồn tại trong file dữ liệu không
     let hasPrevMData = sortedAvailable.includes(prevM);
 
     let activeMonths = new Set(); 
 
-    let sys = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
+    // Biến cho F4 và F2
+    let sys = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0, plannedVisits: 0 };
+    let sysF4 = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
+    let sysF2 = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
+
     let areaMapP1 = {}, weekMapP1 = {}; 
     let kamMap = {}, kaeMap = {}, treeMap = {}, segMap = {}; 
     
@@ -457,7 +464,6 @@ function render() {
         if(!d.cusCode) return;
         let isP1 = filterP1(d);
         let isMain = filterMain(d);
-        
         let isHrTarget = targetM && (d.month.toLowerCase() === targetM) && (filters.week.length === 0 || filters.week.includes(d._w)) && (filters.hq.length === 0 || filters.hq.includes(d.hq)) && (filters.area.length === 0 || filters.area.includes(d.area));
         let isHrPrev = hasPrevMData && prevM && (d.month.toLowerCase() === prevM) && (filters.week.length === 0 || filters.week.includes(d._w)) && (filters.hq.length === 0 || filters.hq.includes(d.hq)) && (filters.area.length === 0 || filters.area.includes(d.area));
 
@@ -473,8 +479,13 @@ function render() {
             weekMapP1[wk].p.add(d.cusCode);
 
             sys.p.add(d.cusCode);
+            sys.plannedVisits++; // Mỗi dòng trong dbMaster tương đương 1 lượt viếng thăm
             activeMonths.add(d.month.toUpperCase()); 
             
+            const rt = d._rtMap[d.cusCode] || "UNKNOWN";
+            if (rt === 'F4') sysF4.p.add(d.cusCode);
+            if (rt === 'F2') sysF2.p.add(d.cusCode);
+
             const kam = d._kam;
             if (kam) {
                 if (!kamMap[kam]) kamMap[kam] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0, areas: new Set() };
@@ -483,6 +494,7 @@ function render() {
             }
 
             const kae = d._kae;
+            let rawKae = String(d.kae).trim();
             if (kae && !kae.toUpperCase().startsWith('KAM')) {
                 if (!kaeMap[kae]) kaeMap[kae] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0, areas: new Set() };
                 kaeMap[kae].p.add(d.cusCode);
@@ -538,6 +550,16 @@ function render() {
 
             sys.s += v;
             if (v > 0) { sys.a.add(d.cusCode); sys.skus += skus; sys.invs++; }
+
+            const rt = d._rtMap[d.cusCode] || "UNKNOWN";
+            if (rt === 'F4') {
+                sysF4.s += v;
+                if (v > 0) { sysF4.a.add(d.cusCode); sysF4.skus += skus; sysF4.invs++; }
+            }
+            if (rt === 'F2') {
+                sysF2.s += v;
+                if (v > 0) { sysF2.a.add(d.cusCode); sysF2.skus += skus; sysF2.invs++; }
+            }
 
             const kam = d._kam;
             if (kam) {
@@ -599,18 +621,26 @@ function render() {
         }
     });
 
-    // 1. UPDATE KPIs GỐC
-    let sysAc = sys.a.size; let sysTc = sys.p.size;
-    let sysKpiObj = { tc: sysTc, ac: sysAc, s: sys.s, avgSku: sys.invs > 0 ? sys.skus/sys.invs : 0, freq: sysAc > 0 ? sys.invs/sysAc : 0 };
+    // 1. UPDATE 4 KPIs ĐẦU TIÊN
     document.getElementById("val-sales").innerText = fmt(sys.s);
-    document.getElementById("val-cust").innerText = fmt(sysTc);
-    document.getElementById("val-strike").innerText = fmt(sysAc);
-    document.getElementById("val-strike-rate").innerText = (sysTc > 0 ? (sysAc/sysTc*100).toFixed(1) : 0) + "%";
-    document.getElementById("val-drop-size").innerText = (sysAc > 0 ? fmt(sys.s/sysAc) : 0);
-    document.getElementById("val-freq").innerText = (sysAc > 0 ? (sys.invs/sysAc).toFixed(1) : "0.0");
-    document.getElementById("val-lppc").innerText = sysKpiObj.avgSku.toFixed(1);
+    document.getElementById("val-active-cust").innerText = fmt(sys.a.size);
 
-    // 2. CẬP NHẬT 4 KPI NHÂN SỰ VÀ MOM (TỰ ĐỘNG ẨN NẾU THIẾU DATA THÁNG 4)
+    let trueStrike = sys.plannedVisits > 0 ? (sys.invs / sys.plannedVisits * 100) : 0;
+    let penetration = sys.p.size > 0 ? (sys.a.size / sys.p.size * 100) : 0;
+    document.getElementById("val-true-strike").innerText = trueStrike.toFixed(1) + "%";
+    document.getElementById("val-penetration").innerText = penetration.toFixed(1) + "%";
+
+    // F4 Drop Size & Freq
+    document.getElementById("val-drop-f4").innerText = sysF4.a.size > 0 ? fmt(sysF4.s / sysF4.a.size) : 0;
+    document.getElementById("val-freq-f4").innerText = sysF4.a.size > 0 ? (sysF4.invs / sysF4.a.size).toFixed(1) : "0.0";
+    document.getElementById("val-lppc-f4").innerText = sysF4.invs > 0 ? (sysF4.skus / sysF4.invs).toFixed(1) : "0.0";
+
+    // F2 Drop Size & Freq
+    document.getElementById("val-drop-f2").innerText = sysF2.a.size > 0 ? fmt(sysF2.s / sysF2.a.size) : 0;
+    document.getElementById("val-freq-f2").innerText = sysF2.a.size > 0 ? (sysF2.invs / sysF2.a.size).toFixed(1) : "0.0";
+    document.getElementById("val-lppc-f2").innerText = sysF2.invs > 0 ? (sysF2.skus / sysF2.invs).toFixed(1) : "0.0";
+
+    // 2. CẬP NHẬT 4 KPI NHÂN SỰ VÀ MOM
     document.getElementById("val-headcount-kae").innerText = fmt(kaeActive.size);
     document.getElementById("val-headcount-dsr").innerText = fmt(dsrActive.size);
     
@@ -634,7 +664,7 @@ function render() {
         document.getElementById("mom-avg-dsr").innerHTML = '';
     }
 
-    // 3. TREE PERSONNEL (BẢN BỎ CỘT TỔNG + RẢI GRID THEO THÁNG)
+    // 3. TREE PERSONNEL
     let getMonthNum = (mStr) => { 
         let c = mStr.toLowerCase().replace('m','').replace('t','').trim(); 
         return !isNaN(c) ? parseInt(c) : (monthOrder[mStr.toLowerCase()] || 99); 
@@ -680,7 +710,8 @@ function render() {
 
     let weekData = Object.keys(weekMapP1).map(k => ({ label: formatWM(weekMapP1[k].w, weekMapP1[k].m), tc: weekMapP1[k].p.size, ac: weekMapP1[k].a.size, s: weekMapP1[k].s, avgSku: weekMapP1[k].invs > 0 ? weekMapP1[k].skus/weekMapP1[k].invs : 0, freq: weekMapP1[k].a.size > 0 ? weekMapP1[k].invs/weekMapP1[k].a.size : 0, w: weekMapP1[k].w, m: weekMapP1[k].m })).sort((a,b) => { let m1 = monthOrder[a.m.toLowerCase()]||99; let m2 = monthOrder[b.m.toLowerCase()]||99; return m1!==m2 ? m1-m2 : a.w.localeCompare(b.w); });
     drawChart('weekChart', weekData, 'label', false); 
-    drawHorizontalTable('weekHeaderRow', 'weekTableBody', weekData, t('colWeek'), true, { label: t('sysTotal'), ...sysKpiObj }, false, true); 
+    let sysKpiObjWeek = { tc: sysTc, ac: sysAc, s: sys.s, avgSku: sys.invs > 0 ? sys.skus/sys.invs : 0, freq: sysAc > 0 ? sys.invs/sysAc : 0 };
+    drawHorizontalTable('weekHeaderRow', 'weekTableBody', weekData, t('colWeek'), true, { label: t('sysTotal'), ...sysKpiObjWeek }, false, true); 
 
     // 5. CHARTS P2 
     let kamData = Object.keys(kamMap).map(k => ({
@@ -698,7 +729,7 @@ function render() {
     drawVerticalTable('dayHeaderRow', 'dayTableBody', kaeData, t('colKae'), false, null, false, false, true); 
 
     // 6. PART 3: SEGMENTATION & BOX %
-    renderPart3(segMap, sysKpiObj);
+    renderPart3(segMap, sysKpiObjWeek);
 }
 
 function renderPart3(segMap, sysKpiObj) {
@@ -906,7 +937,14 @@ function init() {
     if (typeof dbMasterM7 !== 'undefined') { dbMaster = dbMaster.concat(dbMasterM7); dbSales = dbSales.concat(dbSalesM7); }
 
     const segMapPre = {};
-    dbMaster.forEach(d => { if(d.cusCode) segMapPre[d.cusCode] = d.CusS ? String(d.CusS).toUpperCase().trim() : "N"; });
+    const rtMapPre = {}; // Lưu trữ riêng chuẩn viếng thăm F4/F2
+    
+    dbMaster.forEach(d => { 
+        if(d.cusCode) {
+            segMapPre[d.cusCode] = d.CusS ? String(d.CusS).toUpperCase().trim() : "N"; 
+            if(d.rt) rtMapPre[d.cusCode] = String(d.rt).toUpperCase().trim();
+        }
+    });
 
     const pre = (arr) => arr.forEach(d => {
         d.month = d.month ? String(d.month).trim() : "";
@@ -926,6 +964,7 @@ function init() {
         d._kae_display = d._kae ? (d._kae + kaeSign) : "";
         
         d._segMap = segMapPre;
+        d._rtMap = rtMapPre; // Đính kèm Route Type cho Sales data
     });
     pre(dbMaster); pre(dbSales);
 
