@@ -447,10 +447,11 @@ function render() {
 
     let activeMonths = new Set(); 
 
-    // Biến cho F4 và F2
     let sys = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0, plannedVisits: 0 };
-    let sysF4 = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
-    let sysF2 = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
+    
+    // Đã chuyển thành Snapshot (Chỉ lấy tháng mục tiêu)
+    let snapF4 = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
+    let snapF2 = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
 
     let areaMapP1 = {}, weekMapP1 = {}; 
     let kamMap = {}, kaeMap = {}, treeMap = {}, segMap = {}; 
@@ -479,12 +480,8 @@ function render() {
             weekMapP1[wk].p.add(d.cusCode);
 
             sys.p.add(d.cusCode);
-            sys.plannedVisits++; // Mỗi dòng trong dbMaster tương đương 1 lượt viếng thăm
+            sys.plannedVisits++; 
             activeMonths.add(d.month.toUpperCase()); 
-            
-            const rt = d._rtMap[d.cusCode] || "UNKNOWN";
-            if (rt === 'F4') sysF4.p.add(d.cusCode);
-            if (rt === 'F2') sysF2.p.add(d.cusCode);
 
             const kam = d._kam;
             if (kam) {
@@ -494,7 +491,6 @@ function render() {
             }
 
             const kae = d._kae;
-            let rawKae = String(d.kae).trim();
             if (kae && !kae.toUpperCase().startsWith('KAM')) {
                 if (!kaeMap[kae]) kaeMap[kae] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0, areas: new Set() };
                 kaeMap[kae].p.add(d.cusCode);
@@ -508,6 +504,11 @@ function render() {
         }
 
         if (isHrTarget) {
+            // F4 & F2 giờ chỉ quét trong tháng Snapshot
+            const rt = d._rtMap[d.cusCode] || "UNKNOWN";
+            if (rt === 'F4') snapF4.p.add(d.cusCode);
+            if (rt === 'F2') snapF2.p.add(d.cusCode);
+
             const kae = d._kae;
             let rawKae = String(d.kae).trim();
             if (kae && !kae.toUpperCase().startsWith('KAM') && !rawKae.includes('❌')) {
@@ -550,16 +551,6 @@ function render() {
 
             sys.s += v;
             if (v > 0) { sys.a.add(d.cusCode); sys.skus += skus; sys.invs++; }
-
-            const rt = d._rtMap[d.cusCode] || "UNKNOWN";
-            if (rt === 'F4') {
-                sysF4.s += v;
-                if (v > 0) { sysF4.a.add(d.cusCode); sysF4.skus += skus; sysF4.invs++; }
-            }
-            if (rt === 'F2') {
-                sysF2.s += v;
-                if (v > 0) { sysF2.a.add(d.cusCode); sysF2.skus += skus; sysF2.invs++; }
-            }
 
             const kam = d._kam;
             if (kam) {
@@ -605,6 +596,17 @@ function render() {
         }
 
         if (isHrTarget) {
+            // Doanh số F4 & F2 giờ tính cho riêng Snapshot tháng mục tiêu
+            const rt = d._rtMap[d.cusCode] || "UNKNOWN";
+            if (rt === 'F4') {
+                snapF4.s += v;
+                if (v > 0) { snapF4.a.add(d.cusCode); snapF4.skus += skus; snapF4.invs++; }
+            }
+            if (rt === 'F2') {
+                snapF2.s += v;
+                if (v > 0) { snapF2.a.add(d.cusCode); snapF2.skus += skus; snapF2.invs++; }
+            }
+
             const kae = d._kae;
             if (kae && !kae.toUpperCase().startsWith('KAM')) {
                 if (kae.toUpperCase().includes('DSR')) dsrSales += v;
@@ -623,7 +625,6 @@ function render() {
 
     // 1. UPDATE 4 KPIs ĐẦU TIÊN
     let sysAc = sys.a.size; let sysTc = sys.p.size;
-    let sysKpiObj = { tc: sysTc, ac: sysAc, s: sys.s, avgSku: sys.invs > 0 ? sys.skus/sys.invs : 0, freq: sysAc > 0 ? sys.invs/sysAc : 0 };
     
     document.getElementById("val-sales").innerText = fmt(sys.s);
     document.getElementById("val-active-cust").innerText = fmt(sysAc);
@@ -633,15 +634,15 @@ function render() {
     document.getElementById("val-true-strike").innerText = trueStrike.toFixed(1) + "%";
     document.getElementById("val-penetration").innerText = penetration.toFixed(1) + "%";
 
-    // F4 Drop Size & Freq
-    document.getElementById("val-drop-f4").innerText = sysF4.a.size > 0 ? fmt(sysF4.s / sysF4.a.size) : 0;
-    document.getElementById("val-freq-f4").innerText = sysF4.a.size > 0 ? (sysF4.invs / sysF4.a.size).toFixed(1) : "0.0";
-    document.getElementById("val-lppc-f4").innerText = sysF4.invs > 0 ? (sysF4.skus / sysF4.invs).toFixed(1) : "0.0";
+    // F4 Drop Size & Freq (Dựa trên Snapshot tháng mới nhất)
+    document.getElementById("val-drop-f4").innerText = snapF4.a.size > 0 ? fmt(snapF4.s / snapF4.a.size) : 0;
+    document.getElementById("val-freq-f4").innerText = snapF4.a.size > 0 ? (snapF4.invs / snapF4.a.size).toFixed(1) : "0.0";
+    document.getElementById("val-lppc-f4").innerText = snapF4.invs > 0 ? (snapF4.skus / snapF4.invs).toFixed(1) : "0.0";
 
-    // F2 Drop Size & Freq
-    document.getElementById("val-drop-f2").innerText = sysF2.a.size > 0 ? fmt(sysF2.s / sysF2.a.size) : 0;
-    document.getElementById("val-freq-f2").innerText = sysF2.a.size > 0 ? (sysF2.invs / sysF2.a.size).toFixed(1) : "0.0";
-    document.getElementById("val-lppc-f2").innerText = sysF2.invs > 0 ? (sysF2.skus / sysF2.invs).toFixed(1) : "0.0";
+    // F2 Drop Size & Freq (Dựa trên Snapshot tháng mới nhất)
+    document.getElementById("val-drop-f2").innerText = snapF2.a.size > 0 ? fmt(snapF2.s / snapF2.a.size) : 0;
+    document.getElementById("val-freq-f2").innerText = snapF2.a.size > 0 ? (snapF2.invs / snapF2.a.size).toFixed(1) : "0.0";
+    document.getElementById("val-lppc-f2").innerText = snapF2.invs > 0 ? (snapF2.skus / snapF2.invs).toFixed(1) : "0.0";
 
     // 2. CẬP NHẬT 4 KPI NHÂN SỰ VÀ MOM
     document.getElementById("val-headcount-kae").innerText = fmt(kaeActive.size);
@@ -713,6 +714,8 @@ function render() {
 
     let weekData = Object.keys(weekMapP1).map(k => ({ label: formatWM(weekMapP1[k].w, weekMapP1[k].m), tc: weekMapP1[k].p.size, ac: weekMapP1[k].a.size, s: weekMapP1[k].s, avgSku: weekMapP1[k].invs > 0 ? weekMapP1[k].skus/weekMapP1[k].invs : 0, freq: weekMapP1[k].a.size > 0 ? weekMapP1[k].invs/weekMapP1[k].a.size : 0, w: weekMapP1[k].w, m: weekMapP1[k].m })).sort((a,b) => { let m1 = monthOrder[a.m.toLowerCase()]||99; let m2 = monthOrder[b.m.toLowerCase()]||99; return m1!==m2 ? m1-m2 : a.w.localeCompare(b.w); });
     drawChart('weekChart', weekData, 'label', false); 
+    
+    // Tạo lại sysKpiObjWeek cho bảng Tuần (Giữ nguyên logic cộng dồn của bảng Tuần)
     let sysKpiObjWeek = { tc: sysTc, ac: sysAc, s: sys.s, avgSku: sys.invs > 0 ? sys.skus/sys.invs : 0, freq: sysAc > 0 ? sys.invs/sysAc : 0 };
     drawHorizontalTable('weekHeaderRow', 'weekTableBody', weekData, t('colWeek'), true, { label: t('sysTotal'), ...sysKpiObjWeek }, false, true); 
 
@@ -731,7 +734,7 @@ function render() {
     drawChart('dayChart', kaeData, 'label', true); 
     drawVerticalTable('dayHeaderRow', 'dayTableBody', kaeData, t('colKae'), false, null, false, false, true); 
 
-    // 6. PART 3: SEGMENTATION & BOX %
+    // 6. PART 3: SEGMENTATION
     renderPart3(segMap, sysKpiObjWeek);
 }
 
