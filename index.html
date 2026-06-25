@@ -79,9 +79,12 @@
 
         /* THE PULSE BLOCK */
         .section-tag { display: inline-block; padding: 5px 12px; background: rgba(121, 189, 154, 0.08); border-left: 4px solid var(--primary); color: var(--primary); font-size: 11px; font-weight: 800; margin-bottom: 18px; border-radius: 0 6px 6px 0; letter-spacing: 0.5px; }
-        .pulse-row { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 35px; }
         
-        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        /* CẬP NHẬT: 50% CHIỀU NGANG CHO 2 KHỐI */
+        .pulse-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 35px; }
+        
+        /* CẬP NHẬT: Gói 8 KPI vào 2 cột x 4 hàng để vừa vặn với 50% chiều ngang */
+        .kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
         
         .kpi-card { background: var(--bg-card); border-radius: var(--border-radius); padding: 22px; border: 1px solid var(--border-color); box-shadow: var(--ios-shadow); transition: transform 0.25s, border-color 0.25s; display: flex; flex-direction: column; justify-content: space-between; }
         .kpi-card:hover { border-color: var(--primary); transform: translateY(-2px); }
@@ -90,7 +93,7 @@
         .kpi-card .sub { font-size: 11px; color: var(--primary); font-weight: 600; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px; margin-top: auto; }
         
         .tree-box { background: var(--bg-card); border-radius: var(--border-radius); padding: 22px; border: 1px solid var(--border-color); box-shadow: var(--ios-shadow); height: 100%; display: flex; flex-direction: column; min-height: 250px;}
-        .tree-content { flex-grow: 1; overflow-y: auto; overflow-x: auto; max-height: 300px; }
+        .tree-content { flex-grow: 1; overflow-y: auto; overflow-x: auto; max-height: 600px; }
         .tree-node summary { padding: 10px 14px; background: rgba(255,255,255,0.03); border-radius: var(--border-radius-sm); cursor: pointer; font-weight: 800; font-size: 11px; list-style: none; margin-bottom: 6px; }
         .tree-node summary::-webkit-details-marker { display: none; }
         .t-name { display: flex; align-items: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; color: var(--text-main);}
@@ -134,11 +137,8 @@
         ::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-        @media (max-width: 1400px) {
-            .pulse-row { grid-template-columns: 1fr; }
-        }
         @media (max-width: 1024px) {
-            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+            .pulse-row { grid-template-columns: 1fr; }
             .ms-box { width: 130px; }
         }
         @media (max-width: 768px) {
@@ -237,7 +237,7 @@
     <div class="chart-box">
         <div class="chart-header">
             <div class="chart-title" data-i18n="cAreaTitle">HIỆU QUẢ SELL-OUT THEO KHU VỰC</div>
-            <div class="chart-subtitle" data-i18n="cAreaSub">All </div>
+            <div class="chart-subtitle" data-i18n="cAreaSub">⚠️ Cảnh báo đỏ cho vùng có Tỷ lệ chốt đơn < 50% (Không bị ảnh hưởng bởi bộ lọc Khu vực)</div>
         </div>
         <div style="height: 450px;"><canvas id="areaChart"></canvas></div>
         <div class="table-wrap"><table class="data-table"><thead id="areaHeaderRow"></thead><tbody id="areaTableBody"></tbody></table></div>
@@ -269,7 +269,7 @@
 
     <div class="section-tag" data-i18n="secP3">PHẦN 3: ĐỘ PHỦ & CHIẾN LƯỢC ĐIỂM BÁN</div>
     <div class="chart-box">
-        <div class="chart-title" data-i18n="cSegTitle">PHÂN TÍCH SỨC MUA THEO PHÂN KHÚC</div>
+        <div class="chart-title" data-i18n="cSegTitle">PHÂN TÍCH SỨC MUA THEO PHÂN KHÚC TẠP HÓA</div>
         <div class="chart-subtitle" data-i18n="cSegSub">Kèm Box tỷ trọng (%) để đánh giá cơ cấu khách hàng. Bảng tự động gộp Toàn Quốc khi chọn "Tất cả Khu vực".</div>
         <div class="table-wrap" id="segmentAreaTableContainer" style="border:none;"></div>
     </div>
@@ -297,14 +297,14 @@ const dict = {
         lblFreq: "Tần suất lên đơn", lblLppc: "SKU TB/Đơn",
         kpiKaeLbl: "KAE ĐANG HOẠT ĐỘNG", kpiDsrLbl: "DSR ĐANG HOẠT ĐỘNG",
         kpiAvgKaeLbl: "NĂNG SUẤT BÌNH QUÂN/KAE", kpiAvgDsrLbl: "NĂNG SUẤT BÌNH QUÂN/DSR",
-        secP1: "PHẦN 1: TỔNG QUAN THEO KHU VỰC", cAreaTitle: "HIỆU QUẢ SELL-OUT THEO KHU VỰC", cAreaSub: "Toàn quốc",
+        secP1: "PHẦN 1: TỔNG QUAN THEO KHU VỰC", cAreaTitle: "HIỆU QUẢ SELL-OUT THEO KHU VỰC", cAreaSub: "⚠️ Cảnh báo đỏ cho vùng có Tỷ lệ chốt đơn < 50% (Không bị ảnh hưởng bởi bộ lọc Khu vực)",
         cWeekTitle: "SELL OUT THEO TUẦN", secP2: "PHẦN 2: THỰC THI TẠI THỊ TRƯỜNG",
         cKamTitle: "TOP 10 KAM CÓ SELL OUT TỐT NHẤT", cKaeTitle: "TOP 10 KAE CÓ PERFORMANCE TỐT NHẤT",
         secP3: "PHẦN 3: ĐỘ PHỦ & CHIẾN LƯỢC ĐIỂM BÁN", cSegTitle: "PHÂN TÍCH SỨC MUA THEO PHÂN KHÚC TẠP HÓA",
         cSegSub: "Kèm Box tỷ trọng (%) cơ cấu khách hàng. Bảng tự động gộp Toàn Quốc khi chọn 'Tất cả Khu vực'.",
         colArea: "KHU VỰC", colWeek: "TUẦN", colKam: "KAM", colKae: "KAE/DSR",
         tbPlan: "KH trên tuyến", tbActive: "KH lên đơn", tbStrike: "Tỷ lệ chốt đơn", tbSales: "Sell-Out", tbDrop: "Doanh số trung bình/điểm bán", tbFreq: "Tần suất lên đơn", tbLppc: "SKU TB/Đơn",
-        sysTotal: "TỔNG CỘNG", sysTotalSys: "TỔNG HỆ THỐNG",
+        sysTotal: "TỔNG TOÀN QUỐC", sysTotalSys: "TỔNG HỆ THỐNG",
         segColClass: "PHÂN KHÚC", segTblH1: "HIỆU SUẤT ĐIỂM BÁN",
         axisCust: "Đơn vị: Cửa hàng", axisVnd: "Đơn vị: VNĐ", legSales: "Doanh số", legTotal: "KH trên tuyến", legActive: "KH lên đơn"
     },
@@ -317,14 +317,14 @@ const dict = {
         lblFreq: "Freq", lblLppc: "LPPC",
         kpiKaeLbl: "ACTIVE KAE", kpiDsrLbl: "ACTIVE DSR",
         kpiAvgKaeLbl: "AVG SALES / KAE", kpiAvgDsrLbl: "AVG SALES / DSR",
-        secP1: "PART 1: MACRO OVERVIEW (NATIONWIDE)", cAreaTitle: "SELL-OUT EFFICIENCY BY AREA", cAreaSub: "All Area",
+        secP1: "PART 1: MACRO OVERVIEW (NATIONWIDE)", cAreaTitle: "SELL-OUT EFFICIENCY BY AREA", cAreaSub: "⚠️ Red flag for regions with Strike Rate < 50% (Unaffected by Area filter)",
         cWeekTitle: "WEEKLY SELL-OUT", secP2: "PART 2: IN-MARKET EXECUTION",
         cKamTitle: "TOP 10 KAM BY SELL-OUT", cKaeTitle: "TOP 10 KAE BY PERFORMANCE",
         secP3: "PART 3: COVERAGE & OUTLET STRATEGY", cSegTitle: "PURCHASING POWER BY OUTLET SEGMENTATION",
         cSegSub: "Includes (%) Proportion Boxes. Auto-groups to Nationwide when 'All Areas' is selected.",
         colArea: "AREA", colWeek: "WEEK", colKam: "KAM", colKae: "KAE/DSR",
         tbPlan: "Route", tbActive: "Active", tbStrike: "Strike Rate", tbSales: "Sell-Out", tbDrop: "Drop Size", tbFreq: "Freq", tbLppc: "LPPC",
-        sysTotal: "GRAND TOTAL", sysTotalSys: "SYSTEM TOTAL",
+        sysTotal: "NATIONWIDE TOTAL", sysTotalSys: "SYSTEM TOTAL",
         segColClass: "CLASS", segTblH1: "OUTLET PERFORMANCE",
         axisCust: "Unit: Outlets", axisVnd: "Unit: VND", legSales: "Sales", legTotal: "Route", legActive: "Active"
     }
@@ -415,16 +415,32 @@ const getMoMHtml = (curVal, prevVal) => {
 function render() {
     if (dbMaster.length === 0 && dbSales.length === 0) return; 
 
-    // Cập nhật Subtitle cho Biểu đồ Tuần theo bộ lọc Khu vực
     let weekSubText = filters.area.length > 0 ? filters.area.join(', ') : (lang === 'vi' ? 'Tất cả khu vực' : 'All Areas');
     document.getElementById('weekChartSub').innerText = (lang === 'vi' ? 'Khu vực đang xem: ' : 'Filtered Areas: ') + weekSubText;
 
     const filterP1 = (d) => (filters.month.length === 0 || filters.month.includes(d.month)) && (filters.week.length === 0 || filters.week.includes(d._w));
     const filterMain = (d) => filterP1(d) && (filters.hq.length === 0 || filters.hq.includes(d.hq)) && (filters.area.length === 0 || filters.area.includes(d.area));
 
-    let curM = filters.month.length === 1 ? filters.month[0].toLowerCase() : null;
-    let prevMNum = curM ? monthOrder[curM] - 1 : null;
+    // Lấy toàn bộ các tháng có trong dữ liệu Master
+    let allMonths = new Set();
+    dbMaster.forEach(d => { if(d.month) allMonths.add(d.month.toLowerCase()); });
+    let sortedAvailable = Array.from(allMonths).sort((a,b) => monthOrder[a] - monthOrder[b]);
+
+    // Thuật toán Snapshot cho HR KPIs
+    let targetM = null;
+    if (filters.month.length === 0) {
+        targetM = sortedAvailable.length > 0 ? sortedAvailable[sortedAvailable.length - 1] : null;
+    } else {
+        let selectedSorted = filters.month.map(m=>m.toLowerCase()).sort((a,b) => monthOrder[a] - monthOrder[b]);
+        targetM = selectedSorted[selectedSorted.length - 1];
+    }
+
+    let targetMNum = targetM ? monthOrder[targetM] : null;
+    let prevMNum = targetMNum ? targetMNum - 1 : null;
     let prevM = Object.keys(monthOrder).find(k => monthOrder[k] === prevMNum);
+    
+    // Kiểm tra xem tháng liền trước có thực sự tồn tại trong file dữ liệu không
+    let hasPrevMData = sortedAvailable.includes(prevM);
 
     let activeMonths = new Set(); 
 
@@ -441,8 +457,10 @@ function render() {
         if(!d.cusCode) return;
         let isP1 = filterP1(d);
         let isMain = filterMain(d);
-        let isPrevMonth = prevM && (d.month.toLowerCase() === prevM) && (filters.hq.length === 0 || filters.hq.includes(d.hq)) && (filters.area.length === 0 || filters.area.includes(d.area));
         
+        let isHrTarget = targetM && (d.month.toLowerCase() === targetM) && (filters.week.length === 0 || filters.week.includes(d._w)) && (filters.hq.length === 0 || filters.hq.includes(d.hq)) && (filters.area.length === 0 || filters.area.includes(d.area));
+        let isHrPrev = hasPrevMData && prevM && (d.month.toLowerCase() === prevM) && (filters.week.length === 0 || filters.week.includes(d._w)) && (filters.hq.length === 0 || filters.hq.includes(d.hq)) && (filters.area.length === 0 || filters.area.includes(d.area));
+
         if(isP1) {
             const a = d.area;
             if (!areaMapP1[a]) areaMapP1[a] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
@@ -450,7 +468,6 @@ function render() {
         }
 
         if(isMain) {
-            // Data cho Tuần giờ bị ảnh hưởng bởi Area (isMain)
             const wk = d._w + '|' + d.month;
             if (!weekMapP1[wk]) weekMapP1[wk] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0, w: d._w, m: d.month };
             weekMapP1[wk].p.add(d.cusCode);
@@ -466,16 +483,10 @@ function render() {
             }
 
             const kae = d._kae;
-            let rawKae = String(d.kae).trim();
             if (kae && !kae.toUpperCase().startsWith('KAM')) {
                 if (!kaeMap[kae]) kaeMap[kae] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0, areas: new Set() };
                 kaeMap[kae].p.add(d.cusCode);
                 kaeMap[kae].areas.add(d.area);
-                
-                if (!rawKae.includes('❌')) {
-                    if (kae.toUpperCase().includes('DSR')) dsrActive.add(kae);
-                    else kaeActive.add(kae);
-                }
             }
 
             const seg = d.CusS ? String(d.CusS).toUpperCase().trim() : "N";
@@ -484,7 +495,16 @@ function render() {
             segMap[segKey].p.add(d.cusCode);
         }
 
-        if (isPrevMonth) {
+        if (isHrTarget) {
+            const kae = d._kae;
+            let rawKae = String(d.kae).trim();
+            if (kae && !kae.toUpperCase().startsWith('KAM') && !rawKae.includes('❌')) {
+                if (kae.toUpperCase().includes('DSR')) dsrActive.add(kae);
+                else kaeActive.add(kae);
+            }
+        }
+
+        if (isHrPrev) {
             const kae = d._kae;
             let rawKae = String(d.kae).trim();
             if (kae && !kae.toUpperCase().startsWith('KAM') && !rawKae.includes('❌')) {
@@ -499,7 +519,9 @@ function render() {
         const skus = d.skuLines || 0;
         let isP1 = filterP1(d);
         let isMain = filterMain(d);
-        let isPrevMonth = prevM && (d.month.toLowerCase() === prevM) && (filters.hq.length === 0 || filters.hq.includes(d.hq)) && (filters.area.length === 0 || filters.area.includes(d.area));
+
+        let isHrTarget = targetM && (d.month.toLowerCase() === targetM) && (filters.week.length === 0 || filters.week.includes(d._w)) && (filters.hq.length === 0 || filters.hq.includes(d.hq)) && (filters.area.length === 0 || filters.area.includes(d.area));
+        let isHrPrev = hasPrevMData && prevM && (d.month.toLowerCase() === prevM) && (filters.week.length === 0 || filters.week.includes(d._w)) && (filters.hq.length === 0 || filters.hq.includes(d.hq)) && (filters.area.length === 0 || filters.area.includes(d.area));
 
         if(isP1) {
             const a = d.area;
@@ -509,7 +531,6 @@ function render() {
         }
 
         if(isMain) {
-            // Data cho Tuần giờ bị ảnh hưởng bởi Area (isMain)
             const wk = d._w + '|' + d.month;
             if (!weekMapP1[wk]) weekMapP1[wk] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0, w: d._w, m: d.month };
             weekMapP1[wk].s += v;
@@ -532,9 +553,6 @@ function render() {
                 kaeMap[kae].s += v;
                 kaeMap[kae].areas.add(d.area);
                 if (v > 0) { kaeMap[kae].a.add(d.cusCode); kaeMap[kae].skus += skus; kaeMap[kae].invs++; }
-                
-                if (kae.toUpperCase().includes('DSR')) dsrSales += v;
-                else kaeSales += v;
             }
 
             if (kam && kae) {
@@ -564,7 +582,15 @@ function render() {
             if (v > 0) { segMap[segKey].a.add(d.cusCode); }
         }
 
-        if (isPrevMonth) {
+        if (isHrTarget) {
+            const kae = d._kae;
+            if (kae && !kae.toUpperCase().startsWith('KAM')) {
+                if (kae.toUpperCase().includes('DSR')) dsrSales += v;
+                else kaeSales += v;
+            }
+        }
+
+        if (isHrPrev) {
             const kae = d._kae;
             if (kae && !kae.toUpperCase().startsWith('KAM')) {
                 if (kae.toUpperCase().includes('DSR')) dsrSalesPrev += v;
@@ -584,7 +610,7 @@ function render() {
     document.getElementById("val-freq").innerText = (sysAc > 0 ? (sys.invs/sysAc).toFixed(1) : "0.0");
     document.getElementById("val-lppc").innerText = sysKpiObj.avgSku.toFixed(1);
 
-    // 2. CẬP NHẬT 4 KPI NHÂN SỰ VÀ MOM
+    // 2. CẬP NHẬT 4 KPI NHÂN SỰ VÀ MOM (TỰ ĐỘNG ẨN NẾU THIẾU DATA THÁNG 4)
     document.getElementById("val-headcount-kae").innerText = fmt(kaeActive.size);
     document.getElementById("val-headcount-dsr").innerText = fmt(dsrActive.size);
     
@@ -593,7 +619,7 @@ function render() {
     document.getElementById("val-avg-kae").innerText = fmt(curAvgKae);
     document.getElementById("val-avg-dsr").innerText = fmt(curAvgDsr);
 
-    if (filters.month.length === 1 && prevM) {
+    if (hasPrevMData) {
         document.getElementById("mom-headcount-kae").innerHTML = getMoMHtml(kaeActive.size, kaeActivePrev.size);
         document.getElementById("mom-headcount-dsr").innerHTML = getMoMHtml(dsrActive.size, dsrActivePrev.size);
         
@@ -618,7 +644,7 @@ function render() {
     
     let gridStyle = `grid-template-columns: minmax(130px, 2.5fr) repeat(${colCount}, minmax(60px, 1fr)); gap: 10px; align-items: center; text-align: right; width: 100%;`;
 
-    let treeHtml = `<div style="min-width: 350px;">`; // Scroll ngang
+    let treeHtml = `<div style="min-width: 350px;">`; 
     treeHtml += `<div style="display:grid; ${gridStyle} padding: 0 14px 10px 14px; font-weight: 800; color: var(--text-muted); font-size: 10px; text-transform: uppercase; border-bottom: 1px solid var(--border-color); margin-bottom: 10px;">
         <span style="text-align: left;">Nhân sự</span>
         ${sortedMonths.map(m => `<span>${m}</span>`).join('')}
@@ -654,7 +680,6 @@ function render() {
 
     let weekData = Object.keys(weekMapP1).map(k => ({ label: formatWM(weekMapP1[k].w, weekMapP1[k].m), tc: weekMapP1[k].p.size, ac: weekMapP1[k].a.size, s: weekMapP1[k].s, avgSku: weekMapP1[k].invs > 0 ? weekMapP1[k].skus/weekMapP1[k].invs : 0, freq: weekMapP1[k].a.size > 0 ? weekMapP1[k].invs/weekMapP1[k].a.size : 0, w: weekMapP1[k].w, m: weekMapP1[k].m })).sort((a,b) => { let m1 = monthOrder[a.m.toLowerCase()]||99; let m2 = monthOrder[b.m.toLowerCase()]||99; return m1!==m2 ? m1-m2 : a.w.localeCompare(b.w); });
     drawChart('weekChart', weekData, 'label', false); 
-    // Dữ liệu bảng Tuần giờ dùng sysKpiObj vì đã chịu ảnh hưởng của Area Filter
     drawHorizontalTable('weekHeaderRow', 'weekTableBody', weekData, t('colWeek'), true, { label: t('sysTotal'), ...sysKpiObj }, false, true); 
 
     // 5. CHARTS P2 
@@ -892,8 +917,13 @@ function init() {
         d._kam = cleanName(d.kam, true, d.area);
         d._kae = cleanName(d.kae, false, d.area);
         
-        d._kam_display = d.kam ? String(d.kam).trim() : "";
-        d._kae_display = d.kae ? String(d.kae).trim() : "";
+        let rawKam = String(d.kam || "").trim();
+        let rawKae = String(d.kae || "").trim();
+        let kamSign = rawKam.match(/[✔️❌]/) ? " " + rawKam.match(/[✔️❌]/)[0] : "";
+        let kaeSign = rawKae.match(/[✔️❌]/) ? " " + rawKae.match(/[✔️❌]/)[0] : "";
+
+        d._kam_display = d._kam ? (d._kam + kamSign) : "";
+        d._kae_display = d._kae ? (d._kae + kaeSign) : "";
         
         d._segMap = segMapPre;
     });
