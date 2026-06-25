@@ -89,7 +89,6 @@
         .kpi-card .value { font-size: 26px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; margin-bottom: 8px; }
         .kpi-card .sub { font-size: 11px; color: var(--primary); font-weight: 600; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px; margin-top: auto; }
         
-        /* Cấu hình mới cho Danh mục nhân sự tự cuộn ngang và rải cột Grid */
         .tree-box { background: var(--bg-card); border-radius: var(--border-radius); padding: 22px; border: 1px solid var(--border-color); box-shadow: var(--ios-shadow); height: 100%; display: flex; flex-direction: column; min-height: 250px;}
         .tree-content { flex-grow: 1; overflow-y: auto; overflow-x: auto; max-height: 300px; }
         .tree-node summary { padding: 10px 14px; background: rgba(255,255,255,0.03); border-radius: var(--border-radius-sm); cursor: pointer; font-weight: 800; font-size: 11px; list-style: none; margin-bottom: 6px; }
@@ -238,27 +237,30 @@
     <div class="chart-box">
         <div class="chart-header">
             <div class="chart-title" data-i18n="cAreaTitle">HIỆU QUẢ SELL-OUT THEO KHU VỰC</div>
-            <div class="chart-subtitle" data-i18n="cAreaSub">⚠️ Cảnh báo đỏ cho vùng có Tỷ lệ chốt đơn < 50% (Không bị ảnh hưởng bởi bộ lọc Khu vực)</div>
+            <div class="chart-subtitle" data-i18n="cAreaSub">All </div>
         </div>
         <div style="height: 450px;"><canvas id="areaChart"></canvas></div>
         <div class="table-wrap"><table class="data-table"><thead id="areaHeaderRow"></thead><tbody id="areaTableBody"></tbody></table></div>
     </div>
 
     <div class="chart-box">
-        <div class="chart-title" data-i18n="cWeekTitle">TỐC ĐỘ LUÂN CHUYỂN HÀNG HÓA THEO TUẦN</div>
+        <div class="chart-header">
+            <div class="chart-title" data-i18n="cWeekTitle">SELL OUT THEO TUẦN</div>
+            <div class="chart-subtitle" id="weekChartSub">Khu vực đang xem: Tất cả khu vực</div>
+        </div>
         <div style="height: 450px;"><canvas id="weekChart"></canvas></div>
         <div class="table-wrap"><table class="data-table"><thead id="weekHeaderRow"></thead><tbody id="weekTableBody"></tbody></table></div>
     </div>
 
-    <div class="section-tag" data-i18n="secP2">PHẦN 2: THỰC THI THỊ TRƯỜNG & SFE</div>
+    <div class="section-tag" data-i18n="secP2">PHẦN 2: THỰC THI TẠI THỊ TRƯỜNG</div>
     <div class="side-by-side">
         <div class="chart-box" style="margin-bottom: 0;">
-            <div class="chart-title" data-i18n="cKamTitle">TOP 10 NĂNG SUẤT KAM</div>
+            <div class="chart-title" data-i18n="cKamTitle">TOP 10 KAM CÓ SELL OUT TỐT NHẤT</div>
             <div style="height: 450px;"><canvas id="kamChart"></canvas></div>
             <div class="table-wrap"><table class="data-table"><thead id="kamHeaderRow"></thead><tbody id="kamTableBody"></tbody></table></div>
         </div>
         <div class="chart-box" style="margin-bottom: 0;">
-            <div class="chart-title" data-i18n="cKaeTitle">TOP 10 NĂNG SUẤT KAE/DSR</div>
+            <div class="chart-title" data-i18n="cKaeTitle">TOP 10 KAE CÓ PERFORMANCE TỐT NHẤT</div>
             <div style="height: 450px;"><canvas id="dayChart"></canvas></div>
             <div class="table-wrap"><table class="data-table"><thead id="dayHeaderRow"></thead><tbody id="dayTableBody"></tbody></table></div>
         </div>
@@ -295,14 +297,14 @@ const dict = {
         lblFreq: "Tần suất lên đơn", lblLppc: "SKU TB/Đơn",
         kpiKaeLbl: "KAE ĐANG HOẠT ĐỘNG", kpiDsrLbl: "DSR ĐANG HOẠT ĐỘNG",
         kpiAvgKaeLbl: "NĂNG SUẤT BÌNH QUÂN/KAE", kpiAvgDsrLbl: "NĂNG SUẤT BÌNH QUÂN/DSR",
-        secP1: "PHẦN 1: TỔNG QUAN THEO KHU VỰC", cAreaTitle: "HIỆU QUẢ SELL-OUT THEO KHU VỰC", cAreaSub: "⚠️ Cảnh báo đỏ cho vùng có Tỷ lệ chốt đơn < 50% (Không bị ảnh hưởng bởi bộ lọc Khu vực)",
-        cWeekTitle: "TỐC ĐỘ LUÂN CHUYỂN HÀNG HÓA THEO TUẦN", secP2: "PHẦN 2: THỰC THI THỊ TRƯỜNG & SFE",
-        cKamTitle: "TOP 10 NĂNG SUẤT KAM", cKaeTitle: "TOP 10 NĂNG SUẤT KAE/DSR",
+        secP1: "PHẦN 1: TỔNG QUAN THEO KHU VỰC", cAreaTitle: "HIỆU QUẢ SELL-OUT THEO KHU VỰC", cAreaSub: "Toàn quốc",
+        cWeekTitle: "SELL OUT THEO TUẦN", secP2: "PHẦN 2: THỰC THI TẠI THỊ TRƯỜNG",
+        cKamTitle: "TOP 10 KAM CÓ SELL OUT TỐT NHẤT", cKaeTitle: "TOP 10 KAE CÓ PERFORMANCE TỐT NHẤT",
         secP3: "PHẦN 3: ĐỘ PHỦ & CHIẾN LƯỢC ĐIỂM BÁN", cSegTitle: "PHÂN TÍCH SỨC MUA THEO PHÂN KHÚC TẠP HÓA",
         cSegSub: "Kèm Box tỷ trọng (%) cơ cấu khách hàng. Bảng tự động gộp Toàn Quốc khi chọn 'Tất cả Khu vực'.",
         colArea: "KHU VỰC", colWeek: "TUẦN", colKam: "KAM", colKae: "KAE/DSR",
         tbPlan: "KH trên tuyến", tbActive: "KH lên đơn", tbStrike: "Tỷ lệ chốt đơn", tbSales: "Sell-Out", tbDrop: "Doanh số trung bình/điểm bán", tbFreq: "Tần suất lên đơn", tbLppc: "SKU TB/Đơn",
-        sysTotal: "TỔNG TOÀN QUỐC", sysTotalSys: "TỔNG HỆ THỐNG",
+        sysTotal: "TỔNG CỘNG", sysTotalSys: "TỔNG HỆ THỐNG",
         segColClass: "PHÂN KHÚC", segTblH1: "HIỆU SUẤT ĐIỂM BÁN",
         axisCust: "Đơn vị: Cửa hàng", axisVnd: "Đơn vị: VNĐ", legSales: "Doanh số", legTotal: "KH trên tuyến", legActive: "KH lên đơn"
     },
@@ -315,14 +317,14 @@ const dict = {
         lblFreq: "Freq", lblLppc: "LPPC",
         kpiKaeLbl: "ACTIVE KAE", kpiDsrLbl: "ACTIVE DSR",
         kpiAvgKaeLbl: "AVG SALES / KAE", kpiAvgDsrLbl: "AVG SALES / DSR",
-        secP1: "PART 1: MACRO OVERVIEW (NATIONWIDE)", cAreaTitle: "SELL-OUT EFFICIENCY BY AREA", cAreaSub: "⚠️ Red flag for regions with Strike Rate < 50% (Unaffected by Area filter)",
-        cWeekTitle: "WEEKLY GOODS VELOCITY", secP2: "PART 2: MARKET EXECUTION & SFE",
-        cKamTitle: "TOP 10 KAM SFE", cKaeTitle: "TOP 10 KAE/DSR SFE",
+        secP1: "PART 1: MACRO OVERVIEW (NATIONWIDE)", cAreaTitle: "SELL-OUT EFFICIENCY BY AREA", cAreaSub: "All Area",
+        cWeekTitle: "WEEKLY SELL-OUT", secP2: "PART 2: IN-MARKET EXECUTION",
+        cKamTitle: "TOP 10 KAM BY SELL-OUT", cKaeTitle: "TOP 10 KAE BY PERFORMANCE",
         secP3: "PART 3: COVERAGE & OUTLET STRATEGY", cSegTitle: "PURCHASING POWER BY OUTLET SEGMENTATION",
         cSegSub: "Includes (%) Proportion Boxes. Auto-groups to Nationwide when 'All Areas' is selected.",
         colArea: "AREA", colWeek: "WEEK", colKam: "KAM", colKae: "KAE/DSR",
         tbPlan: "Route", tbActive: "Active", tbStrike: "Strike Rate", tbSales: "Sell-Out", tbDrop: "Drop Size", tbFreq: "Freq", tbLppc: "LPPC",
-        sysTotal: "NATIONWIDE TOTAL", sysTotalSys: "SYSTEM TOTAL",
+        sysTotal: "GRAND TOTAL", sysTotalSys: "SYSTEM TOTAL",
         segColClass: "CLASS", segTblH1: "OUTLET PERFORMANCE",
         axisCust: "Unit: Outlets", axisVnd: "Unit: VND", legSales: "Sales", legTotal: "Route", legActive: "Active"
     }
@@ -400,7 +402,6 @@ function renderFilters() {
     populateDropdown('area', 'area', [...new Set(all.filter(d => filters.hq.length === 0 || filters.hq.includes(d.hq)).map(d=>d.area))].filter(Boolean).sort());
 }
 
-// Hàm format HTML cho MoM Subtext
 const getMoMHtml = (curVal, prevVal) => {
     if (prevVal === 0 && curVal === 0) return `<span style="color:var(--text-muted)">- 0% so với tháng trước</span>`;
     if (prevVal === 0) return `<span style="color:var(--accent-success)">▲ 100% so với tháng trước</span>`;
@@ -414,6 +415,10 @@ const getMoMHtml = (curVal, prevVal) => {
 function render() {
     if (dbMaster.length === 0 && dbSales.length === 0) return; 
 
+    // Cập nhật Subtitle cho Biểu đồ Tuần theo bộ lọc Khu vực
+    let weekSubText = filters.area.length > 0 ? filters.area.join(', ') : (lang === 'vi' ? 'Tất cả khu vực' : 'All Areas');
+    document.getElementById('weekChartSub').innerText = (lang === 'vi' ? 'Khu vực đang xem: ' : 'Filtered Areas: ') + weekSubText;
+
     const filterP1 = (d) => (filters.month.length === 0 || filters.month.includes(d.month)) && (filters.week.length === 0 || filters.week.includes(d._w));
     const filterMain = (d) => filterP1(d) && (filters.hq.length === 0 || filters.hq.includes(d.hq)) && (filters.area.length === 0 || filters.area.includes(d.area));
 
@@ -421,7 +426,7 @@ function render() {
     let prevMNum = curM ? monthOrder[curM] - 1 : null;
     let prevM = Object.keys(monthOrder).find(k => monthOrder[k] === prevMNum);
 
-    let activeMonths = new Set(); // Dùng để rải cột cho Danh mục nhân sự
+    let activeMonths = new Set(); 
 
     let sys = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
     let areaMapP1 = {}, weekMapP1 = {}; 
@@ -442,15 +447,16 @@ function render() {
             const a = d.area;
             if (!areaMapP1[a]) areaMapP1[a] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
             areaMapP1[a].p.add(d.cusCode);
-
-            const wk = d._w + '|' + d.month;
-            if (!weekMapP1[wk]) weekMapP1[wk] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0, w: d._w, m: d.month };
-            weekMapP1[wk].p.add(d.cusCode);
         }
 
         if(isMain) {
+            // Data cho Tuần giờ bị ảnh hưởng bởi Area (isMain)
+            const wk = d._w + '|' + d.month;
+            if (!weekMapP1[wk]) weekMapP1[wk] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0, w: d._w, m: d.month };
+            weekMapP1[wk].p.add(d.cusCode);
+
             sys.p.add(d.cusCode);
-            activeMonths.add(d.month.toUpperCase()); // Thu thập các tháng đang Active trong dữ liệu
+            activeMonths.add(d.month.toUpperCase()); 
             
             const kam = d._kam;
             if (kam) {
@@ -500,14 +506,15 @@ function render() {
             if (!areaMapP1[a]) areaMapP1[a] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0 };
             areaMapP1[a].s += v;
             if (v > 0) { areaMapP1[a].a.add(d.cusCode); areaMapP1[a].skus += skus; areaMapP1[a].invs++; }
+        }
 
+        if(isMain) {
+            // Data cho Tuần giờ bị ảnh hưởng bởi Area (isMain)
             const wk = d._w + '|' + d.month;
             if (!weekMapP1[wk]) weekMapP1[wk] = { p: new Set(), a: new Set(), s: 0, skus: 0, invs: 0, w: d._w, m: d.month };
             weekMapP1[wk].s += v;
             if (v > 0) { weekMapP1[wk].a.add(d.cusCode); weekMapP1[wk].skus += skus; weekMapP1[wk].invs++; }
-        }
 
-        if(isMain) {
             sys.s += v;
             if (v > 0) { sys.a.add(d.cusCode); sys.skus += skus; sys.invs++; }
 
@@ -534,7 +541,6 @@ function render() {
                 let kamDisplay = d._kam_display;
                 let kaeDisplay = d._kae_display;
                 
-                // Mở rộng object treeMap để chứa dữ liệu theo từng tháng (sByM)
                 if (!treeMap[kam]) treeMap[kam] = { s: 0, sByM: {}, kaes: {}, display: kamDisplay };
                 if (!treeMap[kam].kaes[kae]) treeMap[kam].kaes[kae] = { s: 0, sByM: {}, display: kaeDisplay };
                 
@@ -602,31 +608,27 @@ function render() {
         document.getElementById("mom-avg-dsr").innerHTML = '';
     }
 
-    // 3. TREE PERSONNEL (BẢN UPDATE: CHIA CỘT THEO THÁNG SỬ DỤNG CSS GRID)
-    // Sắp xếp các tháng active để đưa lên Header của lưới
+    // 3. TREE PERSONNEL (BẢN BỎ CỘT TỔNG + RẢI GRID THEO THÁNG)
     let getMonthNum = (mStr) => { 
         let c = mStr.toLowerCase().replace('m','').replace('t','').trim(); 
         return !isNaN(c) ? parseInt(c) : (monthOrder[mStr.toLowerCase()] || 99); 
     };
     let sortedMonths = Array.from(activeMonths).sort((a,b) => getMonthNum(a) - getMonthNum(b));
-    let colCount = sortedMonths.length + 1; // +1 cho cột Tổng
+    let colCount = sortedMonths.length; 
     
-    // Tạo style rải cột tự động
     let gridStyle = `grid-template-columns: minmax(130px, 2.5fr) repeat(${colCount}, minmax(60px, 1fr)); gap: 10px; align-items: center; text-align: right; width: 100%;`;
 
-    let treeHtml = `<div style="min-width: 450px;">`; // Cho phép scroll ngang trên mobile
+    let treeHtml = `<div style="min-width: 350px;">`; // Scroll ngang
     treeHtml += `<div style="display:grid; ${gridStyle} padding: 0 14px 10px 14px; font-weight: 800; color: var(--text-muted); font-size: 10px; text-transform: uppercase; border-bottom: 1px solid var(--border-color); margin-bottom: 10px;">
         <span style="text-align: left;">Nhân sự</span>
         ${sortedMonths.map(m => `<span>${m}</span>`).join('')}
-        <span style="color: var(--primary);">Tổng</span>
     </div>`;
 
     Object.keys(treeMap).sort((a,b) => treeMap[b].s - treeMap[a].s).forEach(k => {
-        let kamMonthHtml = sortedMonths.map(m => `<span>${fmt(treeMap[k].sByM[m] || 0)}</span>`).join('');
+        let kamMonthHtml = sortedMonths.map(m => `<span style="color:var(--primary); font-weight:bold;">${fmt(treeMap[k].sByM[m] || 0)}</span>`).join('');
         treeHtml += `<details class="tree-node"><summary style="display:grid; ${gridStyle}">
             <div class="t-name">${treeMap[k].display}</div>
             ${kamMonthHtml}
-            <span style="color: var(--primary);">${fmt(treeMap[k].s)}</span>
         </summary><div class="t-children">`;
         
         Object.keys(treeMap[k].kaes).sort((a,b) => treeMap[k].kaes[b].s - treeMap[k].kaes[a].s).forEach(ke => {
@@ -634,28 +636,28 @@ function render() {
             treeHtml += `<div class="t-leaf" style="display:grid; ${gridStyle}">
                 <div class="t-name leaf-name">${treeMap[k].kaes[ke].display}</div>
                 ${kaeMonthHtml}
-                <span style="color: var(--primary);">${fmt(treeMap[k].kaes[ke].s)}</span>
             </div>`;
         });
         treeHtml += `</div></details>`;
     });
-    treeHtml += `</div>`; // Đóng tag cuộn ngang
+    treeHtml += `</div>`; 
     document.getElementById('tree-container').innerHTML = treeHtml || '<div style="color:var(--text-muted); font-style:italic;">No Personnel Data</div>';
 
-    // 4. CHARTS P1
+    // 4. CHARTS P1 
     let p1Total = { tc: 0, ac: 0, s: 0, skus: 0, invs: 0 };
     Object.values(areaMapP1).forEach(m => { p1Total.tc+=m.p.size; p1Total.ac+=m.a.size; p1Total.s+=m.s; p1Total.skus+=m.skus; p1Total.invs+=m.invs; });
     let p1Kpi = { tc: p1Total.tc, ac: p1Total.ac, s: p1Total.s, avgSku: p1Total.invs > 0 ? p1Total.skus/p1Total.invs : 0, freq: p1Total.ac > 0 ? p1Total.invs/p1Total.ac : 0 };
 
     let areaData = Object.keys(areaMapP1).map(k => ({ label: k, tc: areaMapP1[k].p.size, ac: areaMapP1[k].a.size, s: areaMapP1[k].s, avgSku: areaMapP1[k].invs > 0 ? areaMapP1[k].skus/areaMapP1[k].invs : 0, freq: areaMapP1[k].a.size > 0 ? areaMapP1[k].invs/areaMapP1[k].a.size : 0 })).sort((a,b) => b.s - a.s);
-    drawChart('areaChart', areaData, 'label', false); // Cột đứng
+    drawChart('areaChart', areaData, 'label', false); 
     drawHorizontalTable('areaHeaderRow', 'areaTableBody', areaData, t('colArea'), true, { label: t('sysTotal'), ...p1Kpi }, true); 
 
     let weekData = Object.keys(weekMapP1).map(k => ({ label: formatWM(weekMapP1[k].w, weekMapP1[k].m), tc: weekMapP1[k].p.size, ac: weekMapP1[k].a.size, s: weekMapP1[k].s, avgSku: weekMapP1[k].invs > 0 ? weekMapP1[k].skus/weekMapP1[k].invs : 0, freq: weekMapP1[k].a.size > 0 ? weekMapP1[k].invs/weekMapP1[k].a.size : 0, w: weekMapP1[k].w, m: weekMapP1[k].m })).sort((a,b) => { let m1 = monthOrder[a.m.toLowerCase()]||99; let m2 = monthOrder[b.m.toLowerCase()]||99; return m1!==m2 ? m1-m2 : a.w.localeCompare(b.w); });
-    drawChart('weekChart', weekData, 'label', false); // Cột đứng
-    drawHorizontalTable('weekHeaderRow', 'weekTableBody', weekData, t('colWeek'), true, { label: t('sysTotal'), ...p1Kpi }, false, true); 
+    drawChart('weekChart', weekData, 'label', false); 
+    // Dữ liệu bảng Tuần giờ dùng sysKpiObj vì đã chịu ảnh hưởng của Area Filter
+    drawHorizontalTable('weekHeaderRow', 'weekTableBody', weekData, t('colWeek'), true, { label: t('sysTotal'), ...sysKpiObj }, false, true); 
 
-    // 5. CHARTS P2
+    // 5. CHARTS P2 
     let kamData = Object.keys(kamMap).map(k => ({
         label: k, areaStr: Array.from(kamMap[k].areas).join(', '),
         tc: kamMap[k].p.size, ac: kamMap[k].a.size, s: kamMap[k].s, avgSku: kamMap[k].invs > 0 ? kamMap[k].skus/kamMap[k].invs : 0, freq: kamMap[k].a.size > 0 ? kamMap[k].invs/kamMap[k].a.size : 0
