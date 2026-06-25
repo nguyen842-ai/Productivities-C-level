@@ -622,11 +622,14 @@ function render() {
     });
 
     // 1. UPDATE 4 KPIs ĐẦU TIÊN
+    let sysAc = sys.a.size; let sysTc = sys.p.size;
+    let sysKpiObj = { tc: sysTc, ac: sysAc, s: sys.s, avgSku: sys.invs > 0 ? sys.skus/sys.invs : 0, freq: sysAc > 0 ? sys.invs/sysAc : 0 };
+    
     document.getElementById("val-sales").innerText = fmt(sys.s);
-    document.getElementById("val-active-cust").innerText = fmt(sys.a.size);
+    document.getElementById("val-active-cust").innerText = fmt(sysAc);
 
     let trueStrike = sys.plannedVisits > 0 ? (sys.invs / sys.plannedVisits * 100) : 0;
-    let penetration = sys.p.size > 0 ? (sys.a.size / sys.p.size * 100) : 0;
+    let penetration = sysTc > 0 ? (sysAc / sysTc * 100) : 0;
     document.getElementById("val-true-strike").innerText = trueStrike.toFixed(1) + "%";
     document.getElementById("val-penetration").innerText = penetration.toFixed(1) + "%";
 
